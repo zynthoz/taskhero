@@ -59,35 +59,35 @@ CREATE TRIGGER set_items_updated_at
   EXECUTE FUNCTION public.handle_updated_at();
 
 -- Seed initial items
-INSERT INTO public.items (name, description, type, rarity, cost_gold, emoji, effect_type, effect_value) VALUES
-  -- Weapons
-  ('Rusty Sword', 'A basic sword for beginners', 'weapon', 'common', 50, '🗡️', NULL, NULL),
-  ('Iron Blade', 'A reliable iron sword', 'weapon', 'common', 150, '⚔️', NULL, NULL),
-  ('Silver Rapier', 'An elegant silver blade', 'weapon', 'rare', 500, '🗡️', NULL, NULL),
-  ('Dragon Slayer', 'A legendary sword of heroes', 'weapon', 'epic', 2000, '⚔️', NULL, NULL),
-  ('Excalibur', 'The sword of legends', 'weapon', 'legendary', 10000, '⚔️', NULL, NULL),
+INSERT INTO public.items (name, description, type, rarity, cost_gold, emoji, effect_type, effect_value, is_daily_shop, effect_duration) VALUES
+  -- Weapons (daily shop eligible)
+  ('Rusty Sword', 'A basic sword for beginners', 'weapon', 'common', 50, '🗡️', NULL, NULL, true, NULL),
+  ('Iron Blade', 'A reliable iron sword', 'weapon', 'common', 150, '⚔️', NULL, NULL, true, NULL),
+  ('Silver Rapier', 'An elegant silver blade', 'weapon', 'rare', 500, '🗡️', NULL, NULL, true, NULL),
+  ('Dragon Slayer', 'A legendary sword of heroes', 'weapon', 'epic', 2000, '⚔️', NULL, NULL, true, NULL),
+  ('Excalibur', 'The sword of legends', 'weapon', 'legendary', 10000, '⚔️', NULL, NULL, false, NULL),
   
-  -- Armor
-  ('Leather Tunic', 'Basic leather protection', 'armor', 'common', 50, '🦺', NULL, NULL),
-  ('Chainmail', 'Sturdy chain armor', 'armor', 'rare', 400, '🛡️', NULL, NULL),
-  ('Plate Armor', 'Heavy plate protection', 'armor', 'epic', 1500, '🛡️', NULL, NULL),
-  ('Dragon Scale Mail', 'Armor made from dragon scales', 'armor', 'legendary', 8000, '🛡️', NULL, NULL),
+  -- Armor (daily shop eligible)
+  ('Leather Tunic', 'Basic leather protection', 'armor', 'common', 50, '🦺', NULL, NULL, true, NULL),
+  ('Chainmail', 'Sturdy chain armor', 'armor', 'rare', 400, '🛡️', NULL, NULL, true, NULL),
+  ('Plate Armor', 'Heavy plate protection', 'armor', 'epic', 1500, '🛡️', NULL, NULL, true, NULL),
+  ('Dragon Scale Mail', 'Armor made from dragon scales', 'armor', 'legendary', 8000, '🛡️', NULL, NULL, false, NULL),
   
-  -- Accessories
-  ('Lucky Coin', 'Increases gold rewards', 'accessory', 'rare', 300, '🪙', 'gold_multiplier', 1.2),
-  ('Sage Ring', 'Increases XP gains', 'accessory', 'rare', 300, '💍', 'xp_multiplier', 1.2),
-  ('Phoenix Feather', 'Protects your streak once', 'accessory', 'epic', 1000, '🪶', 'streak_shield', 1),
+  -- Accessories (daily shop eligible)
+  ('Lucky Coin', 'Increases gold rewards', 'accessory', 'rare', 300, '🪙', 'gold_multiplier', 1.2, true, NULL),
+  ('Sage Ring', 'Increases XP gains', 'accessory', 'rare', 300, '💍', 'xp_multiplier', 1.2, true, NULL),
+  ('Phoenix Feather', 'Protects your streak once', 'accessory', 'epic', 1000, '🪶', 'streak_shield', 1, true, NULL),
   
-  -- Consumables
-  ('Focus Potion', 'Doubles XP for 1 hour', 'consumable', 'common', 100, '🧪', 'xp_multiplier', 2.0),
-  ('Time Warp', 'Extends time on tasks', 'consumable', 'rare', 200, '⏰', 'time_extension', 3600),
-  ('Streak Shield', 'Protects streak for 24 hours', 'consumable', 'epic', 500, '🛡️', 'streak_protection', 24),
-  ('Gold Rush Elixir', 'Triples gold for 1 hour', 'consumable', 'rare', 250, '💰', 'gold_multiplier', 3.0),
+  -- Consumables (daily shop eligible)
+  ('Focus Potion', 'Doubles XP for 1 hour', 'consumable', 'common', 100, '🧪', 'xp_multiplier', 2.0, true, 60),
+  ('Time Warp', 'Extends time on tasks', 'consumable', 'rare', 200, '⏰', 'time_extension', 3600, true, NULL),
+  ('Streak Shield', 'Protects streak for 24 hours', 'consumable', 'epic', 500, '🛡️', 'streak_protection', 24, true, 1440),
+  ('Gold Rush Elixir', 'Triples gold for 1 hour', 'consumable', 'rare', 250, '💰', 'gold_multiplier', 3.0, true, 60),
   
-  -- Cosmetics
-  ('Hero Cape', 'A stylish red cape', 'cosmetic', 'rare', 600, '🦸', NULL, NULL),
-  ('Crown of Glory', 'For the mightiest heroes', 'cosmetic', 'legendary', 5000, '👑', NULL, NULL),
-  ('Wizard Hat', 'Mysterious and magical', 'cosmetic', 'epic', 1200, '🧙', NULL, NULL)
+  -- Cosmetics (some daily shop eligible)
+  ('Hero Cape', 'A stylish red cape', 'cosmetic', 'rare', 600, '🦸', NULL, NULL, true, NULL),
+  ('Crown of Glory', 'For the mightiest heroes', 'cosmetic', 'legendary', 5000, '👑', NULL, NULL, false, NULL),
+  ('Wizard Hat', 'Mysterious and magical', 'cosmetic', 'epic', 1200, '🧙', NULL, NULL, true, NULL)
 ON CONFLICT DO NOTHING;
 
 -- Add comments

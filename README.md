@@ -2,6 +2,8 @@
 
 A gamified task management application that transforms boring to-do lists into an epic RPG adventure. Level up your life by completing quests, earning rewards, and building streaks!
 
+> **⚠️ IMPORTANT**: Before making any UI/design changes, read [DESIGN_SYSTEM.md](DESIGN_SYSTEM.md) - it contains all design guidelines, component patterns, and styling conventions that MUST be followed.
+
 ## 🚀 Getting Started
 
 ### Prerequisites
@@ -63,6 +65,7 @@ taskhero/
 ├── types/                 # TypeScript type definitions
 ├── hooks/                 # Custom React hooks
 ├── public/                # Static assets
+├── DESIGN_SYSTEM.md       # **CRITICAL** Design system & style guide
 ├── PRD.md                 # Product Requirements Document
 ├── progress.md            # Development progress log
 └── implementation.md      # Technical implementation guide
@@ -117,13 +120,17 @@ See [PRD.md](PRD.md) for the complete development roadmap and [progress.md](prog
 
 ## 🎨 Design System
 
-TaskHero uses a dark fantasy RPG aesthetic with:
-- **Primary Colors:** Deep purple/midnight blue (#1a1625, #2d1b4e)
-- **Accent Colors:** Gold (#ffd700), Emerald (#00ff88), Ruby (#ff4757), Sapphire (#3498db)
-- **Fonts:** Cinzel (fantasy headers), Inter (body text), Monaco (stats)
-- **Layout:** Three-panel desktop design (1440x900px)
+**📖 [Read the complete Design System documentation →](DESIGN_SYSTEM.md)**
 
-All game assets use a placeholder system for early development.
+TaskHero follows a minimalist, clean design inspired by Linear and GitHub:
+
+- **Colors:** Neutral-900/800 backgrounds, white/neutral-400 text, NO gradients
+- **Layout:** Three-column structure (280px left sidebar, 940px center, 220px right sidebar)
+- **Typography:** System fonts with clear hierarchy (text-2xl headers, text-sm body)
+- **Components:** Clean cards with subtle borders, solid backgrounds, emoji accents
+- **Philosophy:** Minimalism first, no AI clichés, functional beauty
+
+**⚠️ All new features MUST follow the patterns documented in [DESIGN_SYSTEM.md](DESIGN_SYSTEM.md)**
 
 ## 🤝 Contributing
 
@@ -137,6 +144,7 @@ ISC
 
 - **Repository:** [https://github.com/zynthoz/taskhero](https://github.com/zynthoz/taskhero)
 - **Documentation:** See [PRD.md](PRD.md) and [implementation.md](implementation.md)
+- **Design System:** [DESIGN_SYSTEM.md](DESIGN_SYSTEM.md) ⚠️ **Required reading for all UI work**
 
 ---
 

@@ -3,6 +3,8 @@
 import React from "react";
 import { Card } from "../ui/card";
 import { ItemPlaceholder } from "../placeholders/item-placeholder";
+import { DailyBonusButton } from "../gamification/daily-bonus-button";
+import { GoldBalance } from "../ui/gold-balance";
 
 interface RightSidebarProps {
   shopItem?: {
@@ -23,13 +25,19 @@ export default function RightSidebar({
 }: RightSidebarProps) {
   return (
     <div className="h-full flex flex-col bg-[#0a0a0a]">
-      {/* Header */}
-      <div className="p-6 border-b border-neutral-800">
-        <h2 className="text-base font-semibold text-white">Daily Shop</h2>
+      {/* Header with Gold Balance */}
+      <div className="p-4 border-b border-neutral-800">
+        <div className="flex items-center justify-between mb-2">
+          <h2 className="text-base font-semibold text-white">Daily Shop</h2>
+          <GoldBalance size="sm" showLabel={false} className="opacity-80 hover:opacity-100 transition-opacity" />
+        </div>
       </div>
 
       {/* Scrollable Content */}
       <div className="flex-1 overflow-y-auto p-4 space-y-6">
+        {/* Daily Bonus Button */}
+        <DailyBonusButton />
+
         {/* Shop Preview Section */}
         <section>
           <Card className="bg-neutral-900 border-neutral-800 p-4">

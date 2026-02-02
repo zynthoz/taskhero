@@ -96,6 +96,19 @@ BEGIN
   -- Check if leveled up
   IF new_level > old_level THEN
     level_up := TRUE;
+    
+    -- Record level-up in level_history table
+    INSERT INTO public.level_history (
+      user_id,
+      previous_level,
+      new_level,
+      total_xp_at_levelup
+    ) VALUES (
+      task.user_id,
+      old_level,
+      new_level,
+      (SELECT total_xp FROM public.users WHERE id = task.user_id)
+    );
   END IF;
   
   -- Update achievement progress

@@ -370,6 +370,32 @@ export interface Database {
           completed_at?: string | null
         }
       }
+      level_history: {
+        Row: {
+          id: string
+          user_id: string
+          previous_level: number
+          new_level: number
+          total_xp_at_levelup: number
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          user_id: string
+          previous_level: number
+          new_level: number
+          total_xp_at_levelup: number
+          created_at?: string
+        }
+        Update: {
+          id?: string
+          user_id?: string
+          previous_level?: number
+          new_level?: number
+          total_xp_at_levelup?: number
+          created_at?: string
+        }
+      }
     }
     Functions: {
       xp_for_level: {

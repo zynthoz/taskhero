@@ -4,6 +4,8 @@ import React from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Progress } from "../ui/progress";
+import { GoldBalance } from "../ui/gold-balance";
+import { getStreakMultiplier, getStreakMultiplierText } from "@/lib/streak-utils";
 
 interface LeftSidebarProps {
   user: {
@@ -22,16 +24,20 @@ export default function LeftSidebar({ user }: LeftSidebarProps) {
   const pathname = usePathname();
 
   const navigationItems = [
-    { href: "/dashboard", label: "Tasks" },
+    { href: "/dashboard", label: "Dashboard" },
+    { href: "/tasks", label: "Tasks" },
     { href: "/goals", label: "Goals" },
     { href: "/shop", label: "Shop" },
     { href: "/inventory", label: "Inventory" },
     { href: "/achievements", label: "Achievements" },
     { href: "/leaderboard", label: "Leaderboard" },
+    { href: "/gold-history", label: "Gold History" },
     { href: "/settings", label: "Settings" },
   ];
 
   const xpProgress = (user.currentXp / user.xpForNextLevel) * 100;
+  const streakMultiplier = getStreakMultiplier(user.currentStreak);
+  const hasStreakBonus = streakMultiplier > 1.0;
 
   return (
     <div className="h-full flex flex-col bg-[#0a0a0a]">
@@ -69,6 +75,12 @@ export default function LeftSidebar({ user }: LeftSidebarProps) {
           <div className="text-center text-xs text-neutral-400">
             {user.currentXp} / {user.xpForNextLevel} XP
           </div>
+          {hasStreakBonus && (
+            <div className="flex items-center justify-center gap-1 text-xs text-orange-400 bg-orange-950/30 border border-orange-900/50 rounded px-2 py-1">
+              <span>🔥</span>
+              <span className="font-semibold">{streakMultiplier}x XP Bonus</span>
+            </div>
+          )}
         </div>
 
         {/* Stats Grid - Slightly Bigger */}

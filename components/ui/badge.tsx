@@ -3,34 +3,34 @@ import { cva, type VariantProps } from 'class-variance-authority';
 import { cn } from '@/lib/utils';
 
 const badgeVariants = cva(
-  'inline-flex items-center rounded-full border px-3 py-1 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2',
+  'inline-flex items-center rounded-md border px-2.5 py-0.5 text-xs font-medium transition-colors focus:outline-none focus:ring-1 focus:ring-offset-1 focus:ring-offset-black',
   {
     variants: {
       variant: {
         default:
-          'border-transparent bg-gray-700 text-gray-100 hover:bg-gray-600',
+          'border-transparent bg-neutral-800 text-neutral-200 hover:bg-neutral-700',
         primary:
-          'border-transparent bg-accent-gold text-primary hover:bg-accent-gold-light',
+          'border-transparent bg-white text-black hover:bg-neutral-200',
         secondary:
-          'border-accent-blue bg-accent-blue/20 text-accent-blue hover:bg-accent-blue/30',
+          'border-blue-900 bg-blue-950/50 text-blue-400 hover:bg-blue-950/70',
         success:
-          'border-accent-green bg-accent-green/20 text-accent-green hover:bg-accent-green/30',
+          'border-green-900 bg-green-950/50 text-green-400 hover:bg-green-950/70',
         danger:
-          'border-accent-red bg-accent-red/20 text-accent-red hover:bg-accent-red/30',
+          'border-red-900 bg-red-950/50 text-red-400 hover:bg-red-950/70',
         work:
-          'border-red-500 bg-red-500/20 text-red-400',
+          'border-red-900 bg-red-950/50 text-red-400',
         health:
-          'border-pink-500 bg-pink-500/20 text-pink-400',
+          'border-pink-900 bg-pink-950/50 text-pink-400',
         learning:
-          'border-blue-500 bg-blue-500/20 text-blue-400',
+          'border-blue-900 bg-blue-950/50 text-blue-400',
         social:
-          'border-green-500 bg-green-500/20 text-green-400',
+          'border-green-900 bg-green-950/50 text-green-400',
         finance:
-          'border-yellow-500 bg-yellow-500/20 text-yellow-400',
+          'border-yellow-900 bg-yellow-950/50 text-yellow-400',
         personal:
-          'border-purple-500 bg-purple-500/20 text-purple-400',
+          'border-purple-900 bg-purple-950/50 text-purple-400',
         outline:
-          'text-gray-300 border-gray-600 hover:bg-gray-800',
+          'text-neutral-300 border-neutral-700 hover:bg-neutral-900',
       },
     },
     defaultVariants: {

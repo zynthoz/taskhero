@@ -13,18 +13,11 @@ interface ItemPlaceholderProps {
   isEquipped?: boolean;
 }
 
-const rarityGradients = {
-  common: 'from-gray-600 to-gray-500',
-  rare: 'from-blue-600 to-blue-400',
-  epic: 'from-purple-600 to-purple-400',
-  legendary: 'from-yellow-600 to-yellow-400',
-};
-
-const rarityBorders = {
-  common: 'border-gray-400',
-  rare: 'border-blue-400',
-  epic: 'border-purple-400',
-  legendary: 'border-yellow-400',
+const rarityColors = {
+  common: 'bg-neutral-800 border-neutral-600',
+  rare: 'bg-blue-950/50 border-blue-800',
+  epic: 'bg-purple-950/50 border-purple-800',
+  legendary: 'bg-yellow-950/50 border-yellow-800',
 };
 
 export function ItemPlaceholder({
@@ -49,42 +42,29 @@ export function ItemPlaceholder({
     <div className={cn('relative flex flex-col items-center gap-1', className)}>
       <div
         className={cn(
-          'rounded-lg flex items-center justify-center',
-          'bg-gradient-to-br transition-all duration-300',
+          'rounded-md flex items-center justify-center',
+          'transition-all duration-300',
           'border-dashed border-2 hover:border-solid hover:scale-105',
           sizeClasses[size],
-          rarityGradients[rarity],
-          rarityBorders[rarity],
-          isEquipped && 'border-solid border-4 shadow-lg'
+          rarityColors[rarity],
+          isEquipped && 'border-solid border-2 shadow-lg'
         )}
       >
         <span className="select-none">{emoji}</span>
-        
-        {/* Corner badge for image indicator */}
-        <div className="absolute top-1 right-1 w-6 h-6 rounded-full bg-black/50 flex items-center justify-center">
-          <span className="text-[8px] font-bold text-white">IMG</span>
-        </div>
 
         {/* Equipped banner */}
         {isEquipped && (
-          <div className="absolute -top-2 left-1/2 -translate-x-1/2 bg-accent-gold text-primary px-3 py-0.5 rounded-full text-xs font-bold">
+          <div className="absolute -top-2 left-1/2 -translate-x-1/2 bg-white text-black px-3 py-0.5 rounded-full text-xs font-semibold">
             EQUIPPED
           </div>
         )}
       </div>
       
       {label && (
-        <span className="text-xs text-gray-400 font-mono text-center">
+        <span className="text-xs text-neutral-400 font-mono text-center">
           {label}
         </span>
       )}
-
-      {/* Rarity indicator gem */}
-      <div className="absolute bottom-0 right-0 text-xs">
-        {rarity === 'legendary' && '💎'}
-        {rarity === 'epic' && '💜'}
-        {rarity === 'rare' && '💙'}
-      </div>
     </div>
   );
 }

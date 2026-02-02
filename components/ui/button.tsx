@@ -3,26 +3,28 @@ import { cva, type VariantProps } from 'class-variance-authority';
 import { cn } from '@/lib/utils';
 
 const buttonVariants = cva(
-  'inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-lg text-sm font-bold transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50',
+  'inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-black disabled:pointer-events-none disabled:opacity-50',
   {
     variants: {
       variant: {
         primary:
-          'bg-gradient-to-r from-accent-gold to-accent-gold-light text-primary shadow-lg shadow-accent-gold/50 hover:shadow-xl hover:shadow-accent-gold/70 hover:scale-105 active:scale-95',
+          'bg-white text-black hover:bg-neutral-200 shadow-sm',
         secondary:
-          'border-2 border-accent-blue text-accent-blue hover:bg-accent-blue hover:text-white hover:shadow-lg hover:shadow-accent-blue/50',
+          'border border-neutral-700 text-neutral-200 hover:bg-neutral-900 hover:border-neutral-600',
         danger:
-          'bg-gradient-to-r from-accent-red to-accent-red-dark text-white shadow-lg shadow-accent-red/50 hover:shadow-xl hover:shadow-accent-red/70 hover:scale-105 active:scale-95',
+          'bg-danger text-white hover:bg-danger-hover',
         ghost:
-          'text-gray-300 hover:bg-white/10 hover:text-white',
+          'text-neutral-400 hover:bg-neutral-900 hover:text-neutral-200',
         link:
-          'text-accent-gold underline-offset-4 hover:underline',
+          'text-neutral-400 underline-offset-4 hover:underline hover:text-neutral-200',
+        outline:
+          'border border-neutral-800 text-neutral-300 hover:bg-neutral-900 hover:border-neutral-700',
       },
       size: {
-        sm: 'h-9 px-4 text-xs',
-        md: 'h-11 px-6 text-sm',
-        lg: 'h-14 px-8 text-lg',
-        xl: 'h-16 px-10 text-xl',
+        sm: 'h-9 px-3 text-xs',
+        md: 'h-10 px-4 text-sm',
+        lg: 'h-11 px-6 text-base',
+        xl: 'h-12 px-8 text-base',
         icon: 'h-10 w-10',
       },
     },

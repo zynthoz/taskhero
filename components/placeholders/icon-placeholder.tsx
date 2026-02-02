@@ -18,7 +18,7 @@ export function IconPlaceholder({
   shape = 'circle',
   emoji = '⚔️',
   label,
-  color = 'bg-accent-blue',
+  color = 'bg-blue-600',
   className,
 }: IconPlaceholderProps) {
   const sizeClasses = {
@@ -33,12 +33,12 @@ export function IconPlaceholder({
   };
 
   return (
-    <div className={cn('inline-flex flex-col items-center gap-1', className)}>
+    <div className={cn('inline-flex flex-col items-center gap-2', className)}>
       <div
         className={cn(
           'flex items-center justify-center',
-          'border-2 border-dashed border-white/50',
-          'transition-all duration-200 hover:border-solid',
+          'border border-neutral-700',
+          'transition-all duration-200 hover:border-neutral-600 hover:scale-105',
           sizeClasses[size],
           shapeClasses[shape],
           color
@@ -47,7 +47,7 @@ export function IconPlaceholder({
         <span className="select-none">{emoji}</span>
       </div>
       {label && (
-        <span className="text-[10px] text-gray-500 font-mono">
+        <span className="text-xs text-neutral-400 font-medium">
           {label}
         </span>
       )}
@@ -57,15 +57,15 @@ export function IconPlaceholder({
 
 // Category-specific icon placeholders
 export function WorkIcon(props: Omit<IconPlaceholderProps, 'emoji' | 'color'>) {
-  return <IconPlaceholder {...props} emoji="⚔️" color="bg-red-600" />;
+  return <IconPlaceholder {...props} emoji="⚔️" color="bg-neutral-800" />;
 }
 
 export function HealthIcon(props: Omit<IconPlaceholderProps, 'emoji' | 'color'>) {
-  return <IconPlaceholder {...props} emoji="❤️" color="bg-pink-600" />;
+  return <IconPlaceholder {...props} emoji="❤️" color="bg-neutral-800" />;
 }
 
 export function LearningIcon(props: Omit<IconPlaceholderProps, 'emoji' | 'color'>) {
-  return <IconPlaceholder {...props} emoji="📚" color="bg-blue-600" />;
+  return <IconPlaceholder {...props} emoji="📚" color="bg-neutral-800" />;
 }
 
 export function SocialIcon(props: Omit<IconPlaceholderProps, 'emoji' | 'color'>) {

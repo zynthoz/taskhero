@@ -4,29 +4,100 @@
   --font-sans: Inter, sans-serif;
   --font-fantasy: Cinzel, serif;
   
-  --color-primary: #2d1b4e;
-  --color-primary-dark: #1a1625;
-  --color-accent-gold: #ffd700;
-  --color-accent-gold-light: #ffb83d;
-  --color-accent-green: #00ff88;
-  --color-accent-green-dark: #2ecc71;
-  --color-accent-red: #ff4757;
-  --color-accent-red-dark: #e74c3c;
-  --color-accent-blue: #3498db;
+  --color-primary: #0a0a0a;
+  --color-primary-dark: #000000;
+  --color-accent: #22c55e;
+  --color-accent-hover: #16a34a;
+  --color-success: #22c55e;
+  --color-danger: #ef4444;
+  --color-danger-hover: #dc2626;
+  --color-border: #27272a;
+  --color-border-hover: #3f3f46;
 }
 
 :root {
-  --foreground-rgb: 248, 249, 250;
-  --background-start-rgb: 26, 22, 37;
-  --background-end-rgb: 45, 27, 78;
+  --foreground-rgb: 250, 250, 250;
+  --background-rgb: 10, 10, 10;
 }
 
 body {
   color: rgb(var(--foreground-rgb));
-  background: linear-gradient(
-      to bottom,
-      rgb(var(--background-start-rgb)),
-      rgb(var(--background-end-rgb))
-    );
+  background: rgb(var(--background-rgb));
   min-height: 100vh;
+}
+
+/* Custom Animations */
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0) translateX(0);
+  }
+  25% {
+    transform: translateY(-20px) translateX(10px);
+  }
+  50% {
+    transform: translateY(-10px) translateX(-10px);
+  }
+  75% {
+    transform: translateY(-30px) translateX(5px);
+  }
+}
+
+@keyframes slide {
+  0% {
+    transform: translateX(-100%);
+    opacity: 0;
+  }
+  50% {
+    opacity: 0.2;
+  }
+  100% {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+}
+
+@keyframes slide-reverse {
+  0% {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  50% {
+    opacity: 0.2;
+  }
+  100% {
+    transform: translateX(-100%);
+    opacity: 0;
+  }
+}
+
+@keyframes pulse-slow {
+  0%, 100% {
+    opacity: 0.3;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.5;
+    transform: scale(1.1);
+  }
+}
+
+.animate-float {
+  animation: float linear infinite;
+}
+
+.animate-slide {
+  animation: slide 8s ease-in-out infinite;
+}
+
+.animate-slide-reverse {
+  animation: slide-reverse 8s ease-in-out infinite;
+}
+
+.animate-pulse-slow {
+  animation: pulse-slow 8s ease-in-out infinite;
+}
+
+/* Utility Classes */
+.bg-gradient-radial {
+  background-image: radial-gradient(circle at center, var(--tw-gradient-stops));
 }

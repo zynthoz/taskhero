@@ -1,50 +1,52 @@
-Design a desktop web application UI for a gamified to-do list called "Quest Daily" - a productivity app that transforms boring tasks into an epic RPG adventure.
+Design a desktop web application UI for a gamified to-do list called "TaskHero" - a productivity app that transforms boring tasks into an engaging progress tracking system.
 
 ## DESIGN SPECIFICATIONS:
 
 ### VISUAL THEME & STYLE:
-- **Overall aesthetic**: Dark fantasy RPG meets modern productivity app (think Habitica meets Notion with AAA game polish)
-- **Art style**: Modern UI with placeholder zones for future 3D character illustrations and items
+- **Overall aesthetic**: Professional, clean, minimal dark UI inspired by Linear, GitHub, and Stripe - avoiding all AI design clichés
+- **Art style**: Modern, functional UI with placeholder zones for future character illustrations and items
 - **Color scheme**: 
-  - Primary: Deep purple/midnight blue (#1a1625, #2d1b4e)
-  - Accent 1: Gold/amber (#ffd700, #ffb83d) for achievements & rewards
-  - Accent 2: Emerald green (#00ff88, #2ecc71) for completed tasks
-  - Accent 3: Ruby red (#ff4757, #e74c3c) for urgent/overdue
-  - Accent 4: Sapphire blue (#3498db) for XP and progress
-  - Neutral: Slate gray (#cbd5e0) for text, soft white (#f8f9fa) for cards
+  - Primary: True black (#0a0a0a) background
+  - Neutral grays: #171717, #262626, #404040, #525252, #737373, #a3a3a3, #d4d4d4
+  - Accents: Subtle blue/green tints at 3-5% opacity for interactive elements
+  - Success: Emerald green (#10b981) for completed tasks
+  - Danger: Red (#ef4444) for urgent/overdue
+  - Warning: Amber (#f59e0b) for alerts
+  - Text: White (#ffffff) for primary, neutral-400 (#a3a3a3) for secondary
 - **Typography**: 
-  - Headers: Bold fantasy-style font (similar to "Cinzel" or "Immortal")
-  - Body: Clean sans-serif (Inter, SF Pro Display)
-  - Numbers/Stats: Monospace font for game-like feel
-- **Layout**: Desktop-first, 1440px width, sidebar navigation
+  - All text: Clean sans-serif system font stack (-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto)
+  - No fantasy or decorative fonts
+  - Font weights: 400 (normal), 500 (medium), 600 (semibold)
+- **Layout**: Desktop-first, responsive, clean spacing
 
 ### PLACEHOLDER ASSET SPECIFICATIONS:
 
 **CHARACTER PLACEHOLDER:**
 - Size: 280x320px (portrait rectangle)
-- Style: Rounded rectangle frame with gradient background (purple to blue)
-- Content: Large "👤" icon or text "Character Avatar" centered
-- Border: 2px dashed golden border (#ffd700)
-- Label below: "Replace with 3D Character Asset" in small gray text
-- Background pattern: Subtle diagonal lines or dots to indicate placeholder
+- Style: Rounded rectangle (border-radius: 12px) with solid neutral-900 background
+- Content: Simple icon or text "Character" centered in neutral-500
+- Border: 1px solid neutral-800
+- Label: Small text label in neutral-500 if needed
+- Background: Solid color, no gradients or patterns
 
 **ITEM/EQUIPMENT PLACEHOLDER:**
 - Size: 64x64px (small items), 128x128px (medium items), 256x256px (large showcase)
-- Style: Rounded square with gradient background matching rarity:
-  - Common: Gray gradient (#6b7280 to #9ca3af)
-  - Rare: Blue gradient (#3b82f6 to #60a5fa)
-  - Epic: Purple gradient (#8b5cf6 to #a78bfa)
-  - Legendary: Gold gradient (#f59e0b to #fbbf24)
-- Content: Icon placeholder (⚔️ for weapons, 🛡️ for armor, ⭐ for power-ups) OR "ITEM" text
-- Border: 2px dashed white border with opacity 0.5
-- Corner badge: Small "IMG" text in circle to indicate image placeholder
+- Style: Rounded square (border-radius: 8px) with solid neutral-900 background
+- Content: Simple icon or text label in neutral-500
+- Border: 1px solid neutral-800
+- Rarity indication: Simple border color change (no gradients):
+  - Common: neutral-700 border
+  - Rare: blue-900 border with subtle blue tint
+  - Epic: purple-900 border with subtle purple tint
+  - Legendary: amber-900 border with subtle amber tint
+- No corner badges or decorative elements
 
 **ICON PLACEHOLDER:**
 - Size: 24x24px (standard icons)
-- Style: Circle or rounded square
-- Content: Simple geometric shape or first letter of icon purpose (W for work, H for health, etc.)
-- Color: Match the category color scheme
-- Can use emoji as temporary placeholders (📋 ⚔️ 🎯 🏪 etc.)
+- Style: Simple, clean icons or single letters
+- Content: Minimal geometric shapes or letters
+- Color: neutral-500 or category-specific subtle tint
+- No emoji unless absolutely necessary for clarity
 
 ### MAIN DASHBOARD LAYOUT (16:9 aspect ratio, 1440x900px):
 
@@ -53,15 +55,15 @@ Design a desktop web application UI for a gamified to-do list called "Quest Dail
   - **CHARACTER PLACEHOLDER BOX** (240x280px)
     - Centered in sidebar
     - Rounded corners (12px)
-    - Purple-to-blue gradient background
-    - Large "👤" icon or geometric avatar placeholder
-    - Dashed gold border (2px)
-    - Small text below: "Character Preview"
+    - Solid neutral-900 background
+    - Simple icon or text placeholder
+    - 1px solid neutral-800 border
+    - Small text label in neutral-500 if needed
   - **Equipment slots (below character):**
     - 3 small squares (48x48px each) in horizontal row
-    - Labels: "Weapon" "Armor" "Accessory"
-    - Each with **ITEM PLACEHOLDER** (dashed border, gradient fill)
-    - Icons: ⚔️ 🛡️ 💍 as temporary placeholders
+    - Labels: "Weapon" "Armor" "Accessory" in neutral-500
+    - Each with **ITEM PLACEHOLDER** (solid border, solid neutral-900 background)
+    - Simple icons or text labels
 
 - Username + Title/Rank (e.g. "John the Persistent")
 - Level display with XP bar (current XP / next level XP)
@@ -69,225 +71,227 @@ Design a desktop web application UI for a gamified to-do list called "Quest Dail
   - Current Streak: 🔥 7 days
   - Total Points: ⭐ 2,847
   - Rank: 🏆 Gold Tier III
-- Navigation menu (using emoji or simple icon placeholders):
-  - 📋 Today's Quests (highlighted/active)
-  - 🎯 Goals & Campaigns
-  - 🏪 Daily Shop
-  - 🎒 Inventory
-  - 🏅 Achievements
-  - 👥 Leaderboard
-  - ⚙️ Settings
-- Bottom section: "Logout" button
+- Navigation menu (clean text-based with minimal icons):
+  - Tasks (highlighted/active with neutral-800 background)
+  - Goals
+  - Shop
+  - Inventory
+  - Achievements
+  - Leaderboard
+  - Settings
+- Bottom section: "Logout" button (neutral-800 background, white text)
 
 **MAIN CONTENT AREA (940px width):**
 
 **Header Section:**
-- Page title: "Today's Quests" with decorative fantasy divider
-- Date display in fantasy style: "Day 156 of Quest Year 2026"
+- Page title: "Tasks" in clean typography (text-2xl, font-semibold)
+- Date display: Standard format "February 2, 2026"
 - Quick action buttons:
-  - "+ New Quest" (primary CTA, glowing golden button)
-  - "View All Tasks"
-  - Filter/Sort dropdown
+  - "+ New Task" (primary CTA, white background, black text)
+  - "View All"
+  - Filter/Sort dropdown (neutral-800 background)
 
 **Hero Stats Panel (full-width card):**
 - **Left side - CHARACTER PLACEHOLDER (400x400px):**
-  - Large rounded rectangle
-  - Purple-to-blue radial gradient background
-  - Centered "👤" icon (120px size) or text "Hero Character"
-  - Dashed golden border (3px)
-  - Label overlay: "Character Display Area"
-  - Subtle glow effect around border
+  - Large rounded rectangle (border-radius: 12px)
+  - Solid neutral-900 background
+  - Simple centered placeholder icon or text
+  - 1px solid neutral-800 border
+  - Clean, no decorative effects
   
 - **Right side - Stats display (in card format):**
-  - Today's Progress: Circular progress ring (like the finance app but fantasy-themed)
-    - Center shows: "8/15 Quests" with ⚔️ emoji placeholder
-    - Ring segments: Completed (green), In Progress (blue), Not Started (gray), Overdue (red)
-  - Daily Multiplier: "x1.5 🔥" (bonus for streaks)
-  - Power Level: 2,847 (total points, displayed like a game stat)
+  - Today's Progress: Simple progress bar or ring
+    - Center shows: "8/15 Tasks" in clean typography
+    - Segments: Completed (green-500), In Progress (neutral-600), Overdue (red-500)
+  - Streak: "7 day streak" with simple fire icon or text
+  - Total Points: 2,847 (displayed cleanly without decoration)
 
-**Quest List Section:**
-Three columns of task cards organized by priority/category:
+**Task List Section:**
+Clean list or column layout organized by priority/status:
 
-Column 1 - "Main Quests" (High Priority):
-- Card design: Darker background, golden border glow
+High Priority:
+- Card design: Solid neutral-900 background, 1px neutral-800 border, subtle left accent border (red-500)
 - Each card shows:
-  - **Quest icon PLACEHOLDER (32x32px):**
-    - Rounded square with category color
-    - Emoji placeholder: ⚔️ for work, ❤️ for health, 📚 for learning, etc.
-    - OR simple letter icon (W, H, L, etc.)
-  - Quest title with checkbox (styled as shield/crest - can use ☑️ emoji temporarily)
-  - Difficulty indicator: ⚔️⚔️⚔️ (1-5 sword emojis as placeholders)
-  - Reward preview: "+50 XP, 💰25 Gold"
-  - Due date with urgency color coding
-  - Tags (color-coded pills)
+  - **Category icon (24x24px):**
+    - Simple icon or letter
+    - Neutral-500 color
+  - Task title with checkbox (clean, minimal checkbox)
+  - Priority indicator: Simple badge ("High", "Medium", "Low") in small text
+  - Points preview: "+50 XP" in neutral-500
+  - Due date in neutral-500
+  - Tags (small pills with neutral-800 background)
   - Expand arrow for subtasks
 
-Column 2 - "Side Quests" (Medium Priority):
-- Standard card styling with blue accent border
-- Same placeholder structure as main quests
+Medium Priority:
+- Same card styling with neutral left accent border
+- Clean, consistent structure
 
-Column 3 - "Daily Tasks" (Recurring):
-- Lighter cards with repeating icon indicator (🔄 emoji)
-- Streak counter for habit tracking
-- Smaller reward amounts
+Recurring Tasks:
+- Same card styling with green left accent border for active streaks
+- Streak counter in small text ("7 day streak")
+- Standard point values
 
 **TASK CARD HOVER STATE:**
-- Card lifts with shadow
-- Glow effect on border
-- Quick actions appear: ✏️ Edit, 🗑️ Delete, ⭐ Star, ⏰ Reschedule (emoji placeholders)
+- Subtle background color change (neutral-900 → neutral-800)
+- No shadow lift or glow effects
+- Quick actions appear: Edit, Delete, Star, Reschedule (text or simple icons)
 
 **RIGHT SIDEBAR (220px width):**
 
-**Daily Loot Box Section:**
-- "Daily Shop" preview card
+**Daily Shop Section:**
+- "Shop" preview card with neutral-900 background
 - **ITEM PLACEHOLDER (180x180px):**
-  - Rounded square
-  - Gold gradient background
-  - 📦 emoji or "CHEST" text centered
-  - Dashed white border
-  - Rotating animation indicator (↻ symbol or "Animated" label)
-- "New items available!" callout
-- CTA: "Visit Shop →"
+  - Rounded square (border-radius: 12px)
+  - Solid neutral-900 background
+  - Simple icon or text centered
+  - 1px solid neutral-800 border
+  - Clean, minimal design
+- "New items available" text in neutral-500
+- CTA: "Visit Shop →" button (neutral-800 background)
 
 **Active Buffs/Power-ups:**
 - Mini cards showing active bonuses with **ITEM PLACEHOLDERS (48x48px):**
-  - Example: "☕ Focus Potion - 2x XP for 2 hours"
-  - Rounded square with blue gradient
-  - Coffee emoji ☕ as temporary icon
-  - Timer countdown
-- Each power-up uses emoji placeholders: ☕ ⚡ 🛡️ ⏰
+  - Example: "Focus Mode - 2x XP for 2 hours"
+  - Rounded square with solid neutral-900 background
+  - Simple icon or text
+  - 1px solid neutral-800 border
+  - Timer countdown in neutral-500
+- Clean, consistent card styling
 
 **Quick Stats Widget:**
 - Mini leaderboard (top 3 friends)
 - **Friend avatars as PLACEHOLDERS (32x32px circles):**
-  - Colored circles with initials or emoji (👤)
-  - Different colors for each rank position
-- "You're rank #2 this week!"
-- Animated position indicator
+  - Simple colored circles with initials
+  - Solid neutral-700 background with 1px neutral-600 border
+  - Different subtle color tints for rank positions
+- "You're rank #2 this week" in neutral-400
+- Simple position indicator
 
 **Achievement Toast:**
-- Floating notification when achievement unlocked
+- Clean notification when achievement unlocked
 - **ACHIEVEMENT ICON PLACEHOLDER (64x64px):**
-  - Circle with gold gradient
-  - 🏆 emoji or star ⭐
-  - Dashed white border
-- Shows achievement name, reward
-- Animated entrance (slides in from right)
+  - Circle with solid neutral-900 background
+  - Simple icon or text
+  - 1px solid neutral-800 border
+- Shows achievement name, reward in clean typography
+- Subtle slide-in animation (no fancy effects)
 
 ### ADDITIONAL SCREENS TO DESIGN:
 
 **GOALS & CAMPAIGNS PAGE:**
-- Long-term goal cards displayed as "Campaign Maps"
-- Visual progress path (like a game skill tree)
-- **Campaign illustration PLACEHOLDER (full width, 200px height):**
-  - Horizontal rectangle showing path from start to finish
-  - Gradient background (left dark, right light for progress)
-  - Milestone dots along the path (⭕ circles)
-  - Current position indicator (📍 pin emoji)
-  - Label: "Campaign Path Visualization"
-- Milestones as checkpoints on journey path
-- Example: "Quit Smoking" campaign with 30/60/90 day milestones
-- Timer display: "Smoke-free for 23 days, 14 hours"
-- Milestone rewards with **REWARD PLACEHOLDERS (48x48px)**
+- Long-term goal cards displayed as progress trackers
+- Visual progress path (simple, clean design)
+- **Progress visualization (full width, 200px height):**
+  - Horizontal bar showing progress from start to finish
+  - Solid neutral-900 background
+  - Simple progress indicators (dots or lines)
+  - Current position marker (simple icon or text)
+  - Clean, minimal design
+- Milestones as checkpoints
+- Example: "Quit Smoking" with 30/60/90 day milestones
+- Timer display: "23 days, 14 hours" in clean typography
+- Milestone rewards with **REWARD PLACEHOLDERS (48x48px)** (solid backgrounds, simple borders)
 
 **DAILY SHOP PAGE:**
 - Grid layout of purchasable items (4 columns)
 - Each item card with **ITEM PLACEHOLDER (200x200px):**
-  - Large rounded square
-  - Gradient based on rarity tier:
-    - Common: Gray (#6b7280 to #9ca3af)
-    - Rare: Blue (#3b82f6 to #60a5fa)
-    - Epic: Purple (#8b5cf6 to #a78bfa)
-    - Legendary: Gold (#f59e0b to #fbbf24)
-  - Centered emoji or icon: ⚔️ 🛡️ 👕 🎩 ⚡ 💎
-  - Dashed border matching rarity color
-  - Corner badge: "IMG" label
-  - Small rarity gem icon in top-right (💎)
-- Item name + rarity label below placeholder
-- Cost in gold coins (💰 emoji + number)
-- "Purchase" button (disabled if insufficient funds)
-- User's gold balance at top: "💰 1,234 Gold"
-- Daily rotation timer: "⏰ Refreshes in 6h 23m"
+  - Large rounded square (border-radius: 12px)
+  - Solid neutral-900 background
+  - Simple icon or text centered
+  - 1px solid border, color based on rarity:
+    - Common: neutral-700
+    - Rare: blue-900 with subtle blue background tint
+    - Epic: purple-900 with subtle purple background tint
+    - Legendary: amber-900 with subtle amber background tint
+  - No corner badges or decorative gems
+- Item name + rarity label in neutral-400
+- Cost display: "1,234 coins" in clean typography
+- "Purchase" button (neutral-800 background, disabled state is neutral-900)
+- User's balance at top: "Balance: 1,234 coins" in neutral-400
+- Refresh timer: "Refreshes in 6h 23m" in neutral-500
 
 **INVENTORY PAGE:**
 - Grid of owned items (5 columns, responsive)
-- Filter by category tabs with emoji icons: ⚔️ 🛡️ 👕 ⚡ 🎨
+- Filter by category tabs: Weapons, Armor, Clothing, Items, Misc (text-based tabs)
 - Each item with **ITEM PLACEHOLDER (160x160px):**
-  - Rarity-colored gradient background
-  - Emoji placeholder based on category
-  - Dashed border (thicker if equipped - 4px)
-  - "EQUIPPED" banner overlay for active items (gold ribbon graphic or text)
+  - Rounded square (border-radius: 12px)
+  - Solid neutral-900 background
+  - Simple icon or text
+  - 1px border (color based on rarity, no gradients)
+  - Thicker border (2px) if equipped
+  - "EQUIPPED" text overlay for active items (neutral-500)
 - Item details card on hover/click:
   - Larger placeholder preview (256x256px)
-  - Stats display
-  - "Equip" / "Unequip" / "Use" / "Sell" buttons
+  - Stats display in clean typography
+  - "Equip" / "Unequip" / "Use" / "Sell" buttons (neutral-800 background)
 - **Character preview on left (300x600px):**
   - Full-body CHARACTER PLACEHOLDER
-  - Shows equipped items overlaid on placeholder areas
-  - Equipment slot indicators: Head, Torso, Weapon, Accessory
+  - Solid neutral-900 background
+  - Equipment slot indicators overlaid
   - Each slot with small **ITEM PLACEHOLDER (64x64px)**
+  - Clean, minimal design
 
 **ACHIEVEMENTS PAGE:**
-- Achievement wall/trophy room layout (grid or shelf display)
-- Categories: Tasks, Streaks, Social, Special Events
+- Achievement grid layout
+- Categories: Tasks, Streaks, Social, Special (text-based tabs)
 - Each achievement card with **BADGE PLACEHOLDER (128x128px):**
   - **Locked state:**
-    - Circular frame
-    - Dark gray gradient background
-    - 🔒 lock emoji centered
-    - Grayscale effect
-    - Dashed border (2px, gray)
+    - Circular frame (border-radius: 50%)
+    - Solid neutral-950 background
+    - Simple lock icon or text
+    - 1px neutral-800 border
+    - Reduced opacity (50%)
   - **Unlocked state:**
     - Circular frame
-    - Gold gradient background
-    - 🏆 trophy emoji or ⭐ star
-    - Glowing border (solid 3px gold)
-    - Small shine/sparkle effects (✨ positioned around)
-  - Progress bar below (if in progress)
-  - Date earned (for unlocked)
-  - Reward received display
+    - Solid neutral-900 background
+    - Simple icon or text
+    - 1px neutral-700 border
+    - Full opacity
+  - Progress bar below (if in progress) - simple linear bar
+  - Date earned in neutral-500 (for unlocked)
+  - Reward received in neutral-400
 
 **LEADERBOARD PAGE:**
 - Top 100 ranking table
-- User's position highlighted and pinned at top
+- User's position highlighted with neutral-800 background
 - Columns structure:
-  - Rank (number with 🥇🥈🥉 medals for top 3)
+  - Rank (number with simple position indicators for top 3)
   - **Avatar PLACEHOLDER (40x40px circle):**
-    - Colored circle with initials
-    - OR emoji 👤
-    - Rank tier colored border (Bronze, Silver, Gold, etc.)
-  - Username
-  - Level (number with ⭐)
-  - Total XP
-  - This Week's XP
-- Filter options: Friends Only, Global, This Week, All Time
-- Rank tier indicators (Bronze 🥉, Silver 🥈, Gold 🥇, Platinum 💎, Diamond 💠)
-- Animated position changes (↑↓ arrows)
+    - Solid colored circle with initials
+    - neutral-700 background with 1px border
+    - Subtle rank tier color on border
+  - Username in white
+  - Level (number in neutral-400)
+  - Total XP in neutral-400
+  - This Week's XP in neutral-400
+- Filter options: Friends Only, Global, This Week, All Time (simple tabs)
+- Rank tier indicators via border colors (subtle bronze/silver tints)
+- Simple position change arrows (↑↓)
 
 **LOGIN PAGE:**
-- Split screen design (50/50)
+- Split screen design (50/50) or single column on smaller screens
 - **Left side - Hero illustration PLACEHOLDER (720x900px):**
   - Full-height vertical rectangle
-  - Epic purple-to-gold gradient background
-  - Large "⚔️" sword emoji or "HERO" text centered
-  - Dashed gold border (4px)
-  - Decorative corner ornaments (✦ symbols)
-  - Label: "Epic Hero Illustration Area"
+  - Solid neutral-950 background
+  - Simple centered text or icon
+  - 1px solid neutral-800 border
+  - Clean, minimal design
+  - No decorative elements
   
 - Right side: Login form
-  - "Begin Your Quest" headline
-  - "Sign in with Google" button (Google logo can use actual icon or "G" placeholder)
-  - Decorative elements (⚔️🛡️ emojis as ornaments)
-  - Footer: "New adventurer? Create account"
+  - "Welcome to TaskHero" headline in clean typography
+  - "Sign in with Google" button (neutral-800 background)
+  - Clean form inputs (neutral-900 background, 1px neutral-800 border)
+  - Footer: "New user? Create account" in neutral-400
 
 ### PLACEHOLDER SYSTEM SPECIFICATIONS:
 
-**Create reusable Figma components for placeholders:**
+**Create reusable components for placeholders:**
 
 1. **Character-Large** (400x400px)
-   - Component with variants: Default, Hover, Active
-   - Properties: Background color, Border color, Icon/emoji
-   - Instance swap enabled for easy replacement
+   - Component with variants: Default, Hover
+   - Properties: Background (solid neutral-900), Border (1px solid neutral-800)
+   - Clean, consistent styling
 
 2. **Character-Small** (240x280px)
    - Sidebar version
@@ -295,98 +299,97 @@ Column 3 - "Daily Tasks" (Recurring):
 
 3. **Item-Legendary** through **Item-Common** (64x64px, 128x128px, 256x256px)
    - Separate components for each rarity
-   - Auto-layout for consistent sizing
-   - Gradient background variables
+   - Solid backgrounds with rarity-based border colors (no gradients)
+   - Consistent sizing
 
 4. **Icon-Placeholder** (24x24px, 32x32px, 48x48px)
-   - Circular and square variants
-   - Color property for category coding
+   - Simple icon variants
+   - Neutral color scheme
 
 5. **Achievement-Badge** (128x128px)
    - Locked and Unlocked states
-   - Glow effect property
+   - Solid backgrounds, no glow effects
 
 **Placeholder Layer Naming Convention:**
-- `[REPLACE] Character Hero`
+- `[REPLACE] Character`
 - `[REPLACE] Item - Weapon`
 - `[REPLACE] Icon - Category`
-- `[REPLACE] Achievement Badge`
-- `[IMG] Shop Item 1`
+- `[REPLACE] Achievement`
 
 **Placeholder Annotations:**
-Use Figma's annotation feature or text layers to add notes:
-- "Replace with 3D rendered character model"
-- "Insert item illustration here (256x256px PNG)"
-- "Weapon icon placeholder - use game asset"
-- "Achievement badge - gold tier design"
+Use text layers to add notes:
+- "Replace with character asset"
+- "Insert item image (256x256px PNG)"
+- "Icon placeholder"
+- "Achievement badge"
 
 ### INTERACTIVE ELEMENTS & ANIMATIONS:
 
-**Micro-interactions to visualize (without actual asset dependency):**
-- Checkbox click → Explosion of ⭐💫 emoji particles
-- Task completion → Placeholder character shows "celebration" state (add emoji ✨ around it)
-- Level up → Full-screen modal with "LEVEL UP!" text and particle effects (visualized with emoji ✨⭐💫)
-- XP bar fill → Smooth animated progress with pulse effect
-- New achievement → Badge placeholder flies in and pins to achievement wall (motion path indicator)
-- Shop purchase → Item placeholder flies into inventory with sparkle trail (arrow path + ✨)
-- Streak milestone → 🔥 emoji intensifies with glow effect
+**Micro-interactions (subtle, professional):**
+- Checkbox click → Simple checkmark animation
+- Task completion → Subtle fade to neutral-800 background
+- Level up → Clean modal with "LEVEL UP" text (no particle effects)
+- XP bar fill → Smooth animated progress
+- New achievement → Badge slides in with simple fade
+- Shop purchase → Item transitions to inventory (simple opacity animation)
+- Streak milestone → Text emphasis with subtle color change
 
 ### COMPONENT STATES:
 
 **Task Cards:**
-- Default state
-- Hover state (elevated with glow)
-- Active/selected state
-- Completed state (grayed out with ✅, strikethrough)
-- Overdue state (red border pulse animation - visualize with 🔴 indicator)
+- Default state (neutral-900 background)
+- Hover state (neutral-800 background)
+- Active/selected state (neutral-700 background)
+- Completed state (neutral-900 with reduced opacity, line-through)
+- Overdue state (red-900/10 background tint)
 
 **Placeholder States:**
-- Default (dashed border, gradient)
-- Hover (border becomes solid, slight scale up)
-- Loading (add spinner icon ⟳ or "Loading..." text)
-- Error (red border with ⚠️ icon)
-- Empty (dimmed with "No image" text)
+- Default (1px solid border, solid background)
+- Hover (background neutral-800, subtle transition)
+- Loading (simple spinner or "Loading..." text)
+- Error (red-900 border)
+- Empty ("No image" text in neutral-500)
 
 **Buttons:**
-- Primary CTA: Golden gradient with hover lift
-- Secondary: Purple outline with hover fill
-- Danger: Red with ⚠️ emoji
-- Disabled: Grayed out with 🔒 emoji
+- Primary CTA: White background, black text, hover to neutral-200
+- Secondary: neutral-800 background, white text, hover to neutral-700
+- Danger: red-900/20 background, red-500 text
+- Disabled: neutral-900 background, neutral-600 text, reduced opacity
 
 ### DESIGN SYSTEM TOKENS:
 
 **Spacing:**
 - Base unit: 8px
-- Card padding: 24px
-- Section margins: 48px
-- Element gaps: 16px
-- Placeholder margins: 16px
+- Card padding: 16px (standard), 24px (large)
+- Section margins: 32px
+- Element gaps: 12px
+- Placeholder margins: 12px
 
 **Border Radius:**
 - Cards: 12px
 - Buttons: 8px
 - Avatars/Badges: 50% (circular)
-- Item placeholders: 8px (small), 12px (medium), 16px (large)
-- Tags: 24px (pill shape)
+- Item placeholders: 8px (small), 12px (medium/large)
+- Tags: 6px
 
 **Placeholder Borders:**
-- Default: 2px dashed, opacity 0.5
-- Hover: 2px solid, opacity 1.0
-- Active/Selected: 3px solid with glow
-- Error: 2px solid red
+- Default: 1px solid, neutral-800
+- Hover: 1px solid, neutral-700
+- Active/Selected: 1px solid, neutral-600
+- Error: 1px solid, red-900
 
 **Shadows:**
-- Card elevation: 0 4px 24px rgba(0,0,0,0.25)
-- Hover lift: 0 8px 32px rgba(0,0,0,0.35)
-- Glow effect: 0 0 20px rgba(255,215,0,0.4)
-- Placeholder depth: 0 2px 8px rgba(0,0,0,0.15)
+- Card: 0 1px 3px rgba(0,0,0,0.1) (shadow-sm)
+- Hover: 0 4px 6px rgba(0,0,0,0.1) (shadow-md)
+- Modal: 0 10px 25px rgba(0,0,0,0.2) (shadow-lg)
+- No glow effects
 
-**Iconography (Emoji Placeholders):**
-- Categories: ⚔️ Work, ❤️ Health, 📚 Learning, 👥 Social, 💰 Finance, 🎨 Personal, 💡 Creative
-- Difficulty: ⚔️ (1-5 swords)
-- Rewards: ⭐ XP, 💰 Gold, 💎 Gems
-- Status: ✅ Complete, ⏰ Pending, 🔥 Streak, 🔒 Locked
-- Navigation: 📋 Tasks, 🎯 Goals, 🏪 Shop, 🎒 Inventory, 🏅 Achievements, 👥 Leaderboard
+**Iconography (Simple, clean icons preferred):**
+- Categories: Work, Health, Learning, Social, Finance, Personal (text labels or simple icons)
+- Priority: High/Medium/Low (text badges or colored dots)
+- Rewards: XP, Coins, Gems (text labels)
+- Status: Complete, Pending, Streak, Locked (text or simple icons)
+- Navigation: Tasks, Goals, Shop, Inventory, Achievements, Leaderboard (text-based)
 
 ### RESPONSIVE BEHAVIOR NOTES:
 - Sidebar collapses to hamburger menu at <1280px
@@ -405,85 +408,102 @@ Use Figma's annotation feature or text layers to add notes:
 - Color-blind friendly mode (add patterns/textures to placeholders, not just color)
 
 ### BRANDING ELEMENTS:
-- Logo: ⚔️📋 emoji combination or text "Quest Daily" (top-left corner)
-- App name: "Quest Daily" in fantasy font
-- Tagline: "Level Up Your Life, One Quest at a Time"
-- Mascot: 🧙 wizard emoji for tutorials/empty states
+- App name: "TaskHero" in clean sans-serif
+- Tagline: "Level Up Your Productivity"
+- Logo: Simple text-based or minimal icon (avoid fantasy themes)
 
 ### EMPTY STATES:
 
 **No tasks:**
-- Large placeholder area (400x300px)
-- 🧙 wizard emoji (120px size)
-- Text: "Your quest log is empty, brave adventurer!"
-- CTA: "+ Add your first quest to begin"
+- Simple centered message area
+- Text: "No tasks yet"
+- CTA: "+ Add your first task"
 
 **No achievements yet:**
-- Trophy case visualization (grid of 🔒 locked badges)
-- Text: "Complete your first quest to unlock achievements!"
-- Progress indicator: "0/50 achievements unlocked"
+- Grid of locked achievement placeholders
+- Text: "Complete tasks to unlock achievements"
+- Progress: "0/50 achievements"
 
 **Empty inventory:**
-- 📦 treasure chest emoji (large, 200px)
-- Text: "Your inventory is empty!"
-- CTA: "Visit the Daily Shop to acquire items →"
+- Simple centered message
+- Text: "Your inventory is empty"
+- CTA: "Visit Shop →"
 
 **No friends on leaderboard:**
-- 👥 group emoji
-- Text: "Add friends to compete!"
+- Simple centered message
+- Text: "Add friends to compete"
 - CTA: "+ Invite Friends"
 
 ### GAMIFICATION SPECIFICS:
 
 **Level System Visualization:**
-- Levels 1-100 represented as progress bar
-- Current level displayed as: "⭐ Level 24 Warrior"
-- Next level preview: "347/500 XP to Level 25"
-- Each level milestone shows **REWARD PLACEHOLDER:**
-  - Small gift box 🎁 emoji
-  - "Level 25 Reward: Unlock Epic Shop Items!"
+- Levels 1-100 as simple progress bar
+- Current level: "Level 24" in clean typography
+- Next level: "347/500 XP to Level 25"
+- Milestone rewards shown cleanly without decoration
 
 **Points & Currency Display:**
-- XP (Experience Points): ⭐ emoji + number
-- Gold Coins: 💰 emoji + number  
-- Gems (premium currency): 💎 emoji + number
-- All displayed in header/sidebar with clear labels
+- XP (Experience Points): Text + number
+- Coins: Text + number  
+- Gems (premium): Text + number
+- All in clean typography with neutral-400 color
 
-**Difficulty Ratings (Using Sword Emojis):**
-- Tutorial: ⚔️ (1 sword) = 10 XP, 5 💰
-- Easy: ⚔️⚔️ (2 swords) = 25 XP, 15 💰
-- Medium: ⚔️⚔️⚔️ (3 swords) = 50 XP, 30 💰
-- Hard: ⚔️⚔️⚔️⚔️ (4 swords) = 100 XP, 60 💰
-- Epic: ⚔️⚔️⚔️⚔️⚔️ (5 swords) = 250 XP, 150 💰
+**Priority Ratings (Simple text badges):**
+- Tutorial: "Easy" = 10 XP
+- Low: "Low" = 25 XP
+- Medium: "Medium" = 50 XP
+- High: "High" = 100 XP
+- Critical: "Critical" = 250 XP
 
 **Streak Bonuses Visualization:**
-- 3 days: 🔥 (small flame) = 1.2x multiplier
-- 7 days: 🔥🔥 (medium flames) = 1.5x multiplier
-- 30 days: 🔥🔥🔥 (large flames with glow) = 2x multiplier
-- Visual intensity increases with streak length
+- 3 days: "3 day streak" = 1.2x multiplier
+- 7 days: "7 day streak" = 1.5x multiplier
+- 30 days: "30 day streak" = 2x multiplier
+- Simple text display, no decorative flames
 
 ### MOOD & TONE:
-- Encouraging, not punishing
-- Epic fantasy but not overwhelming
-- Professional enough for work tasks
-- Fun enough to be engaging
-- Celebratory for successes
-- Motivational for setbacks
+- Professional and clean
+- Encouraging without being overly playful
+- Functional and efficient
+- Motivating through progress visualization
+- Calm, focused aesthetic
+
+### DESIGN PRINCIPLES TO AVOID:
+**CRITICAL - DO NOT USE:**
+- Purple-to-blue gradients
+- Gold/amber accent colors (#ffd700, #ffb83d)
+- Glassmorphism effects
+- Excessive shadows or glows
+- Dashed borders
+- Emoji as primary icons (use sparingly only when needed)
+- Radial gradients
+- Gradient text
+- Decorative corner ornaments
+- Fantasy-themed fonts
+- Overly rounded corners (>12px)
+- Particle effects or sparkles
+- Border glow effects
+- Animated position changes
+
+**INSTEAD USE:**
+- Solid neutral colors (blacks and grays)
+- Subtle blue/green tints at 3-5% opacity
+- Clean 1px solid borders
+- Minimal shadows (shadow-sm, shadow-lg only)
+- Simple text labels
+- System fonts
+- 8-12px border radius
+- Clean, subtle transitions
+- Function over decoration
 
 ### EXPORT SPECIFICATIONS:
-- Design at 1440x900px (desktop standard)
-- Export placeholder components separately for easy asset swapping
-- Create auto-layout frames for responsive scaling
-- All placeholders should be components with instance swap enabled
-- Provide spec sheet documenting all placeholder sizes and formats needed
-- Include interactive prototype for:
-  - Task completion flow
-  - Shop purchase flow (placeholder to inventory animation)
-  - Achievement unlock
-  - Level up celebration
-  - Placeholder replacement workflow demonstration
-- Provide dark mode variants
-- Export placeholder templates at 1x, 2x, 3x for developer handoff
+- Design at responsive breakpoints (mobile, tablet, desktop)
+- Export placeholder components as reusable elements
+- All placeholders should use solid backgrounds and simple borders
+- Provide spec sheet for all placeholder sizes
+- Include simple prototypes for key flows
+- Dark theme only (no light mode variants needed initially)
+- Export at 1x, 2x for standard and retina displays
 
 ### PLACEHOLDER ASSET SPECIFICATION SHEET:
 
@@ -513,83 +533,75 @@ Organize by size and category:
 - Particle effects (16x16px, 24x24px, 32x32px)
 
 **Format Requirements:**
-- File type: PNG with transparency (preferred) or SVG (for icons)
+- File type: PNG with transparency or SVG (for icons)
 - Color mode: RGB
 - Resolution: 72 DPI for web, 144 DPI for retina
 - Naming convention: `category_item-name_size.png`
-  - Example: `weapon_legendary-sword_128px.png`
-  - Example: `character_hero-idle_400px.png`
-  - Example: `icon_achievement-firstquest_128px.png`
+  - Example: `weapon_sword_128px.png`
+  - Example: `character_avatar_400px.png`
+  - Example: `achievement_first-task_128px.png`
 
-### FIGMA LAYER ORGANIZATION:
-📁 Quest Daily Desktop App
-📄 00 - Cover & Overview
-📄 01 - Design System
-🎨 Colors
-📝 Typography
-🔲 Components
-↳ Placeholders
-↳ Character-Large
-↳ Character-Small
-↳ Item-Legendary
-↳ Item-Epic
-↳ Item-Rare
-↳ Item-Common
-↳ Icon-Round
-↳ Icon-Square
-↳ Achievement-Badge
-↳ Buttons
-↳ Cards
-↳ Navigation
-📄 02 - Screens
-🖼️ Dashboard
-🖼️ Goals & Campaigns
-🖼️ Daily Shop
-🖼️ Inventory
-🖼️ Achievements
-🖼️ Leaderboard
-🖼️ Login
-📄 03 - Flows & Prototypes
-📄 04 - Asset Specifications
-📄 05 - Developer Handoff Notes
+### LAYER ORGANIZATION:
+📁 TaskHero App
+📄 Design System
+  🎨 Colors
+  📝 Typography
+  🔲 Components
+    ↳ Placeholders
+    ↳ Character-Large
+    ↳ Character-Small
+    ↳ Item variants
+    ↳ Icon variants
+    ↳ Achievement-Badge
+    ↳ Buttons
+    ↳ Cards
+    ↳ Navigation
+📄 Screens
+  🖼️ Dashboard
+  🖼️ Goals
+  🖼️ Shop
+  🖼️ Inventory
+  🖼️ Achievements
+  🖼️ Leaderboard
+  🖼️ Login
+📄 Asset Specifications
+📄 Developer Handoff
 
 ### SPECIAL FEATURES TO VISUALIZE:
 
-**Power-Up System (All with placeholders):**
-- "Focus Potion" card:
-  - **ITEM PLACEHOLDER (64x64px)**, blue gradient
-  - ☕ coffee emoji temporary icon
+**Power-Up System (Clean placeholder design):**
+- "Focus Mode" card:
+  - **ITEM PLACEHOLDER (64x64px)**, solid neutral-900 background
+  - Simple icon or text
   - Label: "2x XP for 2 hours"
-  - Active timer countdown
+  - Timer countdown in neutral-500
   
-- "Time Warp" card:
-  - **ITEM PLACEHOLDER (64x64px)**, purple gradient
-  - ⏰ clock emoji
+- "Deadline Extension" card:
+  - **ITEM PLACEHOLDER (64x64px)**, solid neutral-900 background
+  - Simple icon or text
   - Label: "Extend deadline by 1 day"
   
-- "Perfect Day Shield" card:
-  - **ITEM PLACEHOLDER (64x64px)**, gold gradient
-  - 🛡️ shield emoji
-  - Label: "Protect your streak once"
+- "Streak Protection" card:
+  - **ITEM PLACEHOLDER (64x64px)**, solid neutral-900 background
+  - Simple icon or text
+  - Label: "Protect streak once"
 
 **Social Features:**
-- Friend quest collaboration: 
+- Friend collaboration: 
   - Shared task cards with multiple **AVATAR PLACEHOLDERS (32x32px)**
-  - Connected by dotted line
+  - Simple connecting line
 - Challenge mode:
-  - Head-to-head display with two **CHARACTER PLACEHOLDERS** facing each other
-  - vs. indicator between them
-- Guild system:
-  - Team banner **PLACEHOLDER (600x200px)** with guild emblem area
-  - Member **AVATAR PLACEHOLDERS** in grid below
+  - Side-by-side display with two **CHARACTER PLACEHOLDERS**
+  - "vs." text between
+- Team system:
+  - Team info card with member **AVATAR PLACEHOLDERS** in grid
 
 **Notification System:**
-- Toast notifications (top-right, 320x80px cards)
+- Toast notifications (320x80px cards, neutral-900 background)
 - **ICON PLACEHOLDER (48x48px)** on left
-- Message text on right
-- Close button (❌)
-- Badge counts on navigation items (red circle with number)
-- Sound effect indicators visualized with 🔊 emoji or wave graphics
+- Message text in white
+- Close button (X)
+- Badge counts on nav items (red circle with number)
 
 ### DEVELOPER HANDOFF NOTES TO INCLUDE:
 
@@ -622,37 +634,45 @@ interface PlaceholderProps {
 
 Design this entire system with the understanding that:
 1. All character and item visuals are TEMPORARY placeholders
-2. Placeholders should be visually appealing and functional on their own
-3. The app should look polished even before custom assets are added
+2. Placeholders should be clean and functional
+3. The app should look professional even before custom assets are added
 4. Placeholder structure makes it easy to swap in real assets later
-5. Users should feel like they're playing a legitimate RPG game
-6. The design should be so engaging that even with placeholders, users WANT to use the app
+5. Design follows professional, minimal aesthetic principles
+6. Avoid all AI design clichés (gradients, gold colors, glassmorphism, etc.)
 
-Make it epic. Make it legendary. Make productivity feel like an adventure - even with placeholder graphics!
+**Clean, Professional, Functional Design Principles:**
+- True black (#0a0a0a) background
+- Neutral gray color palette
+- Solid backgrounds only (no gradients)
+- Minimal shadows (shadow-sm, shadow-lg)
+- 1px solid borders (neutral-800)
+- 8-12px border radius
+- Clean sans-serif typography
+- Subtle hover states
+- Function over decoration
+- Inspired by Linear, GitHub, Stripe aesthetics
 
-Additional Quick Reference for Placeholder Sizes:
-PLACEHOLDER SIZE GUIDE:
+PLACEHOLDER SIZE REFERENCE:
 
 Characters:
-├─ Hero Display (Main): 400x400px
-├─ Sidebar Avatar: 240x280px  
-├─ Inventory Preview: 300x600px
-└─ Friend/Leaderboard: 32-48px circle
+├─ Hero Display: 400x400px
+├─ Sidebar: 240x280px  
+├─ Inventory: 300x600px
+└─ Leaderboard: 32-48px circle
 
 Items/Equipment:
-├─ Small (UI icons): 64x64px
-├─ Medium (Grid view): 128x128px
-├─ Large (Detail view): 256x256px
-└─ Equipment slots: 48x48px
+├─ Small: 64x64px
+├─ Medium: 128x128px
+├─ Large: 256x256px
+└─ Slots: 48x48px
 
 Icons:
-├─ Navigation: 24x24px
+├─ Nav: 24x24px
 ├─ Category: 32x32px
-└─ Achievement badge: 128x128px
+└─ Achievement: 128x128px
 
 Decorative:
 ├─ Login hero: 720x900px
-├─ Campaign map: Full width x 200px height
-├─ Shop chest: 180x180px
+├─ Progress bar: Full width x 200px
+├─ Shop preview: 180x180px
 └─ Empty state: 400x300px
-This comprehensive prompt ensures all visual assets are placeholder-ready and easily replaceable while still maintaining a polished, professional appearance! 🎮✨

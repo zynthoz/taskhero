@@ -183,18 +183,17 @@ export default function AchievementsPage() {
         </div>
 
         {/* Category Tabs */}
-        <div className="flex gap-2 overflow-x-auto pb-2 -mx-1 px-1 scrollbar-hide">
+        <div className="flex flex-wrap gap-1.5 md:gap-2">
           {categories.map(category => (
             <Button
               key={category.id}
               variant={selectedCategory === category.id ? 'default' : 'outline'}
               size="sm"
               onClick={() => setSelectedCategory(category.id)}
-              className="whitespace-nowrap shrink-0"
+              className="text-xs px-2 py-1 h-auto md:text-sm md:px-3 md:py-1.5"
             >
-              <span className="mr-1 md:mr-1.5">{category.emoji}</span>
-              <span className="hidden sm:inline">{category.label}</span>
-              <span className="sm:hidden">{category.label.substring(0, 4)}</span>
+              <span className="mr-1">{category.emoji}</span>
+              <span>{category.label}</span>
             </Button>
           ))}
         </div>

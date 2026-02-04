@@ -57,13 +57,13 @@ export default function LeftSidebar({ user, loading = false }: LeftSidebarProps)
         {/* Character Avatar with Level */}
         <div className="flex flex-col items-center gap-1.5 md:gap-2">
           {loading ? (
-            <div className="w-16 h-16 md:w-24 md:h-24 rounded-xl bg-neutral-200 dark:bg-neutral-800 animate-pulse relative" />
+            <div className="w-16 h-16 md:w-24 md:h-24 rounded-xl bg-neutral-200 dark:bg-neutral-800 animate-pulse relative mb-3 md:mb-4" />
           ) : (
-            <div className="w-16 h-16 md:w-24 md:h-24 rounded-xl bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 flex items-center justify-center relative">
+            <div className="w-16 h-16 md:w-24 md:h-24 rounded-xl bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 flex items-center justify-center relative mb-3 md:mb-4">
               <span className="text-3xl md:text-5xl">{getAvatarEmoji(user.avatarId)}</span>
-              {/* Level Badge */}
-              <div className="absolute -bottom-2.5 md:-bottom-3.5 left-1/2 -translate-x-1/2 px-1.5 md:px-2 py-0.5 bg-neutral-100 dark:bg-neutral-800 border border-neutral-300 dark:border-neutral-700 rounded-full">
-                <span className="text-[10px] md:text-xs font-semibold text-neutral-900 dark:text-white">Lv {user.level}</span>
+              {/* Level Badge - positioned below avatar box */}
+              <div className="absolute -bottom-3 md:-bottom-4 left-1/2 -translate-x-1/2 px-2 md:px-2.5 py-0.5 bg-purple-600 rounded-full shadow-sm">
+                <span className="text-[10px] md:text-xs font-semibold text-white">Lv {user.level}</span>
               </div>
             </div>
           )}
@@ -133,7 +133,7 @@ export default function LeftSidebar({ user, loading = false }: LeftSidebarProps)
 
       {/* Navigation - Scrollable on mobile */}
       <nav className="flex-1 p-2 md:p-3 overflow-y-auto min-h-0">
-        <ul className="space-y-0.5">
+        <ul className="space-y-0.5 md:space-y-0.5">
           {navigationItems.map((item) => {
             const isActive = pathname === item.href;
             return (
@@ -141,7 +141,7 @@ export default function LeftSidebar({ user, loading = false }: LeftSidebarProps)
                 <Link
                   href={item.href}
                   className={`
-                    block px-2.5 md:px-3 py-1.5 md:py-2 rounded-lg text-xs md:text-sm font-medium
+                    block px-2.5 md:px-3 py-1 md:py-2 rounded-lg text-xs md:text-sm font-medium
                     transition-all duration-200
                     ${
                       isActive

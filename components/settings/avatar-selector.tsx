@@ -52,22 +52,23 @@ export function AvatarSelector({ selectedAvatarId, onSelect }: AvatarSelectorPro
       </div>
 
       {/* Avatar Grid */}
-      <div className="grid grid-cols-5 gap-3">
+      <div className="grid grid-cols-5 sm:grid-cols-6 md:grid-cols-8 gap-2">
         {filteredAvatars.map(avatar => (
           <button
             key={avatar.id}
             onClick={() => onSelect(avatar.id)}
+            title={avatar.name}
             className={`
-              p-3 rounded-lg border-2 transition-all duration-200
+              aspect-square p-2 rounded-lg border-2 transition-all duration-200
               hover:scale-105 hover:border-purple-500
+              flex items-center justify-center
               ${selectedAvatarId === avatar.id 
                 ? 'border-purple-500 bg-purple-950/30' 
                 : 'border-neutral-200 dark:border-neutral-800 bg-neutral-50 dark:bg-neutral-900'
               }
             `}
           >
-            <div className="text-3xl mb-1">{avatar.emoji}</div>
-            <div className="text-[10px] text-neutral-600 dark:text-neutral-400 leading-tight">{avatar.name}</div>
+            <span className="text-2xl md:text-3xl">{avatar.emoji}</span>
           </button>
         ))}
       </div>

@@ -360,19 +360,19 @@ export default function SettingsPage() {
         )}
 
         {/* Tabs */}
-        <div className="flex gap-2 mb-6 overflow-x-auto">
+        <div className="flex flex-wrap gap-1.5 md:gap-2 mb-6">
           {tabs.map((tab) => (
             <button
               key={tab.id}
               onClick={() => setActiveTab(tab.id)}
-              className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors whitespace-nowrap ${
+              className={`px-2.5 md:px-4 py-1.5 md:py-2 rounded-lg text-xs md:text-sm font-medium transition-colors ${
                 activeTab === tab.id
                   ? 'bg-purple-600 text-white'
                   : 'bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 text-neutral-600 dark:text-neutral-400 hover:bg-neutral-100 dark:hover:bg-neutral-800'
               }`}
             >
-              <span className="mr-2">{tab.icon}</span>
-              {tab.label}
+              <span className="mr-1 md:mr-2">{tab.icon}</span>
+              <span className="hidden sm:inline">{tab.label}</span>
             </button>
           ))}
         </div>

@@ -18,6 +18,7 @@ import { TodayProgressChart } from '@/components/tasks/today-progress-chart'
 import { StreakProtectionIndicator } from '@/components/streaks/streak-protection-indicator'
 import { UsernameModal } from '@/components/social/username-modal'
 import { MotivationalQuote } from '@/components/dashboard/motivational-quote'
+import { ensureUserProfile } from '../auth/actions'
 
 export default function DashboardPage() {
   const { user, loading } = useAuth()
@@ -62,6 +63,9 @@ export default function DashboardPage() {
     const { data: { user: authUser } } = await supabase.auth.getUser()
     
     if (authUser) {
+      // Ensure user profile exists (fallback if trigger failed)
+      await ensureUserProfile()
+      
       const { data } = await supabase
         .from('users')
         .select('level, current_xp, total_xp, gold, current_streak, longest_streak, username, avatar_id')

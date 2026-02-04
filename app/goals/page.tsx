@@ -130,17 +130,17 @@ export default function GoalsPage() {
     return (
       <Card 
         key={goal.id} 
-        className={`p-6 bg-neutral-900 border-neutral-800 ${isCompleted ? 'opacity-75' : ''}`}
+        className={`p-4 md:p-6 bg-neutral-900 border-neutral-800 ${isCompleted ? 'opacity-75' : ''}`}
       >
         {/* Goal Header */}
-        <div className="flex items-start justify-between mb-4">
-          <div className="flex-1">
-            <h3 className="text-xl font-semibold text-white mb-1">{goal.title}</h3>
+        <div className="flex items-start justify-between mb-3 md:mb-4 gap-2">
+          <div className="flex-1 min-w-0">
+            <h3 className="text-lg md:text-xl font-semibold text-white mb-0.5 md:mb-1 truncate">{goal.title}</h3>
             {goal.description && (
-              <p className="text-neutral-400 text-sm">{goal.description}</p>
+              <p className="text-neutral-400 text-xs md:text-sm line-clamp-2">{goal.description}</p>
             )}
           </div>
-          <div className={`px-3 py-1 rounded-md text-xs font-medium ${
+          <div className={`px-2 md:px-3 py-0.5 md:py-1 rounded-md text-[10px] md:text-xs font-medium shrink-0 ${
             isCompleted ? 'bg-green-900/20 text-green-500' :
             goal.status === 'paused' ? 'bg-neutral-800 text-neutral-400' :
             'bg-blue-900/20 text-blue-500'
@@ -151,18 +151,18 @@ export default function GoalsPage() {
 
         {/* Habit Tracker Timer */}
         {isHabitTracker && goal.habit_start_date && (
-          <div className="mb-6 p-4 bg-neutral-950 rounded-lg border border-neutral-800">
+          <div className="mb-4 md:mb-6 p-3 md:p-4 bg-neutral-950 rounded-lg border border-neutral-800">
             <div className="text-center">
               {(() => {
                 const time = calculateTimeRemaining(goal.habit_start_date)
                 return (
                   <>
-                    <div className="text-3xl font-bold text-white mb-2">
-                      {time.days} <span className="text-lg text-neutral-400">days</span>{' '}
-                      {time.hours} <span className="text-lg text-neutral-400">hours</span>{' '}
-                      {time.minutes} <span className="text-lg text-neutral-400">minutes</span>
+                    <div className="text-xl md:text-3xl font-bold text-white mb-1 md:mb-2">
+                      {time.days} <span className="text-sm md:text-lg text-neutral-400">days</span>{' '}
+                      {time.hours} <span className="text-sm md:text-lg text-neutral-400">hrs</span>{' '}
+                      {time.minutes} <span className="text-sm md:text-lg text-neutral-400">min</span>
                     </div>
-                    <div className="text-neutral-500 text-sm">Time since start</div>
+                    <div className="text-neutral-500 text-xs md:text-sm">Time since start</div>
                   </>
                 )
               })()}
@@ -171,14 +171,14 @@ export default function GoalsPage() {
         )}
 
         {/* Progress Visualization */}
-        <div className="mb-6">
-          <div className="flex justify-between items-center mb-2">
-            <span className="text-neutral-400 text-sm">Progress</span>
-            <span className="text-neutral-400 text-sm">
+        <div className="mb-4 md:mb-6">
+          <div className="flex justify-between items-center mb-1.5 md:mb-2">
+            <span className="text-neutral-400 text-xs md:text-sm">Progress</span>
+            <span className="text-neutral-400 text-xs md:text-sm">
               {goal.current_progress} / {goal.target_progress}
             </span>
           </div>
-          <div className="h-3 bg-neutral-950 rounded-full overflow-hidden border border-neutral-800">
+          <div className="h-2 md:h-3 bg-neutral-950 rounded-full overflow-hidden border border-neutral-800">
             <div 
               className="h-full transition-all duration-500"
               style={{ 
@@ -191,13 +191,13 @@ export default function GoalsPage() {
 
         {/* Milestone Checkpoints */}
         {goal.milestone_checkpoints && goal.milestone_checkpoints.length > 0 && (
-          <div className="mb-6">
-            <h4 className="text-neutral-400 text-sm font-medium mb-3">Milestones</h4>
-            <div className="space-y-2">
+          <div className="mb-4 md:mb-6">
+            <h4 className="text-neutral-400 text-xs md:text-sm font-medium mb-2 md:mb-3">Milestones</h4>
+            <div className="space-y-1.5 md:space-y-2">
               {goal.milestone_checkpoints.map((milestone, index) => (
                 <div 
                   key={index}
-                  className={`flex items-center justify-between p-3 rounded-lg border ${
+                  className={`flex items-center justify-between p-2 md:p-3 rounded-lg border ${
                     milestone.completed 
                       ? 'bg-green-900/10 border-green-900/30' 
                       : 'bg-neutral-950 border-neutral-800'
@@ -226,8 +226,8 @@ export default function GoalsPage() {
         )}
 
         {/* Rewards Section */}
-        <div className="flex items-center justify-between pt-4 border-t border-neutral-800">
-          <div className="flex gap-4 text-sm">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between pt-3 md:pt-4 border-t border-neutral-800 gap-2 sm:gap-0">
+          <div className="flex gap-3 md:gap-4 text-xs md:text-sm">
             {goal.completion_xp > 0 && (
               <span className="text-blue-400">+{goal.completion_xp} XP</span>
             )}
@@ -235,12 +235,13 @@ export default function GoalsPage() {
               <span className="text-amber-400">+{goal.completion_gold} Gold</span>
             )}
           </div>
-          <div className="flex gap-2">
+          <div className="flex gap-1.5 md:gap-2 flex-wrap">
             {!isCompleted && (
               <>
                 <Button 
                   variant="secondary" 
                   size="sm"
+                  className="text-xs h-7 md:h-8 px-2 md:px-3"
                   onClick={() => updateGoalProgress(goal.id, goal.current_progress + 1)}
                 >
                   +1
@@ -249,6 +250,7 @@ export default function GoalsPage() {
                   <Button 
                     variant="secondary" 
                     size="sm"
+                    className="text-xs h-7 md:h-8 px-2 md:px-3"
                     onClick={() => pauseGoal(goal.id)}
                   >
                     Pause
@@ -257,6 +259,7 @@ export default function GoalsPage() {
                   <Button 
                     variant="secondary" 
                     size="sm"
+                    className="text-xs h-7 md:h-8 px-2 md:px-3"
                     onClick={() => resumeGoal(goal.id)}
                   >
                     Resume
@@ -265,6 +268,7 @@ export default function GoalsPage() {
                 <Button 
                   variant="primary" 
                   size="sm"
+                  className="text-xs h-7 md:h-8 px-2 md:px-3"
                   onClick={() => completeGoal(goal.id)}
                 >
                   Complete
@@ -275,7 +279,7 @@ export default function GoalsPage() {
               variant="secondary" 
               size="sm"
               onClick={() => deleteGoal(goal.id)}
-              className="text-red-400 hover:text-red-300"
+              className="text-xs h-7 md:h-8 px-2 md:px-3 text-red-400 hover:text-red-300"
             >
               Delete
             </Button>
@@ -452,9 +456,9 @@ export default function GoalsPage() {
       >
         <div>
           {/* Header */}
-          <div className="flex items-center justify-between mb-6">
-            <h1 className="text-2xl font-semibold text-white">Goals & Campaigns</h1>
-            <Button variant="primary" onClick={() => setIsCreateDialogOpen(true)}>+ New Goal</Button>
+          <div className="flex items-center justify-between mb-4 md:mb-6">
+            <h1 className="text-xl md:text-2xl font-semibold text-white">Goals & Campaigns</h1>
+            <Button variant="primary" size="sm" onClick={() => setIsCreateDialogOpen(true)}>+ New Goal</Button>
           </div>
 
         {/* Goals Grid */}

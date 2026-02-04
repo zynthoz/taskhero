@@ -248,13 +248,13 @@ export function TaskCard({ task, onComplete, onDelete, onEdit, onDragStart, onDr
         onClick={() => setShowDetails(true)}
       >
         {/* Difficulty badge - top right */}
-        <div className="absolute top-2 right-2 text-xs font-medium text-neutral-500 dark:text-neutral-400 bg-neutral-100 dark:bg-neutral-800 px-1.5 py-0.5 rounded">
+        <div className="absolute top-1.5 md:top-2 right-1.5 md:right-2 text-[10px] md:text-xs font-medium text-neutral-500 dark:text-neutral-400 bg-neutral-100 dark:bg-neutral-800 px-1 md:px-1.5 py-0.5 rounded">
           {getDifficultyDisplay(task.difficulty)}
         </div>
 
-        <div className="p-4 pb-14 pt-8 space-y-3">
+        <div className="p-3 md:p-4 pb-12 md:pb-14 pt-6 md:pt-8 space-y-2 md:space-y-3">
           {/* Header with checkbox */}
-          <div className="flex items-start gap-3">
+          <div className="flex items-start gap-2 md:gap-3">
             <Checkbox
               checked={isCompleted}
               onCheckedChange={handleComplete}
@@ -265,7 +265,7 @@ export function TaskCard({ task, onComplete, onDelete, onEdit, onDragStart, onDr
             
             <div className="flex-1 min-w-0">
               <h3 
-                className={`font-semibold text-base leading-tight ${
+                className={`font-semibold text-sm md:text-base leading-tight ${
                   isCompleted 
                     ? 'line-through text-neutral-500' 
                     : 'text-neutral-900 dark:text-white'
@@ -277,9 +277,9 @@ export function TaskCard({ task, onComplete, onDelete, onEdit, onDragStart, onDr
           </div>
 
           {/* Tags & Status */}
-          <div className="flex flex-wrap gap-2">
+          <div className="flex flex-wrap gap-1 md:gap-2">
             {task.due_date && !isCompleted && (
-              <span className={`px-2.5 py-1 text-[11px] font-medium rounded shadow-sm ${
+              <span className={`px-1.5 md:px-2.5 py-0.5 md:py-1 text-[9px] md:text-[11px] font-medium rounded shadow-sm ${
                 isOverdue ? 'status-overdue' : 'bg-blue-500/10 text-blue-400 border border-blue-500/40'
               }`}>
                 {formatDueDate(task.due_date)}
@@ -287,14 +287,14 @@ export function TaskCard({ task, onComplete, onDelete, onEdit, onDragStart, onDr
             )}
             
             {task.is_recurring && (
-              <span className="px-2.5 py-1 text-[11px] font-medium bg-purple-500/10 text-purple-400 rounded border border-purple-500/40 shadow-sm">
+              <span className="px-1.5 md:px-2.5 py-0.5 md:py-1 text-[9px] md:text-[11px] font-medium bg-purple-500/10 text-purple-400 rounded border border-purple-500/40 shadow-sm">
                 🔄 Recurring
               </span>
             )}
 
             {/* Show subtask count if there are subtasks and this is not a subtask itself */}
             {!task.parent_task_id && subtaskCount > 0 && (
-              <span className="px-2.5 py-1 text-[11px] font-medium bg-cyan-500/10 text-cyan-400 rounded border border-cyan-500/40 shadow-sm">
+              <span className="px-1.5 md:px-2.5 py-0.5 md:py-1 text-[9px] md:text-[11px] font-medium bg-cyan-500/10 text-cyan-400 rounded border border-cyan-500/40 shadow-sm">
                 ✓ {completedSubtaskCount}/{subtaskCount}
               </span>
             )}
@@ -302,22 +302,22 @@ export function TaskCard({ task, onComplete, onDelete, onEdit, onDragStart, onDr
 
 
 
-          {/* Action Buttons (shown on hover) */}
+          {/* Action Buttons (shown on hover, always visible on mobile) */}
           <div 
-            className="flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity pt-2"
+            className="flex gap-1.5 md:gap-2 md:opacity-0 md:group-hover:opacity-100 transition-opacity pt-1 md:pt-2"
             onClick={(e) => e.stopPropagation()}
           >
             {onEdit && !isCompleted && (
               <button
                 onClick={() => onEdit(task)}
-                className="flex-1 px-3 py-1.5 text-xs bg-neutral-100 dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300 hover:bg-neutral-200 dark:hover:bg-neutral-700 rounded border border-neutral-300 dark:border-neutral-700"
+                className="flex-1 px-2 md:px-3 py-1 md:py-1.5 text-[10px] md:text-xs bg-neutral-100 dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300 hover:bg-neutral-200 dark:hover:bg-neutral-700 rounded border border-neutral-300 dark:border-neutral-700"
               >
                 Edit
               </button>
             )}
             <button
               onClick={() => setShowDeleteDialog(true)}
-              className="flex-1 px-3 py-1.5 text-xs bg-neutral-100 dark:bg-neutral-800 text-red-500 dark:text-red-400 hover:bg-red-100 dark:hover:bg-red-950/50 rounded border border-neutral-300 dark:border-neutral-700"
+              className="flex-1 px-2 md:px-3 py-1 md:py-1.5 text-[10px] md:text-xs bg-neutral-100 dark:bg-neutral-800 text-red-500 dark:text-red-400 hover:bg-red-100 dark:hover:bg-red-950/50 rounded border border-neutral-300 dark:border-neutral-700"
             >
               Delete
             </button>
@@ -326,12 +326,12 @@ export function TaskCard({ task, onComplete, onDelete, onEdit, onDragStart, onDr
 
         {/* Bottom-left rewards */}
         {!isCompleted && (
-          <div className="absolute left-3 bottom-3 flex items-center gap-4 text-xs text-neutral-600 dark:text-neutral-400">
-            <div className="flex items-center gap-1.5">
+          <div className="absolute left-2 md:left-3 bottom-2 md:bottom-3 flex items-center gap-2 md:gap-4 text-[10px] md:text-xs text-neutral-600 dark:text-neutral-400">
+            <div className="flex items-center gap-1">
               <span>💰</span>
               <span className="font-medium">{task.gold_reward}</span>
             </div>
-            <div className="flex items-center gap-1.5">
+            <div className="flex items-center gap-1">
               <span>⭐</span>
               <span className="font-medium">{task.xp_reward}</span>
             </div>
@@ -340,7 +340,7 @@ export function TaskCard({ task, onComplete, onDelete, onEdit, onDragStart, onDr
 
         {/* Overdue badge */}
         {isOverdue && !isCompleted && (
-          <div className="absolute top-2 right-2 bg-red-600 text-white px-2 py-0.5 rounded text-[10px] font-medium">
+          <div className="absolute top-1.5 md:top-2 right-1.5 md:right-2 bg-red-600 text-white px-1.5 md:px-2 py-0.5 rounded text-[8px] md:text-[10px] font-medium">
             Overdue
           </div>
         )}

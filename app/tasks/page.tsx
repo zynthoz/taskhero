@@ -394,11 +394,11 @@ export default function TasksPage() {
       rightSidebar={<RightSidebar />}
     >
       {/* Header */}
-      <div className="mb-6">
-        <div className="flex items-center justify-between mb-4">
+      <div className="mb-4 md:mb-6">
+        <div className="flex items-center justify-between mb-2 md:mb-4">
           <div>
-            <h1 className="text-2xl font-semibold text-neutral-900 dark:text-white mb-1">Tasks</h1>
-            <p className="text-sm text-neutral-600 dark:text-neutral-400">
+            <h1 className="text-xl md:text-2xl font-semibold text-neutral-900 dark:text-white mb-0.5 md:mb-1">Tasks</h1>
+            <p className="text-xs md:text-sm text-neutral-600 dark:text-neutral-400">
               {new Date().toLocaleDateString('en-US', { 
                 weekday: 'long', 
                 year: 'numeric', 
@@ -410,7 +410,7 @@ export default function TasksPage() {
           
           <button 
             onClick={() => setIsCreateFormOpen(true)}
-            className="px-4 py-2 bg-neutral-900 dark:bg-white text-white dark:text-black text-sm font-medium rounded-lg hover:bg-neutral-800 dark:hover:bg-neutral-200 transition-colors"
+            className="px-3 md:px-4 py-1.5 md:py-2 bg-neutral-900 dark:bg-white text-white dark:text-black text-xs md:text-sm font-medium rounded-lg hover:bg-neutral-800 dark:hover:bg-neutral-200 transition-colors"
           >
             + New Task
           </button>
@@ -418,19 +418,19 @@ export default function TasksPage() {
       </div>
 
       {/* Main Layout with Folders Sidebar */}
-      <div className="flex gap-6">
-        {/* Folders Sidebar */}
-        <div className="w-64 flex-shrink-0">
-          <Card className="p-4 sticky top-4">
-            <div className="flex items-center justify-between mb-3">
-              <h3 className="text-sm font-semibold text-neutral-900 dark:text-white flex items-center gap-2">
+      <div className="flex flex-col md:flex-row gap-4 md:gap-6">
+        {/* Folders Sidebar - Collapsible on mobile */}
+        <div className="w-full md:w-64 md:flex-shrink-0">
+          <Card className="p-3 md:p-4 md:sticky md:top-4">
+            <div className="flex items-center justify-between mb-2 md:mb-3">
+              <h3 className="text-xs md:text-sm font-semibold text-neutral-900 dark:text-white flex items-center gap-2">
                 📁 Folders
               </h3>
               <Button
                 variant="ghost"
                 size="sm"
                 onClick={() => setShowCreateFolderDialog(true)}
-                className="h-7 w-7 p-0"
+                className="h-6 w-6 md:h-7 md:w-7 p-0"
               >
                 +
               </Button>
@@ -438,13 +438,13 @@ export default function TasksPage() {
             {selectedFolderId && (
               <button
                 onClick={() => setSelectedFolderId(null)}
-                className="text-xs px-2 py-1 mb-3 bg-neutral-200 dark:bg-neutral-700 rounded-full hover:bg-neutral-300 dark:hover:bg-neutral-600 w-full text-center"
+                className="text-[10px] md:text-xs px-2 py-0.5 md:py-1 mb-2 md:mb-3 bg-neutral-200 dark:bg-neutral-700 rounded-full hover:bg-neutral-300 dark:hover:bg-neutral-600 w-full text-center"
               >
                 Clear filter ×
               </button>
             )}
             {loadingFolders ? (
-              <div className="text-center py-4 text-neutral-500 text-sm">Loading...</div>
+              <div className="text-center py-2 md:py-4 text-neutral-500 text-xs md:text-sm">Loading...</div>
             ) : (
               <FolderList
                 folders={folders}
@@ -458,7 +458,7 @@ export default function TasksPage() {
                 compact
               />
             )}
-            <p className="text-xs text-neutral-500 mt-3">
+            <p className="text-[10px] md:text-xs text-neutral-500 mt-2 md:mt-3 hidden md:block">
               💡 Drag tasks onto folders
             </p>
           </Card>
@@ -484,24 +484,24 @@ export default function TasksPage() {
           ) : (
             <>
               {/* Quests Section */}
-              <div className="mb-6">
-                <div className="flex items-center justify-between px-3 py-2 mb-3 bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 rounded-lg">
-                  <div className="flex items-center gap-2">
-                    <span className="text-base">⚔️</span>
-                    <h2 className="text-sm font-semibold text-neutral-900 dark:text-white">Quests</h2>
+              <div className="mb-4 md:mb-6">
+                <div className="flex items-center justify-between px-2 md:px-3 py-1.5 md:py-2 mb-2 md:mb-3 bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 rounded-lg">
+                  <div className="flex items-center gap-1.5 md:gap-2">
+                    <span className="text-sm md:text-base">⚔️</span>
+                    <h2 className="text-xs md:text-sm font-semibold text-neutral-900 dark:text-white">Quests</h2>
                   </div>
-                  <span className="text-sm font-bold text-neutral-900 dark:text-white">{activeTasks.length}</span>
+                  <span className="text-xs md:text-sm font-bold text-neutral-900 dark:text-white">{activeTasks.length}</span>
                 </div>
                 
                 {activeTasks.length === 0 ? (
-                  <Card className="p-8 text-center">
-                    <div className="text-4xl mb-3">🗺️</div>
-                    <p className="text-neutral-500 text-sm">No active quests. Create one to begin your adventure!</p>
+                  <Card className="p-6 md:p-8 text-center">
+                    <div className="text-3xl md:text-4xl mb-2 md:mb-3">🗺️</div>
+                    <p className="text-neutral-500 text-xs md:text-sm">No active quests. Create one to begin your adventure!</p>
                   </Card>
                 ) : (
-                  <div className="flex flex-wrap gap-3">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2 md:gap-3">
                     {activeTasks.map(task => (
-                      <div key={task.id} className="w-full sm:w-[calc(50%-6px)] lg:w-[calc(33.333%-8px)]">
+                      <div key={task.id}>
                         <TaskCard
                           task={task}
                           onComplete={handleCompleteTask}
@@ -518,23 +518,23 @@ export default function TasksPage() {
 
               {/* Completed Tasks Section - Collapsible */}
               {completedTasks.length > 0 && (
-                <div className="mt-6">
+                <div className="mt-4 md:mt-6">
                   <button
                     onClick={() => setShowCompletedTasks(!showCompletedTasks)}
-                    className="flex items-center justify-between w-full px-3 py-2 mb-3 bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 rounded-lg hover:bg-neutral-50 dark:hover:bg-neutral-800 transition-colors"
+                    className="flex items-center justify-between w-full px-2 md:px-3 py-1.5 md:py-2 mb-2 md:mb-3 bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 rounded-lg hover:bg-neutral-50 dark:hover:bg-neutral-800 transition-colors"
                   >
-                    <div className="flex items-center gap-2">
-                      <span className="text-base">{showCompletedTasks ? '▼' : '▶'}</span>
-                      <span className="text-base">✓</span>
-                      <h2 className="text-sm font-semibold text-neutral-900 dark:text-white">Completed</h2>
+                    <div className="flex items-center gap-1.5 md:gap-2">
+                      <span className="text-sm md:text-base">{showCompletedTasks ? '▼' : '▶'}</span>
+                      <span className="text-sm md:text-base">✓</span>
+                      <h2 className="text-xs md:text-sm font-semibold text-neutral-900 dark:text-white">Completed</h2>
                     </div>
-                    <span className="text-sm font-bold text-neutral-900 dark:text-white">{completedTasks.length}</span>
+                    <span className="text-xs md:text-sm font-bold text-neutral-900 dark:text-white">{completedTasks.length}</span>
                   </button>
                   
                   {showCompletedTasks && (
-                    <div className="flex flex-wrap gap-3">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2 md:gap-3">
                       {completedTasks.map(task => (
-                        <div key={task.id} className="w-full sm:w-[calc(50%-6px)] lg:w-[calc(33.333%-8px)]">
+                        <div key={task.id}>
                           <TaskCard
                             task={task}
                             onComplete={handleCompleteTask}

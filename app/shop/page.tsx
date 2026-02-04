@@ -303,17 +303,18 @@ export default function ShopPage() {
         </div>
 
         {/* Category Filter */}
-        <div className="flex gap-2 overflow-x-auto pb-2">
+        <div className="flex gap-2 overflow-x-auto pb-2 -mx-1 px-1 scrollbar-hide">
           {categories.map(category => (
             <Button
               key={category.id}
               variant={selectedCategory === category.id ? 'default' : 'outline'}
               size="sm"
               onClick={() => setSelectedCategory(category.id)}
-              className="whitespace-nowrap"
+              className="whitespace-nowrap shrink-0"
             >
-              <span className="mr-1.5">{category.emoji}</span>
-              {category.label}
+              <span className="mr-1 md:mr-1.5">{category.emoji}</span>
+              <span className="hidden sm:inline">{category.label}</span>
+              <span className="sm:hidden">{category.label.split(' ')[0]}</span>
             </Button>
           ))}
         </div>

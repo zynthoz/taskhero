@@ -101,13 +101,14 @@ export function MonthView({
             <div 
               key={day}
               className={cn(
-                'py-2 text-center text-xs font-medium uppercase tracking-wide',
+                'py-1 md:py-2 text-center text-[10px] md:text-xs font-medium uppercase tracking-wide',
                 index === 0 || index === 6 
                   ? 'text-neutral-400 dark:text-neutral-500' 
                   : 'text-neutral-500 dark:text-neutral-400'
               )}
             >
-              {day}
+              <span className="hidden sm:inline">{day}</span>
+              <span className="sm:hidden">{day.charAt(0)}</span>
             </div>
           ))}
         </div>
@@ -118,16 +119,16 @@ export function MonthView({
           'border-l border-t border-neutral-200 dark:border-neutral-700'
         )}>
           {days.map((day, index) => {
-            const hasMoreTasks = day.tasks.length > 3
-            const displayTasks = day.tasks.slice(0, 3)
-            const remainingCount = day.tasks.length - 3
+            const hasMoreTasks = day.tasks.length > 2
+            const displayTasks = day.tasks.slice(0, 2)
+            const remainingCount = day.tasks.length - 2
 
             return (
               <div
                 key={index}
                 className={cn(
-                  'relative p-1 border-r border-b border-neutral-200 dark:border-neutral-700',
-                  'transition-colors',
+                  'relative p-0.5 md:p-1 border-r border-b border-neutral-200 dark:border-neutral-700',
+                  'transition-colors min-h-[60px] md:min-h-[80px]',
                   !day.isCurrentMonth && 'bg-neutral-50 dark:bg-neutral-900/50',
                   day.isWeekend && day.isCurrentMonth && 'bg-neutral-50/50 dark:bg-neutral-800/30',
                 )}
@@ -136,7 +137,7 @@ export function MonthView({
                 <div className="flex items-start justify-between mb-0.5">
                   <span
                     className={cn(
-                      'inline-flex items-center justify-center w-6 h-6 text-xs rounded-full',
+                      'inline-flex items-center justify-center w-5 h-5 md:w-6 md:h-6 text-[10px] md:text-xs rounded-full',
                       day.isToday && 'bg-[var(--accent-color)] text-white font-semibold',
                       !day.isToday && day.isCurrentMonth && 'text-neutral-700 dark:text-neutral-300',
                       !day.isToday && !day.isCurrentMonth && 'text-neutral-400 dark:text-neutral-500'
@@ -160,7 +161,7 @@ export function MonthView({
                           onTaskClick?.(task)
                         }}
                         className={cn(
-                          'w-full text-left px-1 py-0.5 rounded text-[10px] truncate transition-all',
+                          'w-full text-left px-0.5 md:px-1 py-0.5 rounded text-[8px] md:text-[10px] truncate transition-all',
                           'hover:ring-1 hover:ring-[var(--accent-color)]/50',
                           isCompleted && 'opacity-50 line-through'
                         )}
@@ -184,7 +185,7 @@ export function MonthView({
                         handleShowAllTasks(day.date, day.tasks)
                       }}
                       className={cn(
-                        'w-full text-[10px] text-center py-0.5 rounded',
+                        'w-full text-[8px] md:text-[10px] text-center py-0.5 rounded',
                         'text-neutral-500 dark:text-neutral-400 hover:text-[var(--accent-color)] hover:bg-[var(--accent-color)]/10'
                       )}
                     >

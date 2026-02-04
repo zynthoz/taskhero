@@ -105,7 +105,7 @@ export default function LeftSidebar({ user, loading = false }: LeftSidebarProps)
           ) : (
             <>
               <Progress value={xpProgress} className="h-1.5 md:h-2" />
-              <div className="text-center text-[10px] md:text-xs text-neutral-600 dark:text-neutral-400">
+              <div className="text-center text-[10px] md:text-xs text-neutral-600 dark:text-neutral-400 mt-3">
                 {user.currentXp} / {user.xpForNextLevel ?? (user.level * 100)} XP
               </div>
             </>

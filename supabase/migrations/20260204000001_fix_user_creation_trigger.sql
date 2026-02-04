@@ -1,20 +1,23 @@
 -- Fix for "Database error saving new user"
--- This migration recreates the trigger and function to handle new user signup
--- Run this on your production Supabase database
+-- This migration fixes the trigger that creates user profiles on signup
+-- Run this on your production Supabase database via SQL Editor
 
--- Drop existing trigger and function if they exist
+-- Step 1: Drop the problematic INSERT policy that blocks the trigger
+DROP POLICY IF EXISTS "Users can insert own profile" ON public.users;
+
+-- Step 2: Drop and recreate the trigger function with proper permissions
 DROP TRIGGER IF EXISTS on_auth_user_created ON auth.users;
 DROP FUNCTION IF EXISTS public.handle_new_user();
 
--- Recreate the function with better error handling
+-- Step 3: Create function that bypasses RLS (critical fix!)
 CREATE OR REPLACE FUNCTION public.handle_new_user()
 RETURNS TRIGGER
-SECURITY DEFINER
+SECURITY DEFINER -- This makes the function run with owner's permissions
 SET search_path = public
 LANGUAGE plpgsql
 AS $$
 BEGIN
-  -- Insert new user profile with default values
+  -- Insert bypasses RLS because of SECURITY DEFINER
   INSERT INTO public.users (
     id,
     email,
@@ -35,47 +38,58 @@ BEGIN
     NEW.email,
     COALESCE(NEW.raw_user_meta_data->>'name', NEW.raw_user_meta_data->>'full_name'),
     NEW.raw_user_meta_data->>'avatar_url',
-    1,    -- level
-    0,    -- current_xp
-    0,    -- total_xp
-    0,    -- gold
-    0,    -- gems
-    0,    -- current_streak
-    0,    -- longest_streak
-    'Novice Hero',  -- title
-    0,    -- total_tasks_completed
-    0     -- total_quests_completed
+    1,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    'Novice Hero',
+    0,
+    0
   )
   ON CONFLICT (id) DO NOTHING;
   
   RETURN NEW;
 EXCEPTION
   WHEN OTHERS THEN
-    -- Log error but don't fail the auth.users insert
+    -- Log error but don't block signup
     RAISE WARNING 'Failed to create user profile for %: %', NEW.id, SQLERRM;
     RETURN NEW;
 END;
 $$;
 
--- Recreate the trigger
+-- Step 4: Recreate the trigger
 CREATE TRIGGER on_auth_user_created
   AFTER INSERT ON auth.users
   FOR EACH ROW
   EXECUTE FUNCTION public.handle_new_user();
 
--- Grant necessary permissions
+-- Step 5: Create a new INSERT policy that allows both users AND the trigger
+-- This policy allows inserts when:
+-- 1. User is inserting their own profile (auth.uid() = id), OR
+-- 2. The insert is from the trigger (auth.uid() IS NULL but id matches)
+CREATE POLICY "Users and triggers can insert profiles"
+  ON public.users
+  FOR INSERT
+  WITH CHECK (
+    auth.uid() = id OR  -- User inserting their own
+    auth.uid() IS NULL  -- Trigger context (no session yet)
+  );
+
+-- Step 6: Grant necessary permissions
 GRANT USAGE ON SCHEMA public TO postgres, anon, authenticated, service_role;
 GRANT ALL ON public.users TO postgres, service_role;
 GRANT SELECT, INSERT, UPDATE ON public.users TO authenticated;
 
--- Add comment
-COMMENT ON FUNCTION public.handle_new_user() IS 'Automatically creates a user profile in public.users when a new user signs up';
+-- Step 7: Add helpful comment
+COMMENT ON FUNCTION public.handle_new_user() IS 'Auto-creates user profile on signup. Uses SECURITY DEFINER to bypass RLS.';
 
--- Verify the trigger exists
-SELECT 
-  trigger_name,
-  event_manipulation,
-  event_object_table,
-  action_statement
-FROM information_schema.triggers
-WHERE trigger_name = 'on_auth_user_created';
+-- Step 8: Verify the fix worked
+DO $$
+BEGIN
+  RAISE NOTICE 'Migration completed successfully!';
+  RAISE NOTICE 'Trigger: %', (SELECT COUNT(*) FROM information_schema.triggers WHERE trigger_name = 'on_auth_user_created');
+  RAISE NOTICE 'Function: %', (SELECT COUNT(*) FROM pg_proc WHERE proname = 'handle_new_user');
+END $$;

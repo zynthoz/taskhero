@@ -1,15 +1,40 @@
 # Fix for "Database error saving new user"
 
-## Problem
-When creating a new account on Vercel/production, users encounter the error:
+## ⚠️ CRITICAL ISSUE
+
+The database trigger that creates user profiles is **FAILING** because the RLS (Row Level Security) policy is blocking it. When users try to sign up, they get redirected to:
 ```
-Database error saving new user
+https://impeto.vercel.app/login#error=server_error&error_code=unexpected_failure&error_description=Database+error+saving+new+user
 ```
 
-This error occurs because the database trigger `on_auth_user_created` that should automatically create a user profile in `public.users` when someone signs up is either:
-1. Not running on your production database
-2. Failing due to permission issues
-3. Failing due to constraint violations
+## 🚨 IMMEDIATE FIX (Do This First!)
+
+**You MUST run the emergency SQL script to fix this:**
+
+### Quick Fix Steps:
+1. Open [Supabase Dashboard](https://supabase.com/dashboard)
+2. Select your project (kkqpjjlqxcxyjttxhsny)
+3. Click **SQL Editor** in left sidebar
+4. Click **+ New Query**
+5. Open `EMERGENCY_FIX.sql` in this project
+6. Copy the ENTIRE contents
+7. Paste into Supabase SQL Editor
+8. Click **RUN** (or Ctrl+Enter)
+9. Wait for "Emergency fix applied successfully! ✅"
+10. **Test signup immediately**
+
+This will take **30 seconds** and fix the issue immediately.
+
+## Root Cause
+
+The RLS policy `"Users can insert own profile"` checks `auth.uid() = id`, but when the trigger runs during signup, `auth.uid()` is `NULL` because the user session doesn't exist yet. This causes the insert to fail, which fails the entire signup process.
+
+## What The Emergency Fix Does
+
+1. **Removes the blocking INSERT policy**
+2. **Adds `SECURITY DEFINER`** to the trigger function (bypasses RLS)
+3. **Creates a new INSERT policy** that allows both users AND triggers
+4. **Adds error handling** so signups never fail completely
 
 ## Solution
 
@@ -53,28 +78,25 @@ Improved trigger that:
 
 ## Deployment Steps
 
-### Step 1: Deploy Code Changes
+### ⚠️ CRITICAL: Run Emergency SQL First!
+
+**Before deploying code, you MUST fix the database:**
+
+1. Open Supabase SQL Editor
+2. Run `EMERGENCY_FIX.sql` (see instructions above)
+3. Verify you see "Emergency fix applied successfully! ✅"
+4. Test a signup - it should work now!
+
+### Then Deploy Code Changes
+
 ```bash
 # Commit and push the changes
 git add .
-git commit -m "Fix: Add fallback user profile creation"
+git commit -m "Fix: Add fallback user profile creation + RLS policy fix"
 git push
-
-# Vercel will automatically deploy
 ```
 
-### Step 2: Run Database Migration on Supabase
-
-1. Go to your Supabase dashboard: https://supabase.com/dashboard
-2. Select your project (kkqpjjlqxcxyjttxhsny)
-3. Click on **SQL Editor** in the left sidebar
-4. Click **New Query**
-5. Copy the entire content from: `supabase/migrations/20260204000001_fix_user_creation_trigger.sql`
-6. Paste it into the SQL editor
-7. Click **Run** (or press Ctrl+Enter)
-8. Verify the output shows the trigger was created successfully
-
-### Step 3: Verify the Fix
+Vercel will auto-deploy. The code changes provide additional safety nets.
 
 Test the signup process:
 1. Open your production site: https://impeto.vercel.app

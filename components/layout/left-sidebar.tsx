@@ -46,7 +46,7 @@ export default function LeftSidebar({ user, loading = false }: LeftSidebarProps)
   const hasStreakBonus = streakMultiplier > 1.0;
 
   return (
-    <div className="h-full flex flex-col bg-neutral-50 dark:bg-[#0a0a0a] overflow-y-auto">
+    <div className="h-full flex flex-col bg-neutral-50 dark:bg-[#0a0a0a] overflow-hidden lg:overflow-y-auto">
       {/* App Name */}
       <div className="p-3 md:p-4 border-b border-neutral-200 dark:border-neutral-800 shrink-0">
         <h1 className="text-base md:text-lg font-semibold text-neutral-900 dark:text-white">TaskHero</h1>
@@ -137,7 +137,7 @@ export default function LeftSidebar({ user, loading = false }: LeftSidebarProps)
       </div>
 
       {/* Navigation - Scrollable on mobile */}
-      <nav className="flex-1 p-2 md:p-3 pb-12 md:pb-3 overflow-y-auto min-h-0">
+      <nav className="flex-1 p-2 md:p-3 pb-12 md:pb-3 overflow-hidden lg:overflow-y-auto min-h-0">
         <ul className="space-y-0.5 md:space-y-0.5">
           {navigationItems.map((item) => {
             const isActive = pathname === item.href;
@@ -164,7 +164,7 @@ export default function LeftSidebar({ user, loading = false }: LeftSidebarProps)
       </nav>
 
       {/* Logout */}
-      <div className="p-2 md:p-3 pb-[calc(0.5rem+env(safe-area-inset-bottom))] md:pb-[calc(0.75rem+env(safe-area-inset-bottom))] border-t border-neutral-200 dark:border-neutral-800 shrink-0">
+      <div className="p-2 md:p-3 pb-[calc(4rem+env(safe-area-inset-bottom))] md:pb-[calc(4rem+env(safe-area-inset-bottom))] border-t border-neutral-200 dark:border-neutral-800 shrink-0">
         <button
           onClick={() => window.location.href = "/login"}
           className="w-full px-2.5 md:px-3 py-1.5 md:py-2 rounded-lg text-xs md:text-sm font-medium bg-neutral-200 dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300 hover:bg-red-600 hover:text-white transition-all duration-200 border border-neutral-300 dark:border-neutral-700 hover:border-red-500 hover:shadow-lg hover:shadow-red-500/20"

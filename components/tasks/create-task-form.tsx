@@ -271,7 +271,7 @@ export function CreateTaskForm({
           {trigger || defaultTrigger}
         </DialogTrigger>
       )}
-      <DialogContent className="w-[95vw] max-w-2xl max-h-[90vh] overflow-y-auto">
+      <DialogContent className="w-[95vw] max-w-2xl max-h-[90vh] overflow-y-auto overflow-x-hidden min-w-0">
         <DialogHeader>
           <DialogTitle className="text-xl md:text-2xl font-semibold text-neutral-900 dark:text-white">
             Create New Task
@@ -281,7 +281,7 @@ export function CreateTaskForm({
           </DialogDescription>
         </DialogHeader>
         
-        <form onSubmit={handleSubmit} className="space-y-4">
+        <form onSubmit={handleSubmit} className="space-y-4 min-w-0">
           {/* Two Column Layout */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             {/* Left Column - Task Details */}

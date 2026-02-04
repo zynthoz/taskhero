@@ -46,7 +46,7 @@ export default function LeftSidebar({ user, loading = false }: LeftSidebarProps)
   const hasStreakBonus = streakMultiplier > 1.0;
 
   return (
-    <div className="h-[100dvh] flex flex-col bg-neutral-50 dark:bg-[#0a0a0a] overflow-hidden lg:overflow-y-auto">
+    <div className="h-[110dvh] flex flex-col bg-neutral-50 dark:bg-[#0a0a0a] overflow-hidden lg:overflow-y-auto">
       {/* App Name */}
       <div className="p-3 md:p-4 border-b border-neutral-200 dark:border-neutral-800 shrink-0">
         <h1 className="text-base md:text-lg font-semibold text-neutral-900 dark:text-white">TaskHero</h1>

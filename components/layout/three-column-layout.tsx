@@ -49,7 +49,7 @@ export default function ThreeColumnLayout({
       {/* Left Sidebar - 280px */}
       <aside
         className={`
-          fixed top-0 left-0 h-screen w-[280px] bg-neutral-50 dark:bg-neutral-950 
+          fixed top-0 left-0 h-[100dvh] w-[280px] bg-neutral-50 dark:bg-neutral-950 
           border-r border-neutral-200 dark:border-neutral-800 z-50 transition-transform duration-200
           ${leftOpen ? "translate-x-0" : "-translate-x-full"}
           lg:translate-x-0
@@ -124,7 +124,7 @@ export default function ThreeColumnLayout({
       {hasRightSidebar && (
         <aside
           className={`
-            fixed top-0 right-0 h-screen w-[220px] bg-neutral-50 dark:bg-neutral-950
+            fixed top-0 right-0 h-[100dvh] w-[220px] bg-neutral-50 dark:bg-neutral-950
             border-l border-neutral-200 dark:border-neutral-800 z-50 transition-transform duration-200
             ${rightOpen ? "translate-x-0" : "translate-x-full"}
             lg:translate-x-0

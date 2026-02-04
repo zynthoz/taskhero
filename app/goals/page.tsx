@@ -49,6 +49,7 @@ export default function GoalsPage() {
     currentStreak: 0,
     totalPoints: 0,
     rank: 'Unranked',
+    avatarId: undefined as string | undefined,
   })
   const [profileLoaded, setProfileLoaded] = useState(false)
 
@@ -67,7 +68,7 @@ export default function GoalsPage() {
     const supabase = createClient()
     const { data } = await supabase
       .from('users')
-      .select('username, title, level, current_xp, total_xp, gold, current_streak')
+      .select('username, title, level, current_xp, total_xp, gold, current_streak, avatar_id')
       .eq('id', user.id)
       .single()
     

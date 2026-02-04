@@ -1,6 +1,6 @@
 "use client";
 
-import React, { ReactNode, useState } from "react";
+import React, { ReactNode, useState, useEffect } from "react";
 
 interface ThreeColumnLayoutProps {
   leftSidebar: ReactNode;
@@ -19,6 +19,19 @@ export default function ThreeColumnLayout({
   const [rightOpen, setRightOpen] = useState(false);
 
   const hasRightSidebar = rightSidebar !== null && !expandedMain;
+
+  // Prevent body scroll when sidebar is open on mobile
+  useEffect(() => {
+    if (leftOpen || rightOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+    
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, [leftOpen, rightOpen]);
 
   return (
     <div className="min-h-screen bg-[#FAFAF9] dark:bg-neutral-950">

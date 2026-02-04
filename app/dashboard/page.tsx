@@ -12,23 +12,49 @@ import Link from 'next/link'
 import { getTasks } from '../tasks/actions'
 import { Task } from '@/types/task'
 import { createClient } from '@/lib/supabase/client'
+import { StreakDisplay } from '@/components/streaks/streak-display'
+import { StreakCalendar } from '@/components/streaks/streak-calendar'
+import { TodayProgressChart } from '@/components/tasks/today-progress-chart'
+import { StreakProtectionIndicator } from '@/components/streaks/streak-protection-indicator'
+import { UsernameModal } from '@/components/social/username-modal'
+import { MotivationalQuote } from '@/components/dashboard/motivational-quote'
 
 export default function DashboardPage() {
   const { user, loading } = useAuth()
   const router = useRouter()
   const [tasks, setTasks] = useState<Task[]>([])
   const [isLoading, setIsLoading] = useState(true)
+  const [showUsernameModal, setShowUsernameModal] = useState(false)
   const [userData, setUserData] = useState({
     level: 1,
     currentXp: 0,
     totalXp: 0,
     gold: 0,
     currentStreak: 0,
+    longestStreak: 0,
+    userId: '',
+    username: '',
+    avatarId: undefined as string | undefined,
   })
+  const [profileLoaded, setProfileLoaded] = useState(false)
 
   useEffect(() => {
     loadTasks()
     loadUserData()
+
+    // Listen for task updates from other pages (create/complete/delete)
+    try {
+      const bc = new BroadcastChannel('tasks')
+      bc.onmessage = (e) => {
+        if (e.data?.type === 'update') {
+          loadTasks()
+        }
+      }
+      return () => bc.close()
+    } catch (err) {
+      // BroadcastChannel might not be available in all environments
+      return
+    }
   }, [])
 
   const loadUserData = async () => {
@@ -38,7 +64,7 @@ export default function DashboardPage() {
     if (authUser) {
       const { data } = await supabase
         .from('users')
-        .select('level, current_xp, total_xp, gold, current_streak')
+        .select('level, current_xp, total_xp, gold, current_streak, longest_streak, username, avatar_id')
         .eq('id', authUser.id)
         .single()
       
@@ -49,9 +75,26 @@ export default function DashboardPage() {
           totalXp: data.total_xp || 0,
           gold: data.gold || 0,
           currentStreak: data.current_streak || 0,
+          longestStreak: data.longest_streak || 0,
+          userId: authUser.id,
+          username: data.username || '',
+          avatarId: data.avatar_id || undefined,
         })
+        setProfileLoaded(true)
+        
+        // Show username modal if user doesn't have a username
+        if (!data.username) {
+          setShowUsernameModal(true)
+        }
+      } else {
+        setProfileLoaded(true)
       }
     }
+  }
+
+  const handleUsernameSuccess = async (username: string) => {
+    setShowUsernameModal(false)
+    setUserData(prev => ({ ...prev, username }))
   }
 
   const loadTasks = async () => {
@@ -65,8 +108,8 @@ export default function DashboardPage() {
 
   if (loading || isLoading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-[#0a0a0a]">
-        <div className="text-white text-lg">Loading...</div>
+      <div className="min-h-screen flex items-center justify-center bg-[#FAFAF9] dark:bg-[#0a0a0a]">
+        <div className="text-neutral-900 dark:text-white text-lg">Loading...</div>
       </div>
     )
   }
@@ -78,9 +121,43 @@ export default function DashboardPage() {
   const overdueTasks = tasks.filter(t => t.status === 'overdue').length
   const completionRate = totalTasks > 0 ? Math.round((completedTasks / totalTasks) * 100) : 0
   
-  const mainQuests = tasks.filter(t => t.category === 'main' && t.status !== 'completed').length
-  const sideQuests = tasks.filter(t => t.category === 'side' && t.status !== 'completed').length
-  const dailyTasks = tasks.filter(t => t.category === 'daily' && t.status !== 'completed').length
+  // Today's Progress — shows ALL active (non-completed) tasks as workable today
+  // Completed today = tasks completed today (by completed_at timestamp)
+  // In Progress = tasks with 'in-progress' status
+  // Pending = tasks with 'pending' status (shown as remaining work)
+  // Overdue = tasks past their due date
+  
+  const todayDate = new Date()
+  const isSameLocalDate = (dateStr?: string | null) => {
+    if (!dateStr) return false
+    const d = new Date(dateStr)
+    return (
+      d.getFullYear() === todayDate.getFullYear() &&
+      d.getMonth() === todayDate.getMonth() &&
+      d.getDate() === todayDate.getDate()
+    )
+  }
+
+  // All non-completed tasks are "today's tasks" (available to work on)
+  // Plus tasks that were completed today
+  const todayTasks = tasks.filter(t => {
+    // Include all incomplete tasks (pending, in-progress, overdue)
+    if (t.status !== 'completed') return true
+    
+    // Include tasks completed today
+    if (t.status === 'completed' && isSameLocalDate(t.completed_at)) return true
+    
+    return false
+  })
+
+  // Count tasks completed TODAY (not all-time completed)
+  const todayCompleted = tasks.filter(t => t.status === 'completed' && isSameLocalDate(t.completed_at)).length
+  const todayInProgress = tasks.filter(t => t.status === 'in-progress').length
+  const todayOverdue = tasks.filter(t => t.status === 'overdue').length
+  const todayPending = tasks.filter(t => t.status === 'pending').length
+  
+  // Total for the radial chart = all incomplete + completed today
+  const todayTotal = todayPending + todayInProgress + todayOverdue + todayCompleted
   
   // Get recent tasks (last 5)
   const recentTasks = tasks.slice(0, 5)
@@ -88,35 +165,35 @@ export default function DashboardPage() {
   // Calculate total XP and Gold earned
   const totalXpEarned = tasks.filter(t => t.status === 'completed').reduce((sum, t) => sum + t.xp_reward, 0)
   const totalGoldEarned = tasks.filter(t => t.status === 'completed').reduce((sum, t) => sum + t.gold_reward, 0)
-  
-  // Category breakdown
-  const categoryStats = {
-    main: tasks.filter(t => t.category === 'main' && t.status === 'completed').length,
-    side: tasks.filter(t => t.category === 'side' && t.status === 'completed').length,
-    daily: tasks.filter(t => t.category === 'daily' && t.status === 'completed').length,
-  }
 
-  // Mock user data - you can replace this with real user data from database
-  const mockUserData = {
-    username: user?.email?.split('@')[0] || 'Hero',
+  // User data for sidebar
+  const sidebarUserData = {
+    username: userData.username || user?.email?.split('@')[0] || 'Hero',
     title: 'Novice Adventurer',
     level: userData.level,
     currentXp: userData.currentXp,
-    xpForNextLevel: 100,
+    xpForNextLevel: userData.level * 100,
     currentStreak: userData.currentStreak,
     totalPoints: userData.totalXp,
     rank: 'Unranked',
+    avatarId: userData.avatarId,
   }
 
   return (
-    <ThreeColumnLayout
-      leftSidebar={<LeftSidebar user={mockUserData} />}
-      rightSidebar={<RightSidebar />}
-    >
+    <>
+      <UsernameModal 
+        isOpen={showUsernameModal} 
+        onSuccess={handleUsernameSuccess}
+      />
+      
+      <ThreeColumnLayout
+        leftSidebar={<LeftSidebar user={sidebarUserData} loading={!profileLoaded} />}
+        rightSidebar={<RightSidebar />}
+      >
       {/* Header */}
       <div className="mb-6">
-        <h1 className="text-2xl font-semibold text-white mb-1">Dashboard</h1>
-        <p className="text-sm text-neutral-400">
+        <h1 className="text-2xl font-semibold text-neutral-900 dark:text-white mb-1">Dashboard</h1>
+        <p className="text-sm text-neutral-600 dark:text-neutral-400">
           {new Date().toLocaleDateString('en-US', { 
             weekday: 'long', 
             year: 'numeric', 
@@ -126,211 +203,182 @@ export default function DashboardPage() {
         </p>
       </div>
 
-      {/* Overview Stats */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
-        <Card className="p-4 bg-neutral-900 border-neutral-800">
-          <div className="text-xs text-neutral-400 mb-1">Total Tasks</div>
-          <div className="text-2xl font-semibold text-white">{totalTasks}</div>
+      {/* Motivational Quote */}
+      <div className="mb-6">
+        <MotivationalQuote />
+      </div>
+
+      {/* Quick Stats */}
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+        <Card className="p-4 stat-card card-purple-tint">
+          <div className="text-xs text-neutral-600 dark:text-neutral-400 mb-1 font-semibold">Total Tasks</div>
+          <div className="text-3xl font-bold text-neutral-900 dark:text-white">{totalTasks}</div>
+          <div className="absolute top-2 right-2 text-2xl opacity-100">📋</div>
         </Card>
         
-        <Card className="p-4 bg-neutral-900 border-neutral-800">
-          <div className="text-xs text-neutral-400 mb-1">Completed</div>
-          <div className="text-2xl font-semibold text-white">{completedTasks}</div>
+        <Card className="p-4 stat-card card-green-tint">
+          <div className="text-xs text-neutral-600 dark:text-neutral-400 mb-1 font-semibold">Completed</div>
+          <div className="text-3xl font-bold text-green-600 dark:text-green-400">{completedTasks}</div>
+          <div className="absolute top-2 right-2 text-2xl opacity-100">✅</div>
         </Card>
         
-        <Card className="p-4 bg-neutral-900 border-neutral-800">
-          <div className="text-xs text-neutral-400 mb-1">Pending</div>
-          <div className="text-2xl font-semibold text-white">{pendingTasks}</div>
+        <Card className="p-4 stat-card" style={{
+          background: 'linear-gradient(135deg, rgba(249, 115, 22, 0.08) 0%, rgba(249, 115, 22, 0.03) 100%)',
+          borderColor: 'rgba(249, 115, 22, 0.2)'
+        }}>
+          <div className="text-xs text-neutral-600 dark:text-neutral-400 mb-1 font-semibold">Current Streak</div>
+          <div className="text-3xl font-bold text-orange-600 dark:text-orange-400">{userData.currentStreak} 🔥</div>
+          <div className="absolute top-2 right-2 text-2xl opacity-100">📈</div>
         </Card>
         
-        <Card className="p-4 bg-neutral-900 border-neutral-800">
-          <div className="text-xs text-neutral-400 mb-1">Completion Rate</div>
-          <div className="text-2xl font-semibold text-white">{completionRate}%</div>
+        <Card className="p-4 stat-card card-purple-tint">
+          <div className="text-xs text-neutral-600 dark:text-neutral-400 mb-1 font-semibold">Level</div>
+          <div className="text-3xl font-bold text-purple-600 dark:text-purple-400">Lv {userData.level}</div>
+          <div className="absolute top-2 right-2 text-2xl opacity-100">⭐</div>
         </Card>
       </div>
+
+      {/* Streak Protection Indicator */}
+      {userData.userId && (
+        <div className="mb-6">
+          <StreakProtectionIndicator userId={userData.userId} />
+        </div>
+      )}
 
       {/* Progress & Insights */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
-        {/* Task Progress */}
-        <Card className="p-5 bg-neutral-900 border-neutral-800">
-          <h3 className="text-sm font-semibold text-white mb-4">Task Progress</h3>
-          
-          <div className="space-y-4">
-            <div>
-              <div className="flex justify-between text-xs text-neutral-400 mb-2">
-                <span>Overall Completion</span>
-                <span>{completedTasks}/{totalTasks}</span>
-              </div>
-              <Progress value={completionRate} className="h-2 bg-neutral-800" />
-            </div>
-            
-            {overdueTasks > 0 && (
-              <div className="p-3 bg-red-950/20 border border-red-900/50 rounded-lg">
-                <div className="text-xs text-red-400 font-medium">
-                  ⚠️ {overdueTasks} overdue {overdueTasks === 1 ? 'task' : 'tasks'}
-                </div>
-              </div>
-            )}
-            
-            <div className="grid grid-cols-3 gap-3 pt-2">
-              <div className="text-center">
-                <div className="text-xl font-semibold text-white">{mainQuests}</div>
-                <div className="text-[10px] text-neutral-400">Main Quests</div>
-              </div>
-              <div className="text-center">
-                <div className="text-xl font-semibold text-white">{sideQuests}</div>
-                <div className="text-[10px] text-neutral-400">Side Quests</div>
-              </div>
-              <div className="text-center">
-                <div className="text-xl font-semibold text-white">{dailyTasks}</div>
-                <div className="text-[10px] text-neutral-400">Daily Tasks</div>
-              </div>
-            </div>
-          </div>
-        </Card>
+        {/* Today's Progress Chart */}
+        <TodayProgressChart
+          completed={todayCompleted}
+          inProgress={todayInProgress}
+          overdue={todayOverdue}
+          pending={todayPending}
+        />
 
-        {/* Rewards Earned */}
-        <Card className="p-5 bg-neutral-900 border-neutral-800">
-          <h3 className="text-sm font-semibold text-white mb-4">Rewards Earned</h3>
-          
-          <div className="space-y-4">
-            <div className="flex items-center justify-between p-3 bg-neutral-800 rounded-lg">
-              <div className="flex items-center gap-2">
-                <span className="text-2xl">⭐</span>
-                <span className="text-sm text-neutral-400">Total XP</span>
-              </div>
-              <span className="text-xl font-semibold text-white">{totalXpEarned}</span>
-            </div>
-            
-            <div className="flex items-center justify-between p-3 bg-neutral-800 rounded-lg">
-              <div className="flex items-center gap-2">
-                <span className="text-2xl">💰</span>
-                <span className="text-sm text-neutral-400">Total Gold</span>
-              </div>
-              <span className="text-xl font-semibold text-white">{totalGoldEarned}</span>
-            </div>
-            
-            <div className="flex items-center justify-between p-3 bg-neutral-800 rounded-lg">
-              <div className="flex items-center gap-2">
-                <span className="text-2xl">📊</span>
-                <span className="text-sm text-neutral-400">Current Level</span>
-              </div>
-              <span className="text-xl font-semibold text-white">Lv {mockUserData.level}</span>
-            </div>
-          </div>
-        </Card>
+        {/* Streak Display */}
+        {userData.userId && (
+          <StreakDisplay
+            currentStreak={userData.currentStreak}
+            longestStreak={userData.longestStreak}
+          />
+        )}
       </div>
 
-      {/* Category Breakdown */}
-      <Card className="p-5 bg-neutral-900 border-neutral-800 mb-6">
-        <h3 className="text-sm font-semibold text-white mb-4">Completed by Category</h3>
-        
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3">
-          {Object.entries(categoryStats).map(([category, count]) => (
-            <div key={category} className="text-center p-3 bg-neutral-800 rounded-lg border border-neutral-700">
-              <div className="text-lg font-semibold text-white">{count}</div>
-              <div className="text-[10px] text-neutral-400 capitalize">{category}</div>
-            </div>
-          ))}
-        </div>
-      </Card>
+      {/* Streak Calendar & Recent Tasks */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-6">
+        {/* Streak Calendar */}
+        {userData.userId && (
+          <StreakCalendar userId={userData.userId} />
+        )}
 
-      {/* Recent Tasks */}
-      <Card className="p-5 bg-neutral-900 border-neutral-800 mb-6">
-        <div className="flex items-center justify-between mb-4">
-          <h3 className="text-sm font-semibold text-white">Recent Tasks</h3>
-          <Link href="/tasks">
-            <button className="text-xs text-neutral-400 hover:text-white transition-colors">
-              View all →
-            </button>
-          </Link>
-        </div>
-        
-        {recentTasks.length === 0 ? (
-          <div className="text-center py-8">
-            <div className="text-4xl mb-2">📋</div>
-            <p className="text-sm text-neutral-400 mb-4">No tasks yet</p>
+        {/* Recent Tasks */}
+        <Card className="p-3 w-full">
+          <div className="flex items-center justify-between mb-2">
+            <h3 className="text-[10px] font-semibold text-neutral-900 dark:text-white">Recent Tasks</h3>
             <Link href="/tasks">
-              <button className="px-4 py-2 bg-white text-black text-sm font-medium rounded-lg hover:bg-neutral-200 transition-colors">
-                + Create Your First Task
+              <button className="text-[9px] text-neutral-500 hover:text-neutral-900 dark:hover:text-white transition-colors">
+                View all →
               </button>
             </Link>
           </div>
-        ) : (
-          <div className="space-y-2">
-            {recentTasks.map(task => (
-              <div 
-                key={task.id}
-                className={`flex items-center justify-between p-3 rounded-lg border ${
-                  task.status === 'completed' 
-                    ? 'bg-neutral-800/50 border-neutral-800' 
-                    : 'bg-neutral-800 border-neutral-700 hover:border-neutral-600'
-                } transition-colors`}
-              >
-                <div className="flex items-center gap-3 flex-1 min-w-0">
-                  {task.status === 'completed' ? (
-                    <span className="text-white text-sm">✓</span>
-                  ) : (
-                    <span className="w-4 h-4 border-2 border-neutral-600 rounded" />
-                  )}
-                  <div className="flex-1 min-w-0">
-                    <div className={`text-sm font-medium truncate ${
-                      task.status === 'completed' ? 'text-neutral-500 line-through' : 'text-white'
-                    }`}>
-                      {task.title}
-                    </div>
-                    <div className="flex items-center gap-2 mt-0.5">
-                      <span className="text-[10px] text-neutral-500 capitalize">{task.category}</span>
-                      <span className="text-neutral-700">•</span>
-                      <span className="text-[10px] text-neutral-500">Priority {task.priority}</span>
+          
+          {recentTasks.length === 0 ? (
+            <div className="text-center py-6">
+              <div className="text-3xl mb-1">📋</div>
+              <p className="text-[10px] text-neutral-500 mb-2">No tasks yet</p>
+              <Link href="/tasks">
+                <button className="px-3 py-1.5 bg-white text-black text-[10px] font-medium rounded hover:bg-neutral-200 transition-colors">
+                  + Create Task
+                </button>
+              </Link>
+            </div>
+          ) : (
+            <div className="space-y-1.5">
+              {recentTasks.slice(0, 5).map(task => (
+                <div 
+                  key={task.id}
+                  className={`flex items-center justify-between p-2 rounded border ${
+                    task.status === 'completed' 
+                      ? 'bg-neutral-100 dark:bg-neutral-800/50 border-neutral-200 dark:border-neutral-800' 
+                      : 'bg-neutral-100 dark:bg-neutral-800 border-neutral-200 dark:border-neutral-700 hover:border-neutral-300 dark:hover:border-neutral-600'
+                  } transition-colors`}
+                >
+                  <div className="flex items-center gap-2 flex-1 min-w-0">
+                    {task.status === 'completed' ? (
+                      <span className="text-neutral-900 dark:text-white text-[10px]">✓</span>
+                    ) : (
+                      <span className="w-3 h-3 border border-neutral-400 dark:border-neutral-600 rounded-sm" />
+                    )}
+                    <div className="flex-1 min-w-0">
+                      <div className={`text-[11px] font-medium truncate ${
+                        task.status === 'completed' ? 'text-neutral-500 line-through' : 'text-neutral-900 dark:text-white'
+                      }`}>
+                        {task.title}
+                      </div>
                     </div>
                   </div>
+                  
+                  <div className="flex items-center gap-1.5 text-[9px] text-neutral-500">
+                    <span>💰{task.gold_reward}</span>
+                    <span>⭐{task.xp_reward}</span>
+                  </div>
                 </div>
-                
-                <div className="flex items-center gap-2 text-xs text-neutral-400">
-                  <span>💰 {task.gold_reward}</span>
-                  <span>⭐ {task.xp_reward}</span>
-                </div>
+              ))}
+            </div>
+          )}
+        </Card>
+      </div>
+
+      {/* Overdue Warning */}
+      {overdueTasks > 0 && (
+        <Card className="p-4 bg-red-950/20 border-red-900/50 mb-6">
+          <div className="flex items-center gap-3">
+            <span className="text-2xl">⚠️</span>
+            <div>
+              <div className="text-sm font-semibold text-red-400">
+                {overdueTasks} {overdueTasks === 1 ? 'task is' : 'tasks are'} overdue
               </div>
-            ))}
+              <div className="text-xs text-red-300">Review and update your overdue tasks</div>
+            </div>
           </div>
-        )}
-      </Card>
+        </Card>
+      )}
 
       {/* Quick Actions */}
-      <Card className="p-5 bg-neutral-900 border-neutral-800">
-        <h3 className="text-sm font-semibold text-white mb-4">Quick Actions</h3>
+      <Card className="p-5">
+        <h3 className="text-sm font-semibold text-neutral-900 dark:text-white mb-4">Quick Actions</h3>
         
         <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
           <Link href="/tasks">
-            <button className="w-full p-3 bg-neutral-800 hover:bg-neutral-700 border border-neutral-700 rounded-lg transition-colors text-left">
+            <button className="w-full p-3 bg-neutral-100 dark:bg-neutral-800 hover:bg-neutral-200 dark:hover:bg-neutral-700 border border-neutral-200 dark:border-neutral-700 rounded-lg transition-colors text-left">
               <div className="text-lg mb-1">📝</div>
-              <div className="text-xs font-medium text-white">Create Task</div>
+              <div className="text-xs font-medium text-neutral-900 dark:text-white">Create Task</div>
             </button>
           </Link>
           
           <Link href="/goals">
-            <button className="w-full p-3 bg-neutral-800 hover:bg-neutral-700 border border-neutral-700 rounded-lg transition-colors text-left">
+            <button className="w-full p-3 bg-neutral-100 dark:bg-neutral-800 hover:bg-neutral-200 dark:hover:bg-neutral-700 border border-neutral-200 dark:border-neutral-700 rounded-lg transition-colors text-left">
               <div className="text-lg mb-1">🎯</div>
-              <div className="text-xs font-medium text-white">Set Goal</div>
+              <div className="text-xs font-medium text-neutral-900 dark:text-white">Set Goal</div>
             </button>
           </Link>
           
           <Link href="/shop">
-            <button className="w-full p-3 bg-neutral-800 hover:bg-neutral-700 border border-neutral-700 rounded-lg transition-colors text-left">
+            <button className="w-full p-3 bg-neutral-100 dark:bg-neutral-800 hover:bg-neutral-200 dark:hover:bg-neutral-700 border border-neutral-200 dark:border-neutral-700 rounded-lg transition-colors text-left">
               <div className="text-lg mb-1">🏪</div>
-              <div className="text-xs font-medium text-white">Visit Shop</div>
+              <div className="text-xs font-medium text-neutral-900 dark:text-white">Visit Shop</div>
             </button>
           </Link>
           
           <Link href="/achievements">
-            <button className="w-full p-3 bg-neutral-800 hover:bg-neutral-700 border border-neutral-700 rounded-lg transition-colors text-left">
+            <button className="w-full p-3 bg-neutral-100 dark:bg-neutral-800 hover:bg-neutral-200 dark:hover:bg-neutral-700 border border-neutral-200 dark:border-neutral-700 rounded-lg transition-colors text-left">
               <div className="text-lg mb-1">🏆</div>
-              <div className="text-xs font-medium text-white">Achievements</div>
+              <div className="text-xs font-medium text-neutral-900 dark:text-white">Achievements</div>
             </button>
           </Link>
         </div>
       </Card>
-    </ThreeColumnLayout>
+      </ThreeColumnLayout>
+    </>
   )
 }

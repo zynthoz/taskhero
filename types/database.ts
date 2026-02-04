@@ -76,7 +76,7 @@ export interface Database {
           user_id: string
           title: string
           description: string | null
-          category: 'main' | 'side' | 'daily'
+          color: string
           priority: number
           difficulty: number
           tags: string[]
@@ -97,7 +97,7 @@ export interface Database {
           user_id: string
           title: string
           description?: string | null
-          category?: 'main' | 'side' | 'daily'
+          color?: string
           priority?: number
           difficulty?: number
           tags?: string[]
@@ -118,7 +118,7 @@ export interface Database {
           user_id?: string
           title?: string
           description?: string | null
-          category?: 'main' | 'side' | 'daily'
+          color?: string
           priority?: number
           difficulty?: number
           tags?: string[]

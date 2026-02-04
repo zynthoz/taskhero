@@ -55,7 +55,7 @@ export function CharacterPlaceholder({
 
 // Small variant for sidebar
 export function CharacterPlaceholderSmall(props: Omit<CharacterPlaceholderProps, 'size'>) {
-  return <CharacterPlaceholder {...props} size="280px" />;
+  return <CharacterPlaceholder {...props} size="240x280px" />;
 }
 
 // Large variant for hero display

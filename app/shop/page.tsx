@@ -10,6 +10,8 @@ import { ShopItemCard } from '@/components/shop/shop-item-card'
 import { useAuth } from '@/lib/supabase/auth-provider'
 import { createClient } from '@/lib/supabase/client'
 import { useToast } from '@/hooks/use-toast'
+import { useNotifications } from '@/lib/notifications'
+import { PurchaseAnimation, Confetti } from '@/components/animations'
 
 interface ShopItem {
   id: string
@@ -28,6 +30,7 @@ interface ShopItem {
 export default function ShopPage() {
   const { user } = useAuth()
   const { toast } = useToast()
+  const { showPurchase, error: notifyError } = useNotifications()
   const supabase = createClient()
   
   const [shopItems, setShopItems] = useState<ShopItem[]>([])
@@ -35,36 +38,95 @@ export default function ShopPage() {
   const [selectedCategory, setSelectedCategory] = useState<string>('all')
   const [userGold, setUserGold] = useState(0)
   const [userGems, setUserGems] = useState(0)
-  
-  const mockUserData = {
-    username: user?.email?.split('@')[0] || 'Hero',
-    title: 'Novice Adventurer',
+  const [userData, setUserData] = useState({
+    username: '',
     level: 1,
     currentXp: 0,
-    xpForNextLevel: 100,
+    totalXp: 0,
     currentStreak: 0,
-    totalPoints: 0,
+    xpForNextLevel: undefined as number | undefined,
+    avatarId: undefined as string | undefined,
+  })
+  const [profileLoaded, setProfileLoaded] = useState(false)
+  
+  // Animation states
+  const [showPurchaseAnimation, setShowPurchaseAnimation] = useState(false)
+  const [purchasedItemName, setPurchasedItemName] = useState('')
+  const [showConfetti, setShowConfetti] = useState(false)
+  
+  // Timer state
+  const [timeUntilRefresh, setTimeUntilRefresh] = useState('')
+  
+  const sidebarUserData = {
+    username: userData.username || user?.email?.split('@')[0] || 'Hero',
+    title: 'Novice Adventurer',
+    level: userData.level,
+    currentXp: userData.currentXp,
+    xpForNextLevel: userData.xpForNextLevel,
+    currentStreak: userData.currentStreak,
+    totalPoints: userData.totalXp,
     rank: 'Unranked',
+    avatarId: userData.avatarId,
   }
 
   useEffect(() => {
     if (user) {
       fetchUserCurrency()
       fetchShopItems()
+    } else {
+      setProfileLoaded(true)
     }
+  }, [user])
+
+  // Countdown timer effect
+  useEffect(() => {
+    const updateTimer = () => {
+      const now = new Date()
+      const tomorrow = new Date(now)
+      tomorrow.setDate(tomorrow.getDate() + 1)
+      tomorrow.setHours(0, 0, 0, 0)
+      
+      const diff = tomorrow.getTime() - now.getTime()
+      
+      const hours = Math.floor(diff / (1000 * 60 * 60))
+      const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60))
+      const seconds = Math.floor((diff % (1000 * 60)) / 1000)
+      
+      setTimeUntilRefresh(`${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`)
+      
+      // If we've passed midnight, refresh the shop
+      if (diff <= 0) {
+        fetchShopItems()
+      }
+    }
+    
+    updateTimer()
+    const interval = setInterval(updateTimer, 1000)
+    
+    return () => clearInterval(interval)
   }, [user])
 
   const fetchUserCurrency = async () => {
     try {
       const { data, error } = await supabase
         .from('users')
-        .select('gold, gems')
+        .select('gold, gems, username, avatar_id, level, current_xp, total_xp, current_streak')
         .eq('id', user?.id)
         .single()
       
       if (error) throw error
       setUserGold(data?.gold || 0)
       setUserGems(data?.gems || 0)
+      setUserData({
+        username: data?.username || '',
+        level: data?.level || 1,
+        currentXp: data?.current_xp || 0,
+        totalXp: data?.total_xp || 0,
+        currentStreak: data?.current_streak || 0,
+        xpForNextLevel: (data?.level || 1) * 100,
+        avatarId: data?.avatar_id || undefined,
+      })
+      setProfileLoaded(true)
     } catch (error) {
       console.error('Error fetching user currency:', error)
     }
@@ -159,17 +221,27 @@ export default function ShopPage() {
       if (error) {
         // Function doesn't exist yet - migrations not applied
         if (error.code === '42883' || error.message?.includes('does not exist')) {
-          toast({
-            title: 'Feature Not Available',
-            description: 'Please apply PHASE_8_MIGRATION.sql to enable shop purchases',
-            variant: 'destructive',
-          })
+          notifyError('Please apply PHASE_8_MIGRATION.sql to enable shop purchases')
           return
         }
         throw error
       }
 
       if (data.success) {
+        // Show purchase animation
+        setPurchasedItemName(item.name)
+        setShowPurchaseAnimation(true)
+        setShowConfetti(true)
+        
+        // Clear animations after delay
+        setTimeout(() => {
+          setShowPurchaseAnimation(false)
+          setShowConfetti(false)
+        }, 2500)
+        
+        // Show notification
+        showPurchase(item.name, item.cost_gold)
+        
         toast({
           title: '🎉 Purchase Successful!',
           description: `You bought ${item.name}!`,
@@ -182,6 +254,7 @@ export default function ShopPage() {
         // Refresh shop items
         await fetchShopItems()
       } else {
+        notifyError(data.message || 'Unable to complete purchase')
         toast({
           title: '❌ Purchase Failed',
           description: data.message || 'Unable to complete purchase',
@@ -190,6 +263,7 @@ export default function ShopPage() {
       }
     } catch (error: any) {
       console.error('Purchase error:', error)
+      notifyError(error.message || 'An error occurred during purchase')
       toast({
         title: '❌ Error',
         description: error.message || 'An error occurred during purchase',
@@ -213,18 +287,18 @@ export default function ShopPage() {
 
   return (
     <ThreeColumnLayout
-      leftSidebar={<LeftSidebar user={mockUserData} />}
+      leftSidebar={<LeftSidebar user={sidebarUserData} loading={!profileLoaded} />}
       rightSidebar={<RightSidebar />}
     >
       <div className="space-y-6">
         {/* Header */}
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-2xl font-semibold text-white mb-1">Daily Shop</h1>
-            <p className="text-sm text-neutral-400">Refreshes every 24 hours</p>
+            <h1 className="text-2xl font-semibold text-neutral-900 dark:text-white mb-1">Daily Shop</h1>
+            <p className="text-sm text-neutral-600 dark:text-neutral-400">Refreshes every 24 hours</p>
           </div>
-          <div className="text-sm text-neutral-400">
-            Next refresh: <span className="text-white font-medium">23:59:59</span>
+          <div className="text-sm text-neutral-600 dark:text-neutral-400">
+            Next refresh: <span className="text-neutral-900 dark:text-white font-medium">{timeUntilRefresh || '00:00:00'}</span>
           </div>
         </div>
 
@@ -246,14 +320,14 @@ export default function ShopPage() {
 
         {/* Shop Items Grid */}
         {loading ? (
-          <div className="text-center py-12 text-neutral-400">
+          <div className="text-center py-12 text-neutral-600 dark:text-neutral-400">
             Loading shop items...
           </div>
         ) : filteredItems.length === 0 ? (
-          <Card className="p-12 bg-neutral-900 border-neutral-800 text-center">
+          <Card className="p-12 bg-white dark:bg-neutral-900 border-neutral-200 dark:border-neutral-800 text-center">
             <div className="text-6xl mb-4">🏪</div>
-            <h3 className="text-xl font-semibold text-white mb-2">No items available</h3>
-            <p className="text-neutral-400">Check back later for new items!</p>
+            <h3 className="text-xl font-semibold text-neutral-900 dark:text-white mb-2">No items available</h3>
+            <p className="text-neutral-600 dark:text-neutral-400">Check back later for new items!</p>
           </Card>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -270,6 +344,14 @@ export default function ShopPage() {
           </div>
         )}
       </div>
+
+      {/* Purchase Animations */}
+      <PurchaseAnimation 
+        itemName={purchasedItemName} 
+        show={showPurchaseAnimation} 
+        onComplete={() => setShowPurchaseAnimation(false)} 
+      />
+      <Confetti active={showConfetti} duration={2500} />
     </ThreeColumnLayout>
   )
 }

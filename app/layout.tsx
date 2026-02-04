@@ -2,6 +2,9 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import { AuthProvider } from "@/lib/supabase/auth-provider";
+import { ThemeProvider } from "@/lib/supabase/theme-provider";
+import { NotificationProvider } from "@/lib/notifications";
+import { NotificationContainer } from "@/components/notifications/notification-container";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -22,7 +25,12 @@ export default function RootLayout({
     <html lang="en">
       <body className={`${inter.variable} font-sans antialiased`}>
         <AuthProvider>
-          {children}
+          <ThemeProvider>
+            <NotificationProvider>
+              {children}
+              <NotificationContainer />
+            </NotificationProvider>
+          </ThemeProvider>
         </AuthProvider>
       </body>
     </html>

@@ -16,21 +16,37 @@ import {
   Task,
   getDifficultyDisplay,
   getPriorityColor,
-  getCategoryColor,
+  getTaskColor,
   formatDueDate,
   getDueDateColor,
 } from '@/types/task'
+import { TaskAttachment } from '@/types/folder'
 import { SubtaskList } from './subtask-list'
 import { getSubtasks, createSubtask, toggleSubtask, deleteTask } from '@/app/tasks/actions'
+import { 
+  getTaskAttachments, 
+  uploadFileAttachment, 
+  createChecklistAttachment, 
+  createLinkAttachment,
+  toggleChecklistItem,
+  addChecklistItem,
+  deleteChecklistItem,
+  deleteAttachment,
+  AttachmentWithSignedUrl
+} from '@/app/attachments/actions'
+import { AttachmentList, AddAttachmentDialog, FilePreviewModal } from '@/components/attachments'
 
 interface TaskCardProps {
   task: Task
   onComplete: (taskId: string) => Promise<void>
   onDelete: (taskId: string) => Promise<void>
   onEdit?: (task: Task) => void
+  onDragStart?: (e: React.DragEvent, task: Task) => void
+  onDragEnd?: () => void
+  isDragging?: boolean
 }
 
-export function TaskCard({ task, onComplete, onDelete, onEdit }: TaskCardProps) {
+export function TaskCard({ task, onComplete, onDelete, onEdit, onDragStart, onDragEnd, isDragging }: TaskCardProps) {
   const [isCompleting, setIsCompleting] = useState(false)
   const [isDeleting, setIsDeleting] = useState(false)
   const [showDeleteDialog, setShowDeleteDialog] = useState(false)
@@ -39,6 +55,12 @@ export function TaskCard({ task, onComplete, onDelete, onEdit }: TaskCardProps) 
   const [loadingSubtasks, setLoadingSubtasks] = useState(false)
   const [subtaskCount, setSubtaskCount] = useState(0)
   const [completedSubtaskCount, setCompletedSubtaskCount] = useState(0)
+  
+  // Attachment state
+  const [attachments, setAttachments] = useState<AttachmentWithSignedUrl[]>([])
+  const [loadingAttachments, setLoadingAttachments] = useState(false)
+  const [showAddAttachment, setShowAddAttachment] = useState(false)
+  const [previewAttachment, setPreviewAttachment] = useState<AttachmentWithSignedUrl | null>(null)
 
   const isCompleted = task.status === 'completed'
   const isOverdue = task.status === 'overdue'
@@ -56,6 +78,13 @@ export function TaskCard({ task, onComplete, onDelete, onEdit }: TaskCardProps) 
       loadSubtasks()
     }
   }, [showDetails, task.parent_task_id])
+
+  // Load attachments when details dialog opens
+  useEffect(() => {
+    if (showDetails) {
+      loadAttachments()
+    }
+  }, [showDetails])
 
   const quickLoadSubtaskCount = async () => {
     try {
@@ -109,6 +138,74 @@ export function TaskCard({ task, onComplete, onDelete, onEdit }: TaskCardProps) 
     }
   }
 
+  // Attachment handlers
+  const loadAttachments = async () => {
+    setLoadingAttachments(true)
+    try {
+      const result = await getTaskAttachments(task.id)
+      if (result.success && result.data) {
+        setAttachments(result.data)
+      }
+    } catch (error) {
+      console.error('Error loading attachments:', error)
+    } finally {
+      setLoadingAttachments(false)
+    }
+  }
+
+  const handleAddFile = async (file: File) => {
+    const result = await uploadFileAttachment(task.id, file)
+    if (result.success) {
+      await loadAttachments()
+    }
+  }
+
+  const handleAddChecklist = async (items: string[]) => {
+    const result = await createChecklistAttachment({ 
+      task_id: task.id, 
+      checklist_items: items.map(text => ({ 
+        id: crypto.randomUUID(), 
+        text, 
+        checked: false 
+      }))
+    })
+    if (result.success) {
+      await loadAttachments()
+    }
+  }
+
+  const handleAddLink = async (url: string, title?: string, description?: string) => {
+    const result = await createLinkAttachment({ 
+      task_id: task.id, 
+      link_url: url, 
+      link_title: title, 
+      link_description: description 
+    })
+    if (result.success) {
+      await loadAttachments()
+    }
+  }
+
+  const handleToggleChecklistItem = async (attachmentId: string, itemId: string, checked: boolean) => {
+    await toggleChecklistItem(attachmentId, itemId, checked)
+    await loadAttachments()
+  }
+
+  const handleAddChecklistItem = async (attachmentId: string, text: string) => {
+    await addChecklistItem(attachmentId, text)
+    await loadAttachments()
+  }
+
+  const handleDeleteChecklistItem = async (attachmentId: string, itemId: string) => {
+    await deleteChecklistItem(attachmentId, itemId)
+    await loadAttachments()
+  }
+
+  const handleDeleteAttachment = async (attachmentId: string) => {
+    await deleteAttachment(attachmentId)
+    await loadAttachments()
+  }
+
   const handleComplete = async () => {
     if (isCompleted) return
     
@@ -136,118 +233,108 @@ export function TaskCard({ task, onComplete, onDelete, onEdit }: TaskCardProps) 
   return (
     <>
       <Card 
-        className={`group relative transition-all duration-200 hover:shadow-lg cursor-pointer ${
+        draggable={!!onDragStart}
+        onDragStart={(e) => onDragStart?.(e, task)}
+        onDragEnd={onDragEnd}
+        className={`group relative stat-card transition-all duration-200 hover:shadow-lg cursor-pointer hover-lift ${
+          isDragging ? 'opacity-50 scale-95' : ''
+        } ${
           isCompleted 
-            ? 'bg-neutral-900 border-neutral-800 opacity-60' 
+            ? 'opacity-75 card-green-tint' 
             : isOverdue
-            ? 'bg-neutral-900 border-red-900/50'
-            : 'bg-neutral-900 border-neutral-800 hover:border-neutral-700'
+            ? 'border-red-400/30 card-red-tint'
+            : 'hover:border-neutral-400 dark:hover:border-neutral-700'
         }`}
         onClick={() => setShowDetails(true)}
       >
-        <div className="p-3 space-y-2">
-          {/* Header with checkbox and difficulty */}
-          <div className="flex items-start gap-2">
+        {/* Difficulty badge - top right */}
+        <div className="absolute top-2 right-2 text-xs font-medium text-neutral-500 dark:text-neutral-400 bg-neutral-100 dark:bg-neutral-800 px-1.5 py-0.5 rounded">
+          {getDifficultyDisplay(task.difficulty)}
+        </div>
+
+        <div className="p-4 pb-14 pt-8 space-y-3">
+          {/* Header with checkbox */}
+          <div className="flex items-start gap-3">
             <Checkbox
               checked={isCompleted}
               onCheckedChange={handleComplete}
               disabled={isCompleting || isCompleted}
-              className="mt-0.5 border-neutral-700 data-[state=checked]:bg-white data-[state=checked]:border-white data-[state=checked]:text-black"
+              className="mt-0.5"
               onClick={(e) => e.stopPropagation()}
             />
             
             <div className="flex-1 min-w-0">
               <h3 
-                className={`font-medium text-sm ${
+                className={`font-semibold text-base leading-tight ${
                   isCompleted 
                     ? 'line-through text-neutral-500' 
-                    : 'text-white'
+                    : 'text-neutral-900 dark:text-white'
                 }`}
               >
                 {task.title}
               </h3>
-              
-              {task.description && (
-                <p className="text-xs text-neutral-500 mt-0.5 line-clamp-1">
-                  {task.description}
-                </p>
-              )}
-            </div>
-
-            <div className="flex items-center gap-1 text-xs text-neutral-500">
-              {getDifficultyDisplay(task.difficulty)}
             </div>
           </div>
 
-          {/* Tags & Category */}
-          <div className="flex flex-wrap gap-1.5">
-            <span className="px-2 py-0.5 text-[10px] bg-neutral-800 text-neutral-400 rounded border border-neutral-700">
-              {task.category}
-            </span>
-            
-            {task.due_date && (
-              <span className={`px-2 py-0.5 text-[10px] rounded border ${
-                isOverdue ? 'bg-red-950/50 text-red-400 border-red-900' :
-                'bg-neutral-800 text-neutral-400 border-neutral-700'
+          {/* Tags & Status */}
+          <div className="flex flex-wrap gap-2">
+            {task.due_date && !isCompleted && (
+              <span className={`px-2.5 py-1 text-[11px] font-medium rounded shadow-sm ${
+                isOverdue ? 'status-overdue' : 'bg-blue-500/10 text-blue-400 border border-blue-500/40'
               }`}>
                 {formatDueDate(task.due_date)}
               </span>
             )}
             
             {task.is_recurring && (
-              <span className="px-2 py-0.5 text-[10px] bg-neutral-800 text-neutral-400 rounded border border-neutral-700">
+              <span className="px-2.5 py-1 text-[11px] font-medium bg-purple-500/10 text-purple-400 rounded border border-purple-500/40 shadow-sm">
                 🔄 Recurring
               </span>
             )}
 
             {/* Show subtask count if there are subtasks and this is not a subtask itself */}
             {!task.parent_task_id && subtaskCount > 0 && (
-              <span className="px-2 py-0.5 text-[10px] bg-neutral-800 text-neutral-400 rounded border border-neutral-700">
+              <span className="px-2.5 py-1 text-[11px] font-medium bg-cyan-500/10 text-cyan-400 rounded border border-cyan-500/40 shadow-sm">
                 ✓ {completedSubtaskCount}/{subtaskCount}
               </span>
             )}
           </div>
 
-          {/* Rewards */}
-          {!isCompleted && (
-            <div className="flex items-center gap-3 pt-1 border-t border-neutral-800 text-[11px]">
-              <div className="flex items-center gap-1 text-neutral-400">
-                <span>💰</span>
-                <span>{task.gold_reward}</span>
-              </div>
-              <div className="flex items-center gap-1 text-neutral-400">
-                <span>⭐</span>
-                <span>{task.xp_reward}</span>
-              </div>
-            </div>
-          )}
+
 
           {/* Action Buttons (shown on hover) */}
           <div 
-            className="flex gap-1.5 opacity-0 group-hover:opacity-100 transition-opacity pt-1"
+            className="flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity pt-2"
             onClick={(e) => e.stopPropagation()}
           >
             {onEdit && !isCompleted && (
               <button
                 onClick={() => onEdit(task)}
-                className="flex-1 px-2 py-1 text-[11px] bg-neutral-800 text-neutral-300 hover:bg-neutral-700 rounded border border-neutral-700"
+                className="flex-1 px-3 py-1.5 text-xs bg-neutral-100 dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300 hover:bg-neutral-200 dark:hover:bg-neutral-700 rounded border border-neutral-300 dark:border-neutral-700"
               >
                 Edit
               </button>
             )}
             <button
               onClick={() => setShowDeleteDialog(true)}
-              className="flex-1 px-2 py-1 text-[11px] bg-neutral-800 text-red-400 hover:bg-red-950/50 rounded border border-neutral-700"
+              className="flex-1 px-3 py-1.5 text-xs bg-neutral-100 dark:bg-neutral-800 text-red-500 dark:text-red-400 hover:bg-red-100 dark:hover:bg-red-950/50 rounded border border-neutral-300 dark:border-neutral-700"
             >
               Delete
             </button>
           </div>
         </div>
 
-        {/* Completed badge */}
-        {isCompleted && (
-          <div className="absolute top-2 right-2 bg-white text-black px-2 py-0.5 rounded text-[10px] font-medium">
-            ✓ Done
+        {/* Bottom-left rewards */}
+        {!isCompleted && (
+          <div className="absolute left-3 bottom-3 flex items-center gap-4 text-xs text-neutral-600 dark:text-neutral-400">
+            <div className="flex items-center gap-1.5">
+              <span>💰</span>
+              <span className="font-medium">{task.gold_reward}</span>
+            </div>
+            <div className="flex items-center gap-1.5">
+              <span>⭐</span>
+              <span className="font-medium">{task.xp_reward}</span>
+            </div>
           </div>
         )}
 
@@ -261,10 +348,10 @@ export function TaskCard({ task, onComplete, onDelete, onEdit }: TaskCardProps) 
 
       {/* Delete Confirmation Dialog */}
       <Dialog open={showDeleteDialog} onOpenChange={setShowDeleteDialog}>
-        <DialogContent className="bg-neutral-950 border-neutral-800">
+        <DialogContent>
           <DialogHeader>
-            <DialogTitle className="text-white">Delete Task?</DialogTitle>
-            <DialogDescription className="text-neutral-400">
+            <DialogTitle className="text-neutral-900 dark:text-white">Delete Task?</DialogTitle>
+            <DialogDescription className="text-neutral-600 dark:text-neutral-400">
               Are you sure you want to delete "{task.title}"? This action cannot be undone.
             </DialogDescription>
           </DialogHeader>
@@ -272,7 +359,7 @@ export function TaskCard({ task, onComplete, onDelete, onEdit }: TaskCardProps) 
             <Button
               variant="outline"
               onClick={() => setShowDeleteDialog(false)}
-              className="flex-1 border-neutral-800 text-neutral-300 hover:bg-neutral-900"
+              className="flex-1"
               disabled={isDeleting}
             >
               Cancel
@@ -288,49 +375,54 @@ export function TaskCard({ task, onComplete, onDelete, onEdit }: TaskCardProps) 
         </DialogContent>
       </Dialog>
 
-      {/* Task Details Dialog */}
+      {/* Task Details Dialog - Two Column Layout */}
       <Dialog open={showDetails} onOpenChange={setShowDetails}>
-        <DialogContent className="bg-neutral-950 border-neutral-800 max-w-2xl">
+        <DialogContent className="max-w-4xl max-h-[85vh] overflow-y-auto">
           <DialogHeader>
-            <DialogTitle className="text-xl font-semibold text-white flex items-center gap-2">
+            <DialogTitle className="text-xl font-semibold text-neutral-900 dark:text-white flex items-center gap-2">
               {task.title}
             </DialogTitle>
-            <DialogDescription className="text-neutral-400">
+            <DialogDescription className="text-neutral-600 dark:text-neutral-400">
               Task Details
             </DialogDescription>
           </DialogHeader>
           
-          <div className="space-y-4">
-            {/* Description */}
-            {task.description && (
-              <div>
-                <h4 className="font-medium text-neutral-300 mb-2 text-sm">Description</h4>
-                <p className="text-neutral-400 text-sm">{task.description}</p>
-              </div>
-            )}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {/* Left Column - Task Info */}
+            <div className="space-y-4">
+              {/* Description */}
+              {task.description && (
+                <div>
+                  <h4 className="font-medium text-neutral-700 dark:text-neutral-300 mb-2 text-sm">Description</h4>
+                  <p className="text-neutral-600 dark:text-neutral-400 text-sm">{task.description}</p>
+                </div>
+              )}
 
-            {/* Metadata Grid */}
-            <div className="grid grid-cols-2 gap-3">
+              {/* Metadata Grid */}
+              <div className="grid grid-cols-2 gap-3">
               <div>
-                <h4 className="font-medium text-neutral-300 mb-1 text-xs">Category</h4>
-                <span className="px-2 py-1 text-xs bg-neutral-900 text-neutral-300 rounded border border-neutral-800 inline-block capitalize">
-                  {task.category === 'main' ? 'Main Quest' : task.category === 'side' ? 'Side Quest' : 'Daily Task'}
-                </span>
+                <h4 className="font-medium text-neutral-700 dark:text-neutral-300 mb-1 text-xs">Color</h4>
+                <div className="flex items-center gap-2">
+                  <span className={`w-4 h-4 rounded-full ${getTaskColor(task.color).bg}`} />
+                  <span className="text-xs text-neutral-700 dark:text-neutral-300 capitalize">
+                    {getTaskColor(task.color).name}
+                  </span>
+                </div>
               </div>
               
               <div>
-                <h4 className="font-medium text-neutral-300 mb-1 text-xs">Priority</h4>
-                <span className="px-2 py-1 text-xs bg-neutral-900 text-neutral-300 rounded border border-neutral-800 inline-block">
+                <h4 className="font-medium text-neutral-700 dark:text-neutral-300 mb-1 text-xs">Priority</h4>
+                <span className="px-2 py-1 text-xs bg-neutral-100 dark:bg-neutral-900 text-neutral-700 dark:text-neutral-300 rounded border border-neutral-200 dark:border-neutral-800 inline-block">
                   {task.priority} - {task.priority === 1 ? 'Lowest' : task.priority === 2 ? 'Low' : task.priority === 3 ? 'Normal' : task.priority === 4 ? 'High' : 'Urgent'}
                 </span>
               </div>
 
               <div>
-                <h4 className="font-medium text-neutral-300 mb-1 text-xs">Status</h4>
+                <h4 className="font-medium text-neutral-700 dark:text-neutral-300 mb-1 text-xs">Status</h4>
                 <span className={`px-2 py-1 text-xs rounded border inline-block ${
-                  isCompleted ? 'bg-neutral-900 text-white border-neutral-700' :
-                  isOverdue ? 'bg-red-950/50 text-red-400 border-red-900' :
-                  'bg-neutral-900 text-neutral-300 border-neutral-800'
+                  isCompleted ? 'bg-neutral-100 dark:bg-neutral-900 text-neutral-900 dark:text-white border-neutral-300 dark:border-neutral-700' :
+                  isOverdue ? 'bg-red-100 dark:bg-red-950/50 text-red-600 dark:text-red-400 border-red-300 dark:border-red-900' :
+                  'bg-neutral-100 dark:bg-neutral-900 text-neutral-700 dark:text-neutral-300 border-neutral-200 dark:border-neutral-800'
                 }`}>
                   {task.status}
                 </span>
@@ -338,82 +430,144 @@ export function TaskCard({ task, onComplete, onDelete, onEdit }: TaskCardProps) 
 
               {task.due_date && (
                 <div>
-                  <h4 className="font-medium text-neutral-300 mb-1 text-xs">Due Date</h4>
-                  <span className="px-2 py-1 text-xs bg-neutral-900 text-neutral-300 rounded border border-neutral-800 inline-block">
+                  <h4 className="font-medium text-neutral-700 dark:text-neutral-300 mb-1 text-xs">Due Date</h4>
+                  <span className="px-2 py-1 text-xs bg-neutral-100 dark:bg-neutral-900 text-neutral-700 dark:text-neutral-300 rounded border border-neutral-200 dark:border-neutral-800 inline-block">
                     {formatDueDate(task.due_date)}
                   </span>
                 </div>
               )}
             </div>
 
-            {/* Rewards */}
-            <div>
-              <h4 className="font-medium text-neutral-300 mb-2 text-sm">Rewards</h4>
-              <div className="flex gap-4 p-3 bg-neutral-900 rounded-lg border border-neutral-800">
-                <div className="flex items-center gap-2">
-                  <span className="text-xl">💰</span>
-                  <span className="text-white font-medium">{task.gold_reward} Gold</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <span className="text-xl">⭐</span>
-                  <span className="text-white font-medium">{task.xp_reward} XP</span>
+              {/* Rewards */}
+              <div>
+                <h4 className="font-medium text-neutral-700 dark:text-neutral-300 mb-2 text-sm">Rewards</h4>
+                <div className="flex gap-4 p-3 bg-neutral-100 dark:bg-neutral-900 rounded-lg border border-neutral-200 dark:border-neutral-800">
+                  <div className="flex items-center gap-2">
+                    <span className="text-xl">💰</span>
+                    <span className="text-neutral-900 dark:text-white font-medium">{task.gold_reward} Gold</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <span className="text-xl">⭐</span>
+                    <span className="text-neutral-900 dark:text-white font-medium">{task.xp_reward} XP</span>
+                  </div>
                 </div>
               </div>
+
+              {/* Subtasks - only show for parent tasks (not subtasks themselves) */}
+              {!task.parent_task_id && (
+                <div>
+                  <h4 className="font-medium text-neutral-700 dark:text-neutral-300 mb-2 text-sm">Subtasks</h4>
+                  {loadingSubtasks ? (
+                    <div className="text-sm text-neutral-500 p-3 bg-neutral-100 dark:bg-neutral-900 rounded-lg border border-neutral-200 dark:border-neutral-800">
+                      Loading subtasks...
+                    </div>
+                  ) : (
+                    <SubtaskList
+                      parentTaskId={task.id}
+                      subtasks={subtasks}
+                      onToggleSubtask={handleToggleSubtask}
+                      onAddSubtask={handleAddSubtask}
+                      onDeleteSubtask={handleDeleteSubtask}
+                    />
+                  )}
+                </div>
+              )}
             </div>
 
-            {/* Subtasks - only show for parent tasks (not subtasks themselves) */}
-            {!task.parent_task_id && (
+            {/* Right Column - Attachments */}
+            <div className="space-y-4">
+              {/* Attachments Section */}
               <div>
-                <h4 className="font-medium text-neutral-300 mb-2 text-sm">Subtasks</h4>
-                {loadingSubtasks ? (
-                  <div className="text-sm text-neutral-500 p-3 bg-neutral-900 rounded-lg border border-neutral-800">
-                    Loading subtasks...
+                <div className="flex items-center justify-between mb-2">
+                  <h4 className="font-medium text-neutral-700 dark:text-neutral-300 text-sm">
+                    Attachments {attachments.length > 0 && `(${attachments.length})`}
+                  </h4>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => setShowAddAttachment(true)}
+                    className="text-xs h-7 px-2"
+                  >
+                    + Add
+                  </Button>
+                </div>
+                {loadingAttachments ? (
+                  <div className="text-sm text-neutral-500 p-3 bg-neutral-100 dark:bg-neutral-900 rounded-lg border border-neutral-200 dark:border-neutral-800">
+                    Loading attachments...
+                  </div>
+                ) : attachments.length === 0 ? (
+                  <div className="text-sm text-neutral-500 p-3 bg-neutral-100 dark:bg-neutral-900 rounded-lg border border-neutral-200 dark:border-neutral-800 text-center">
+                    No attachments yet. Add files, checklists, or links.
                   </div>
                 ) : (
-                  <SubtaskList
-                    parentTaskId={task.id}
-                    subtasks={subtasks}
-                    onToggleSubtask={handleToggleSubtask}
-                    onAddSubtask={handleAddSubtask}
-                    onDeleteSubtask={handleDeleteSubtask}
+                  <AttachmentList
+                    attachments={attachments}
+                    onToggleChecklistItem={handleToggleChecklistItem}
+                    onAddChecklistItem={handleAddChecklistItem}
+                    onDeleteChecklistItem={handleDeleteChecklistItem}
+                    onDeleteAttachment={handleDeleteAttachment}
+                    onPreviewFile={setPreviewAttachment}
                   />
                 )}
               </div>
-            )}
 
-            {/* Timestamps */}
-            <div className="text-xs text-neutral-500 space-y-1 pt-2 border-t border-neutral-800">
-              <div>Created: {new Date(task.created_at).toLocaleString()}</div>
-              {task.completed_at && (
-                <div>Completed: {new Date(task.completed_at).toLocaleString()}</div>
-              )}
+              {/* Timestamps */}
+              <div className="text-xs text-neutral-500 space-y-1 pt-2 border-t border-neutral-200 dark:border-neutral-800">
+                <div>Created: {new Date(task.created_at).toLocaleString()}</div>
+                {task.completed_at && (
+                  <div>Completed: {new Date(task.completed_at).toLocaleString()}</div>
+                )}
+              </div>
             </div>
+          </div>
 
-            {/* Actions */}
-            <div className="flex gap-3 pt-4 border-t border-neutral-800">
-              {!isCompleted && (
-                <Button
-                  onClick={() => {
-                    handleComplete()
-                    setShowDetails(false)
-                  }}
-                  className="flex-1 bg-white text-black hover:bg-neutral-200"
-                  disabled={isCompleting}
-                >
-                  Complete Task
-                </Button>
-              )}
+          {/* Actions - Full width at bottom */}
+          <div className="flex gap-3 pt-4 border-t border-neutral-200 dark:border-neutral-800">
+            {!isCompleted && (
               <Button
-                variant="outline"
-                onClick={() => setShowDetails(false)}
-                className="flex-1 border-neutral-800 text-neutral-300 hover:bg-neutral-900"
+                onClick={() => {
+                  handleComplete()
+                  setShowDetails(false)
+                }}
+                variant="primary"
+                className="flex-1"
+                disabled={isCompleting}
               >
-                Close
+                Complete Task
               </Button>
-            </div>
+            )}
+            <Button
+              variant="outline"
+              onClick={() => setShowDetails(false)}
+              className="flex-1"
+            >
+              Close
+            </Button>
           </div>
         </DialogContent>
       </Dialog>
+
+      {/* Add Attachment Dialog */}
+      <AddAttachmentDialog
+        isOpen={showAddAttachment}
+        onClose={() => setShowAddAttachment(false)}
+        onAddFile={handleAddFile}
+        onAddChecklist={handleAddChecklist}
+        onAddLink={handleAddLink}
+      />
+
+      {/* File Preview Modal */}
+      {previewAttachment && (
+        <FilePreviewModal
+          isOpen={!!previewAttachment}
+          onClose={() => setPreviewAttachment(null)}
+          attachment={previewAttachment}
+          onDelete={async () => {
+            await handleDeleteAttachment(previewAttachment.id)
+            setPreviewAttachment(null)
+          }}
+        />
+      )}
     </>
   )
 }

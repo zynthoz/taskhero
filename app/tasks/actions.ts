@@ -29,7 +29,7 @@ export async function createTask(input: CreateTaskInput): Promise<{ success: boo
       user_id: user.id,
       title: input.title,
       description: input.description || null,
-      category: input.category,
+      color: input.color || 'gray',
       priority: input.priority,
       difficulty: input.difficulty,
       status: 'pending' as const,
@@ -408,7 +408,7 @@ export async function createSubtask(
     // Get parent task to inherit some properties
     const { data: parentTask, error: parentError } = await supabase
       .from('tasks')
-      .select('category, priority')
+      .select('color, priority')
       .eq('id', parentTaskId)
       .eq('user_id', user.id)
       .single()
@@ -424,7 +424,7 @@ export async function createSubtask(
       user_id: user.id,
       title,
       description: null,
-      category: parentTask.category,
+      color: parentTask.color || 'gray',
       priority: parentTask.priority,
       difficulty: 1,
       status: 'pending' as const,

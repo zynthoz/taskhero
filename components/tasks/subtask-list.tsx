@@ -47,9 +47,9 @@ export function SubtaskList({
     <div className="mt-4 space-y-2">
       {/* Progress Header */}
       {totalCount > 0 && (
-        <div className="flex items-center gap-2 text-xs text-neutral-400 mb-2">
+        <div className="flex items-center gap-2 text-xs text-neutral-600 dark:text-neutral-400 mb-2">
           <span>Subtasks</span>
-          <span className="text-neutral-600">•</span>
+          <span className="text-neutral-400 dark:text-neutral-600">•</span>
           <span>{completedCount}/{totalCount}</span>
         </div>
       )}
@@ -59,25 +59,24 @@ export function SubtaskList({
         {subtasks.map((subtask) => (
           <div
             key={subtask.id}
-            className="flex items-center gap-2 p-2 bg-neutral-800/50 rounded border border-neutral-800 hover:border-neutral-700 transition-colors group"
+            className="flex items-center gap-2 p-2 bg-neutral-100 dark:bg-neutral-800/50 rounded border border-neutral-200 dark:border-neutral-800 hover:border-neutral-300 dark:hover:border-neutral-700 transition-colors group"
           >
             <Checkbox
               checked={subtask.status === 'completed'}
               onCheckedChange={() => onToggleSubtask(subtask.id)}
-              className="border-neutral-600"
             />
             <span
               className={`flex-1 text-sm ${
                 subtask.status === 'completed'
                   ? 'text-neutral-500 line-through'
-                  : 'text-white'
+                  : 'text-neutral-900 dark:text-white'
               }`}
             >
               {subtask.title}
             </span>
             <button
               onClick={() => onDeleteSubtask(subtask.id)}
-              className="opacity-0 group-hover:opacity-100 text-xs text-neutral-500 hover:text-red-400 transition-all"
+              className="opacity-0 group-hover:opacity-100 text-xs text-neutral-500 hover:text-red-500 dark:hover:text-red-400 transition-all"
             >
               ✕
             </button>
@@ -91,15 +90,16 @@ export function SubtaskList({
           value={newSubtaskTitle}
           onChange={(e) => setNewSubtaskTitle(e.target.value)}
           placeholder="+ Add subtask..."
-          className="flex-1 h-8 text-sm bg-neutral-800 border-neutral-700 focus:border-neutral-600"
+          className="flex-1 h-8 text-sm"
           disabled={isAdding}
         />
         {newSubtaskTitle.trim() && (
           <Button
             type="submit"
             size="sm"
+            variant="primary"
             disabled={isAdding}
-            className="h-8 px-3 bg-white text-black hover:bg-neutral-200"
+            className="h-8 px-3"
           >
             Add
           </Button>

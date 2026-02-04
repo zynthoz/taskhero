@@ -26,13 +26,13 @@ const toastVariants = cva(
   {
     variants: {
       variant: {
-        default: 'border-neutral-800 bg-neutral-950 text-white',
+        default: 'border-neutral-300 dark:border-neutral-800 bg-white dark:bg-neutral-950 text-neutral-900 dark:text-white',
         success:
-          'border-green-900 bg-green-950/90 text-green-400',
+          'border-green-300 dark:border-green-900 bg-green-100 dark:bg-green-950/90 text-green-700 dark:text-green-400',
         destructive:
-          'border-red-900 bg-red-950/90 text-red-400',
+          'border-red-300 dark:border-red-900 bg-red-100 dark:bg-red-950/90 text-red-700 dark:text-red-400',
         achievement:
-          'border-neutral-700 bg-neutral-900 text-white',
+          'border-neutral-300 dark:border-neutral-700 bg-white dark:bg-neutral-900 text-neutral-900 dark:text-white',
       },
     },
     defaultVariants: {
@@ -63,7 +63,7 @@ const ToastAction = React.forwardRef<
   <ToastPrimitives.Action
     ref={ref}
     className={cn(
-      'inline-flex h-8 shrink-0 items-center justify-center rounded-md border border-neutral-700 bg-transparent px-3 text-sm font-medium transition-colors hover:bg-neutral-800 focus:outline-none focus:ring-1 focus:ring-neutral-600 disabled:pointer-events-none disabled:opacity-50',
+      'inline-flex h-8 shrink-0 items-center justify-center rounded-md border border-neutral-300 dark:border-neutral-700 bg-transparent px-3 text-sm font-medium transition-colors hover:bg-neutral-100 dark:hover:bg-neutral-800 focus:outline-none focus:ring-1 focus:ring-purple-500 dark:focus:ring-neutral-600 disabled:pointer-events-none disabled:opacity-50',
       className
     )}
     {...props}

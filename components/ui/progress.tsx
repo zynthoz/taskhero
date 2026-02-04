@@ -9,7 +9,7 @@ interface ProgressProps extends React.HTMLAttributes<HTMLDivElement> {
 }
 
 const variantStyles = {
-  default: 'bg-white',
+  default: 'progress-bar-fill',
   xp: 'bg-blue-500',
   health: 'bg-red-500',
   streak: 'bg-green-500',
@@ -25,7 +25,7 @@ const Progress = React.forwardRef<HTMLDivElement, ProgressProps>(
         className={cn('relative w-full', className)}
         {...props}
       >
-        <div className="h-3 w-full overflow-hidden rounded-md bg-neutral-900 border border-neutral-800">
+        <div className="h-3 w-full overflow-hidden rounded-md progress-bar-bg border border-neutral-300 dark:border-neutral-800">
           <div
             className={cn(
               'h-full transition-all duration-300 ease-out',
@@ -36,7 +36,7 @@ const Progress = React.forwardRef<HTMLDivElement, ProgressProps>(
         </div>
         {showLabel && (
           <div className="absolute inset-0 flex items-center justify-center">
-            <span className="text-xs font-medium text-white">
+            <span className="text-xs font-medium text-neutral-900 dark:text-white">
               {value} / {max}
             </span>
           </div>

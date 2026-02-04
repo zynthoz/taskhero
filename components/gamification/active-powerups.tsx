@@ -130,8 +130,8 @@ export function ActivePowerups() {
   }
 
   return (
-    <Card className="p-4 bg-neutral-900 border-neutral-800">
-      <h3 className="text-sm font-semibold text-white mb-3 flex items-center gap-2">
+    <Card className="p-4">
+      <h3 className="text-sm font-semibold text-neutral-900 dark:text-white mb-3 flex items-center gap-2">
         <span>✨</span>
         <span>Active Power-ups</span>
       </h3>
@@ -140,15 +140,15 @@ export function ActivePowerups() {
         {powerups.map(powerup => (
           <div
             key={powerup.id}
-            className="flex items-center justify-between p-3 bg-neutral-800/50 rounded-lg border border-neutral-700"
+            className="flex items-center justify-between p-3 bg-neutral-100 dark:bg-neutral-800/50 rounded-lg border border-neutral-200 dark:border-neutral-700"
           >
             <div className="flex items-center gap-3">
               <div className="text-2xl">{powerup.items?.emoji || '✨'}</div>
               <div>
-                <p className="text-sm font-medium text-white">
+                <p className="text-sm font-medium text-neutral-900 dark:text-white">
                   {powerup.items?.name || 'Unknown Item'}
                 </p>
-                <p className="text-xs text-neutral-400">
+                <p className="text-xs text-neutral-600 dark:text-neutral-400">
                   {formatEffectType(powerup.effect_type)}
                   {powerup.effect_value && ` (${powerup.effect_value}x)`}
                 </p>
@@ -156,7 +156,7 @@ export function ActivePowerups() {
             </div>
             
             <div className="text-right">
-              <div className="text-sm font-bold text-green-400">
+              <div className="text-sm font-bold text-green-600 dark:text-green-400">
                 {timeRemaining[powerup.id] || 'Calculating...'}
               </div>
               <div className="text-xs text-neutral-500">remaining</div>

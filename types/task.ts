@@ -1,16 +1,39 @@
 // Task-related TypeScript types and interfaces
 
 export type TaskStatus = 'pending' | 'in-progress' | 'completed' | 'overdue' | 'cancelled'
-export type TaskCategory = 'main' | 'side' | 'daily'
 export type TaskPriority = 1 | 2 | 3 | 4 | 5
 export type TaskDifficulty = 1 | 2 | 3 | 4 | 5
+
+// Available task colors for user selection
+export const TASK_COLORS = [
+  { id: 'gray', name: 'Gray', bg: 'bg-neutral-500', text: 'text-neutral-600 dark:text-neutral-400', hex: '#737373' },
+  { id: 'red', name: 'Red', bg: 'bg-red-500', text: 'text-red-600 dark:text-red-400', hex: '#ef4444' },
+  { id: 'orange', name: 'Orange', bg: 'bg-orange-500', text: 'text-orange-600 dark:text-orange-400', hex: '#f97316' },
+  { id: 'amber', name: 'Amber', bg: 'bg-amber-500', text: 'text-amber-600 dark:text-amber-400', hex: '#f59e0b' },
+  { id: 'yellow', name: 'Yellow', bg: 'bg-yellow-500', text: 'text-yellow-600 dark:text-yellow-400', hex: '#eab308' },
+  { id: 'lime', name: 'Lime', bg: 'bg-lime-500', text: 'text-lime-600 dark:text-lime-400', hex: '#84cc16' },
+  { id: 'green', name: 'Green', bg: 'bg-green-500', text: 'text-green-600 dark:text-green-400', hex: '#22c55e' },
+  { id: 'emerald', name: 'Emerald', bg: 'bg-emerald-500', text: 'text-emerald-600 dark:text-emerald-400', hex: '#10b981' },
+  { id: 'teal', name: 'Teal', bg: 'bg-teal-500', text: 'text-teal-600 dark:text-teal-400', hex: '#14b8a6' },
+  { id: 'cyan', name: 'Cyan', bg: 'bg-cyan-500', text: 'text-cyan-600 dark:text-cyan-400', hex: '#06b6d4' },
+  { id: 'sky', name: 'Sky', bg: 'bg-sky-500', text: 'text-sky-600 dark:text-sky-400', hex: '#0ea5e9' },
+  { id: 'blue', name: 'Blue', bg: 'bg-blue-500', text: 'text-blue-600 dark:text-blue-400', hex: '#3b82f6' },
+  { id: 'indigo', name: 'Indigo', bg: 'bg-indigo-500', text: 'text-indigo-600 dark:text-indigo-400', hex: '#6366f1' },
+  { id: 'violet', name: 'Violet', bg: 'bg-violet-500', text: 'text-violet-600 dark:text-violet-400', hex: '#8b5cf6' },
+  { id: 'purple', name: 'Purple', bg: 'bg-purple-500', text: 'text-purple-600 dark:text-purple-400', hex: '#a855f7' },
+  { id: 'fuchsia', name: 'Fuchsia', bg: 'bg-fuchsia-500', text: 'text-fuchsia-600 dark:text-fuchsia-400', hex: '#d946ef' },
+  { id: 'pink', name: 'Pink', bg: 'bg-pink-500', text: 'text-pink-600 dark:text-pink-400', hex: '#ec4899' },
+  { id: 'rose', name: 'Rose', bg: 'bg-rose-500', text: 'text-rose-600 dark:text-rose-400', hex: '#f43f5e' },
+] as const
+
+export type TaskColorId = typeof TASK_COLORS[number]['id']
 
 export interface Task {
   id: string
   user_id: string
   title: string
   description: string | null
-  category: TaskCategory
+  color: TaskColorId
   priority: TaskPriority
   difficulty: TaskDifficulty
   status: TaskStatus
@@ -20,7 +43,7 @@ export interface Task {
   xp_reward: number
   gold_reward: number
   folder_id: string | null
-  parent_task_id: string | null // For subtasks
+  parent_task_id: string | null
   completed_at: string | null
   created_at: string
   updated_at: string
@@ -28,16 +51,16 @@ export interface Task {
 
 export interface RecurrencePattern {
   type: 'daily' | 'weekly' | 'monthly'
-  interval: number // e.g., every 2 days, every 3 weeks
-  days_of_week?: number[] // For weekly: [0=Sunday, 1=Monday, ..., 6=Saturday]
-  day_of_month?: number // For monthly: 1-31
+  interval: number
+  days_of_week?: number[]
+  day_of_month?: number
   end_date?: string | null
 }
 
 export interface CreateTaskInput {
   title: string
   description?: string
-  category: TaskCategory
+  color?: TaskColorId
   priority: TaskPriority
   difficulty: TaskDifficulty
   due_date?: string
@@ -50,7 +73,7 @@ export interface CreateTaskInput {
 export interface UpdateTaskInput {
   title?: string
   description?: string
-  category?: TaskCategory
+  color?: TaskColorId
   priority?: TaskPriority
   difficulty?: TaskDifficulty
   status?: TaskStatus
@@ -105,9 +128,9 @@ export function getTaskStatus(
   return currentStatus
 }
 
-// Helper to get difficulty display (sword icons)
+// Helper to get difficulty display (number + sword icon)
 export function getDifficultyDisplay(difficulty: TaskDifficulty): string {
-  return '⚔️'.repeat(difficulty)
+  return `${difficulty}⚔️`
 }
 
 // Helper to get priority color
@@ -122,14 +145,10 @@ export function getPriorityColor(priority: TaskPriority): string {
   return colors[priority]
 }
 
-// Helper to get category color
-export function getCategoryColor(category: TaskCategory): string {
-  const colors = {
-    main: 'bg-red-500/10 text-red-400 border-red-500/20',
-    side: 'bg-blue-500/10 text-blue-400 border-blue-500/20',
-    daily: 'bg-green-500/10 text-green-400 border-green-500/20',
-  }
-  return colors[category]
+// Helper to get task color by ID
+export function getTaskColor(colorId: TaskColorId | undefined) {
+  const color = TASK_COLORS.find(c => c.id === colorId)
+  return color || TASK_COLORS[0] // Default to gray
 }
 
 // Helper to format due date display

@@ -30,11 +30,12 @@ export default function GoldHistoryPage() {
     title: 'Novice Adventurer',
     level: 1,
     currentXp: 0,
-    xpForNextLevel: 100,
+    xpForNextLevel: undefined as number | undefined,
     currentStreak: 0,
     totalPoints: 0,
     rank: 'Unranked',
   })
+  const [profileLoaded, setProfileLoaded] = useState(false)
 
   useEffect(() => {
     loadTransactions()
@@ -52,7 +53,7 @@ export default function GoldHistoryPage() {
       .single()
     
     if (data) {
-      const xpForNextLevel = data.level * 100
+      const xpForNextLevel = (data.level || 1) * 100
       setUserData({
         username: data.username || user.email?.split('@')[0] || 'Hero',
         title: data.title || 'Novice Adventurer',
@@ -63,6 +64,9 @@ export default function GoldHistoryPage() {
         totalPoints: data.total_xp || 0,
         rank: 'Unranked',
       })
+      setProfileLoaded(true)
+    } else {
+      setProfileLoaded(true)
     }
   }
 
@@ -137,7 +141,7 @@ export default function GoldHistoryPage() {
   if (isLoading) {
     return (
       <ThreeColumnLayout
-        leftSidebar={<LeftSidebar user={userData} />}
+        leftSidebar={<LeftSidebar user={userData} loading={!profileLoaded} />}
         rightSidebar={<RightSidebar />}
       >
         <div className="flex items-center justify-center" style={{ minHeight: '400px' }}>
@@ -149,7 +153,7 @@ export default function GoldHistoryPage() {
 
   return (
     <ThreeColumnLayout
-      leftSidebar={<LeftSidebar user={userData} />}
+      leftSidebar={<LeftSidebar user={userData} loading={!profileLoaded} />}
       rightSidebar={<RightSidebar />}
     >
       <div>

@@ -45,15 +45,20 @@ export default function GoalsPage() {
     title: 'Novice Adventurer',
     level: 1,
     currentXp: 0,
-    xpForNextLevel: 100,
+    xpForNextLevel: undefined as number | undefined,
     currentStreak: 0,
     totalPoints: 0,
     rank: 'Unranked',
   })
+  const [profileLoaded, setProfileLoaded] = useState(false)
 
   useEffect(() => {
     loadGoals()
     loadUserData()
+  }, [user])
+
+  useEffect(() => {
+    if (!user) setProfileLoaded(true)
   }, [user])
 
   const loadUserData = async () => {
@@ -67,7 +72,7 @@ export default function GoalsPage() {
       .single()
     
     if (data) {
-      const xpForNextLevel = data.level * 100
+      const xpForNextLevel = (data.level || 1) * 100
       setUserData({
         username: data.username || user.email?.split('@')[0] || 'Hero',
         title: data.title || 'Novice Adventurer',
@@ -77,7 +82,11 @@ export default function GoalsPage() {
         currentStreak: data.current_streak || 0,
         totalPoints: data.total_xp || 0,
         rank: 'Unranked',
+        avatarId: data.avatar_id || undefined,
       })
+      setProfileLoaded(true)
+    } else {
+      setProfileLoaded(true)
     }
   }
 
@@ -418,7 +427,7 @@ export default function GoalsPage() {
   if (isLoading) {
     return (
       <ThreeColumnLayout
-        leftSidebar={<LeftSidebar user={userData} />}
+        leftSidebar={<LeftSidebar user={userData} loading={!profileLoaded} />}
         rightSidebar={<RightSidebar />}
       >
         <div className="flex items-center justify-center" style={{ minHeight: '400px' }}>
@@ -437,7 +446,7 @@ export default function GoalsPage() {
       />
       
       <ThreeColumnLayout
-        leftSidebar={<LeftSidebar user={userData} />}
+        leftSidebar={<LeftSidebar user={userData} loading={!profileLoaded} />}
         rightSidebar={<RightSidebar />}
       >
         <div>

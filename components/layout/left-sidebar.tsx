@@ -53,9 +53,9 @@ export default function LeftSidebar({ user, loading = false }: LeftSidebarProps)
       </div>
 
       {/* Character & Stats Section */}
-      <div className="p-2 md:p-4 space-y-1.5 md:space-y-3 border-b border-neutral-200 dark:border-neutral-800 shrink-0">
+      <div className="p-2 md:p-4 space-y-2 md:space-y-3 border-b border-neutral-200 dark:border-neutral-800 shrink-0">
         {/* Character Avatar with Level */}
-        <div className="flex flex-col items-center gap-0.5 md:gap-1.5">
+        <div className="flex flex-col items-center gap-1 md:gap-1.5">
           {loading ? (
             <>
               <div className="w-12 h-12 md:w-24 md:h-24 rounded-xl bg-neutral-200 dark:bg-neutral-800 animate-pulse" />
@@ -75,16 +75,16 @@ export default function LeftSidebar({ user, loading = false }: LeftSidebarProps)
         </div>
 
         {/* Username + Title */}
-        <div className="text-center">
+        <div className="text-center -mt-1">
           {loading ? (
             <>
-              <div className="w-20 md:w-24 h-3 md:h-4 mx-auto rounded bg-neutral-200 dark:bg-neutral-800 animate-pulse mb-1" />
+              <div className="w-20 md:w-24 h-3 md:h-4 mx-auto rounded bg-neutral-200 dark:bg-neutral-800 animate-pulse mb-0.5" />
               <div className="w-16 md:w-20 h-2.5 md:h-3 mx-auto rounded bg-neutral-200 dark:bg-neutral-800 animate-pulse" />
             </>
           ) : (
             <>
-              <h2 className="text-xs md:text-sm font-medium text-neutral-900 dark:text-white">{user.username}</h2>
-              <p className="text-[10px] md:text-xs text-neutral-600 dark:text-neutral-400">{user.title}</p>
+              <h2 className="text-[11px] md:text-sm font-medium text-neutral-900 dark:text-white leading-tight">{user.username}</h2>
+              <p className="text-[9px] md:text-xs text-neutral-600 dark:text-neutral-400 leading-tight">{user.title}</p>
             </>
           )}
         </div>
@@ -101,7 +101,7 @@ export default function LeftSidebar({ user, loading = false }: LeftSidebarProps)
           ) : (
             <>
               <Progress value={xpProgress} className="h-1.5 md:h-2" />
-              <div className="text-center text-[9px] md:text-xs text-neutral-600 dark:text-neutral-400">
+              <div className="text-center pt-2 text-[9px] md:text-xs text-neutral-600 dark:text-neutral-400">
                 {user.currentXp} / {user.xpForNextLevel ?? (user.level * 100)} XP
               </div>
             </>

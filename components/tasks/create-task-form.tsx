@@ -271,9 +271,9 @@ export function CreateTaskForm({
           {trigger || defaultTrigger}
         </DialogTrigger>
       )}
-      <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
+      <DialogContent className="w-[95vw] max-w-2xl max-h-[90vh] overflow-y-auto">
         <DialogHeader>
-          <DialogTitle className="text-xl font-semibold text-neutral-900 dark:text-white">
+          <DialogTitle className="text-xl md:text-2xl font-semibold text-neutral-900 dark:text-white">
             Create New Task
           </DialogTitle>
           <DialogDescription className="text-sm text-neutral-600 dark:text-neutral-400">
@@ -344,13 +344,13 @@ export function CreateTaskForm({
                   Difficulty
                 </label>
                 <div className="space-y-2">
-                  <div className="flex gap-2">
+                  <div className="flex gap-1.5 md:gap-2">
                     {[1, 2, 3, 4, 5].map((level) => (
                       <button
                         key={level}
                         type="button"
                         onClick={() => setFormData({ ...formData, difficulty: level as TaskDifficulty })}
-                        className={`flex-1 py-2 px-2 rounded-lg border transition-all text-sm ${
+                        className={`flex-1 py-1.5 md:py-2 px-1 md:px-2 rounded-lg border transition-all text-xs md:text-sm ${
                           formData.difficulty === level
                             ? 'bg-neutral-900 dark:bg-white text-white dark:text-black border-neutral-900 dark:border-white'
                             : 'bg-white dark:bg-neutral-900 text-neutral-600 dark:text-neutral-400 border-neutral-300 dark:border-neutral-800 hover:border-neutral-400 dark:hover:border-neutral-700'

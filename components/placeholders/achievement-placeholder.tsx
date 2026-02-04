@@ -17,12 +17,12 @@ export function AchievementPlaceholder({
   className,
 }: AchievementPlaceholderProps) {
   return (
-    <div className={cn('flex flex-col items-center gap-2', className)}>
+    <div className={cn('flex flex-col items-center gap-1 sm:gap-2', className)}>
       <div className="relative">
         {/* Achievement badge */}
         <div
           className={cn(
-            'w-32 h-32 rounded-full flex items-center justify-center text-6xl',
+            'w-16 h-16 sm:w-24 sm:h-24 md:w-32 md:h-32 rounded-full flex items-center justify-center text-2xl sm:text-4xl md:text-6xl',
             'transition-all duration-300',
             isUnlocked
               ? 'bg-green-950/50 border-2 border-solid border-green-700 shadow-lg'
@@ -39,22 +39,22 @@ export function AchievementPlaceholder({
         {/* Sparkles for unlocked */}
         {isUnlocked && (
           <>
-            <span className="absolute -top-2 -right-2 text-2xl animate-pulse">✨</span>
-            <span className="absolute -bottom-2 -left-2 text-2xl animate-pulse delay-100">✨</span>
+            <span className="absolute -top-1 -right-1 sm:-top-2 sm:-right-2 text-sm sm:text-xl md:text-2xl animate-pulse">✨</span>
+            <span className="absolute -bottom-1 -left-1 sm:-bottom-2 sm:-left-2 text-sm sm:text-xl md:text-2xl animate-pulse delay-100">✨</span>
           </>
         )}
       </div>
 
       {/* Progress bar for in-progress achievements */}
       {!isUnlocked && progress !== undefined && (
-        <div className="w-full max-w-[128px]">
-          <div className="h-2 bg-neutral-800 rounded-full overflow-hidden">
+        <div className="w-full max-w-[80px] sm:max-w-[100px] md:max-w-[128px]">
+          <div className="h-1.5 sm:h-2 bg-neutral-800 rounded-full overflow-hidden">
             <div
               className="h-full bg-blue-500 transition-all duration-500"
               style={{ width: `${progress}%` }}
             />
           </div>
-          <span className="text-xs text-neutral-400 font-mono">
+          <span className="text-[10px] sm:text-xs text-neutral-400 font-mono">
             {progress}% Complete
           </span>
         </div>
@@ -62,7 +62,7 @@ export function AchievementPlaceholder({
 
       {label && (
         <span className={cn(
-          'text-sm font-medium text-center max-w-[128px]',
+          'text-xs sm:text-sm font-medium text-center max-w-[80px] sm:max-w-[100px] md:max-w-[128px]',
           isUnlocked ? 'text-green-400' : 'text-neutral-500'
         )}>
           {label}
@@ -71,7 +71,7 @@ export function AchievementPlaceholder({
 
       {/* Date earned (for unlocked) */}
       {isUnlocked && (
-        <span className="text-xs text-neutral-400 font-mono">
+        <span className="text-[10px] sm:text-xs text-neutral-400 font-mono">
           Unlocked Today
         </span>
       )}

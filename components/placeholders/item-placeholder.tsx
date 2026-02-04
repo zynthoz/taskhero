@@ -2,7 +2,7 @@ import React from 'react';
 import { cn } from '@/lib/utils';
 
 type ItemRarity = 'common' | 'rare' | 'epic' | 'legendary';
-type ItemSize = '48px' | '64px' | '128px' | '160px' | '180px' | '200px' | '256px';
+type ItemSize = '48px' | '64px' | '128px' | '160px' | '180px' | '200px' | '256px' | 'responsive';
 
 interface ItemPlaceholderProps {
   size?: ItemSize;
@@ -36,6 +36,7 @@ export function ItemPlaceholder({
     '180px': 'w-[180px] h-[180px] text-6xl',
     '200px': 'w-[200px] h-[200px] text-7xl',
     '256px': 'w-64 h-64 text-8xl',
+    'responsive': 'w-full aspect-square max-w-[80px] sm:max-w-[100px] md:max-w-[128px] text-2xl sm:text-3xl md:text-5xl',
   };
 
   return (
@@ -75,7 +76,7 @@ export function ItemPlaceholderSmall(props: Omit<ItemPlaceholderProps, 'size'>) 
 }
 
 export function ItemPlaceholderMedium(props: Omit<ItemPlaceholderProps, 'size'>) {
-  return <ItemPlaceholder {...props} size="128px" />;
+  return <ItemPlaceholder {...props} size="responsive" />;
 }
 
 export function ItemPlaceholderLarge(props: Omit<ItemPlaceholderProps, 'size'>) {

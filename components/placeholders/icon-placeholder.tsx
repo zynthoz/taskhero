@@ -24,7 +24,7 @@ export function IconPlaceholder({
   const sizeClasses = {
     '24px': 'w-6 h-6 text-xs',
     '32px': 'w-8 h-8 text-base',
-    '48px': 'w-12 h-12 text-2xl',
+    '48px': 'w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 text-lg sm:text-xl md:text-2xl',
   };
 
   const shapeClasses = {
@@ -47,7 +47,7 @@ export function IconPlaceholder({
         <span className="select-none">{emoji}</span>
       </div>
       {label && (
-        <span className="text-xs text-neutral-400 font-medium">
+        <span className="text-[10px] sm:text-xs text-neutral-400 font-medium">
           {label}
         </span>
       )}

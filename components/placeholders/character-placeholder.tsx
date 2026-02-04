@@ -1,7 +1,7 @@
 import React from 'react';
 import { cn } from '@/lib/utils';
 
-type PlaceholderSize = '32px' | '40px' | '48px' | '240x280px' | '300x600px' | '400px';
+type PlaceholderSize = '32px' | '40px' | '48px' | '240x280px' | '300x600px' | '400px' | 'responsive';
 type PlaceholderVariant = 'default' | 'hover';
 
 interface CharacterPlaceholderProps {
@@ -24,6 +24,7 @@ export function CharacterPlaceholder({
     '240x280px': 'w-60 h-[280px] text-sm',
     '300x600px': 'w-[300px] h-[600px] text-base',
     '400px': 'w-[400px] h-[400px] text-base',
+    'responsive': 'w-full aspect-square max-w-[140px] sm:max-w-[200px] md:max-w-[300px] lg:max-w-[400px] text-xs sm:text-sm md:text-base',
   };
 
   const variantClasses = {
@@ -58,7 +59,7 @@ export function CharacterPlaceholderSmall(props: Omit<CharacterPlaceholderProps,
   return <CharacterPlaceholder {...props} size="240x280px" />;
 }
 
-// Large variant for hero display
+// Large variant for hero display (responsive)
 export function CharacterPlaceholderLarge(props: Omit<CharacterPlaceholderProps, 'size'>) {
-  return <CharacterPlaceholder {...props} size="400px" />;
+  return <CharacterPlaceholder {...props} size="responsive" />;
 }

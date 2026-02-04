@@ -78,52 +78,52 @@ export default function Home() {
       </div>
 
       {/* Hero Section */}
-      <section className="relative flex flex-col items-center justify-center min-h-screen px-8 py-24 z-10">
+      <section className="relative flex flex-col items-center justify-center min-h-screen px-4 sm:px-6 md:px-8 py-16 sm:py-20 md:py-24 z-10">
         <div className={`text-center max-w-4xl z-10 transition-all duration-1000 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
-          <div className="inline-block mb-4">
-            <span className="text-6xl md:text-7xl animate-bounce">⚔️</span>
+          <div className="inline-block mb-3 sm:mb-4">
+            <span className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl animate-bounce">⚔️</span>
           </div>
           
-          <h1 className="text-5xl md:text-7xl font-bold mb-6 text-white">
+          <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-7xl font-bold mb-4 sm:mb-6 text-white">
             TaskHero
           </h1>
           
-          <p className="text-xl md:text-2xl mb-4 text-neutral-400 leading-relaxed">
+          <p className="text-base sm:text-lg md:text-xl lg:text-2xl mb-3 sm:mb-4 text-neutral-400 leading-relaxed">
             Transform Your Tasks Into Epic Quests
           </p>
           
-          <p className="text-base md:text-lg mb-12 text-neutral-500 max-w-2xl mx-auto">
+          <p className="text-sm sm:text-base md:text-lg mb-8 sm:mb-10 md:mb-12 text-neutral-500 max-w-2xl mx-auto px-2">
             Gamify your productivity. Level up by completing tasks, earn achievements, and build the hero version of yourself—one quest at a time.
           </p>
           
           {/* CTA Buttons */}
-          <div className="flex flex-col sm:flex-row gap-4 justify-center mb-16">
+          <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center mb-10 sm:mb-12 md:mb-16 px-4 sm:px-0">
             <Link href="/signup">
-              <div className="group relative inline-block px-8 py-4 bg-white hover:bg-neutral-200 text-black font-semibold rounded-md text-lg transition-all cursor-pointer overflow-hidden">
+              <div className="group relative inline-block w-full sm:w-auto px-6 sm:px-8 py-3 sm:py-4 bg-white hover:bg-neutral-200 text-black font-semibold rounded-md text-base sm:text-lg transition-all cursor-pointer overflow-hidden text-center">
                 <span className="relative z-10">Start Your Journey</span>
                 <div className="absolute inset-0 bg-gradient-to-r from-blue-500/10 to-green-500/10 opacity-0 group-hover:opacity-100 transition-opacity" />
               </div>
             </Link>
             <Link href="/login">
-              <div className="inline-block px-8 py-4 border border-neutral-700 hover:bg-neutral-900 hover:border-neutral-600 text-neutral-300 font-semibold rounded-md text-lg transition-all cursor-pointer">
+              <div className="inline-block w-full sm:w-auto px-6 sm:px-8 py-3 sm:py-4 border border-neutral-700 hover:bg-neutral-900 hover:border-neutral-600 text-neutral-300 font-semibold rounded-md text-base sm:text-lg transition-all cursor-pointer text-center">
                 Sign In →
               </div>
             </Link>
           </div>
 
           {/* Stats */}
-          <div className="grid grid-cols-3 gap-8 max-w-2xl mx-auto">
+          <div className="grid grid-cols-3 gap-4 sm:gap-6 md:gap-8 max-w-2xl mx-auto px-2">
             <div className="text-center">
-              <div className="text-3xl md:text-4xl font-bold text-white mb-2">100%</div>
-              <div className="text-sm text-neutral-500">Motivation</div>
+              <div className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold text-white mb-1 sm:mb-2">100%</div>
+              <div className="text-xs sm:text-sm text-neutral-500">Motivation</div>
             </div>
             <div className="text-center">
-              <div className="text-3xl md:text-4xl font-bold text-white mb-2">∞</div>
-              <div className="text-sm text-neutral-500">Quests</div>
+              <div className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold text-white mb-1 sm:mb-2">∞</div>
+              <div className="text-xs sm:text-sm text-neutral-500">Quests</div>
             </div>
             <div className="text-center">
-              <div className="text-3xl md:text-4xl font-bold text-white mb-2">Level ∞</div>
-              <div className="text-sm text-neutral-500">Potential</div>
+              <div className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold text-white mb-1 sm:mb-2">Level ∞</div>
+              <div className="text-xs sm:text-sm text-neutral-500">Potential</div>
             </div>
           </div>
         </div>
@@ -137,7 +137,7 @@ export default function Home() {
       </section>
 
       {/* Features Section */}
-      <section className="relative min-h-screen flex items-center justify-center py-24 px-8 border-t border-neutral-900 z-10">
+      <section className="relative min-h-screen flex items-center justify-center py-16 sm:py-20 md:py-24 px-4 sm:px-6 md:px-8 border-t border-neutral-900 z-10">
         {/* Dot pattern background */}
         <div className="absolute inset-0 opacity-50" style={{
           backgroundImage: 'radial-gradient(circle, rgba(100, 100, 100, 0.5) 1.5px, transparent 1.5px)',
@@ -146,17 +146,17 @@ export default function Home() {
         <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-transparent to-black/70" />
         
         <div className="max-w-6xl mx-auto w-full relative z-10">
-          <div className={`text-center mb-16 transition-all duration-1000 delay-200 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
-            <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
+          <div className={`text-center mb-10 sm:mb-12 md:mb-16 transition-all duration-1000 delay-200 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
+            <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-white mb-3 sm:mb-4">
               Level Up Every Day
             </h2>
-            <p className="text-neutral-400 text-lg max-w-2xl mx-auto">
+            <p className="text-neutral-400 text-sm sm:text-base md:text-lg max-w-2xl mx-auto px-2">
               Turn mundane tasks into exciting quests with our gamified productivity system
             </p>
           </div>
 
           {/* Feature Cards */}
-          <div className="grid md:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 sm:gap-6 md:gap-8">
             {[
               {
                 icon: '🎯',
@@ -176,16 +176,16 @@ export default function Home() {
             ].map((feature, index) => (
               <div
                 key={index}
-                className={`group relative p-8 rounded-lg border border-neutral-800 bg-neutral-950 hover:border-neutral-700 transition-all duration-500 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}
+                className={`group relative p-5 sm:p-6 md:p-8 rounded-lg border border-neutral-800 bg-neutral-950 hover:border-neutral-700 transition-all duration-500 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}
                 style={{ transitionDelay: `${300 + index * 100}ms` }}
               >
-                <div className="text-5xl mb-4 transform group-hover:scale-110 transition-transform">
+                <div className="text-3xl sm:text-4xl md:text-5xl mb-3 sm:mb-4 transform group-hover:scale-110 transition-transform">
                   {feature.icon}
                 </div>
-                <h3 className="text-xl font-semibold text-white mb-3">
+                <h3 className="text-lg sm:text-xl font-semibold text-white mb-2 sm:mb-3">
                   {feature.title}
                 </h3>
-                <p className="text-neutral-400 leading-relaxed">
+                <p className="text-sm sm:text-base text-neutral-400 leading-relaxed">
                   {feature.description}
                 </p>
                 
@@ -198,7 +198,7 @@ export default function Home() {
       </section>
 
       {/* Preview Section */}
-      <section className="relative min-h-screen flex items-center justify-center py-24 px-8 border-t border-neutral-900 z-10">
+      <section className="relative min-h-screen flex items-center justify-center py-16 sm:py-20 md:py-24 px-4 sm:px-6 md:px-8 border-t border-neutral-900 z-10">
         {/* Diagonal lines background */}
         <div className="absolute inset-0 opacity-40" style={{
           backgroundImage: `repeating-linear-gradient(
@@ -213,27 +213,27 @@ export default function Home() {
         
         <div className="max-w-6xl mx-auto w-full relative z-10">
           <div className={`transition-all duration-1000 delay-500 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
-            <h3 className="text-2xl md:text-3xl font-bold text-white text-center mb-12">
+            <h3 className="text-xl sm:text-2xl md:text-3xl font-bold text-white text-center mb-6 sm:mb-8 md:mb-12">
               Your Arsenal Awaits
             </h3>
             
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-8 mb-12">
-              <div className="transform hover:scale-105 transition-transform duration-300">
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 md:gap-6 lg:gap-8 mb-8 sm:mb-10 md:mb-12 px-2 sm:px-0">
+              <div className="transform hover:scale-105 transition-transform duration-300 flex justify-center">
                 <CharacterPlaceholderLarge label="Hero Character" />
               </div>
-              <div className="transform hover:scale-105 transition-transform duration-300 delay-75">
+              <div className="transform hover:scale-105 transition-transform duration-300 delay-75 flex justify-center">
                 <ItemPlaceholderMedium rarity="legendary" emoji="⚔️" label="Legendary Sword" />
               </div>
-              <div className="transform hover:scale-105 transition-transform duration-300 delay-150">
+              <div className="transform hover:scale-105 transition-transform duration-300 delay-150 flex justify-center">
                 <ItemPlaceholderMedium rarity="epic" emoji="🛡️" label="Epic Shield" isEquipped />
               </div>
-              <div className="transform hover:scale-105 transition-transform duration-300 delay-225">
+              <div className="transform hover:scale-105 transition-transform duration-300 delay-225 flex justify-center">
                 <AchievementPlaceholderUnlocked emoji="🏆" label="First Quest" />
               </div>
             </div>
 
             {/* Category Icons */}
-            <div className="flex flex-wrap justify-center gap-6 pb-8">
+            <div className="flex flex-wrap justify-center gap-4 sm:gap-5 md:gap-6 pb-6 sm:pb-8">
               <div className="transform hover:scale-110 transition-transform">
                 <WorkIcon size="48px" label="Work" />
               </div>
@@ -249,7 +249,7 @@ export default function Home() {
       </section>
 
       {/* CTA Section */}
-      <section className="relative min-h-screen flex items-center justify-center py-24 px-8 border-t border-neutral-900 z-10">
+      <section className="relative min-h-screen flex items-center justify-center py-16 sm:py-20 md:py-24 px-4 sm:px-6 md:px-8 border-t border-neutral-900 z-10">
         {/* Cross-hatch grid background */}
         <div className="absolute inset-0 opacity-30" style={{
           backgroundImage: `
@@ -260,15 +260,15 @@ export default function Home() {
         }} />
         <div className="absolute inset-0 bg-gradient-radial from-neutral-900/40 via-black/90 to-black" />
         
-        <div className={`max-w-3xl mx-auto text-center transition-all duration-1000 delay-700 relative z-10 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
-          <h2 className="text-4xl md:text-5xl font-bold text-white mb-6">
+        <div className={`max-w-3xl mx-auto text-center transition-all duration-1000 delay-700 relative z-10 px-4 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
+          <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-4 sm:mb-6">
             Ready to Begin?
           </h2>
-          <p className="text-xl text-neutral-400 mb-10">
+          <p className="text-base sm:text-lg md:text-xl text-neutral-400 mb-6 sm:mb-8 md:mb-10">
             Your adventure starts now. Create your hero and conquer your goals.
           </p>
           <Link href="/signup">
-            <div className="group inline-block px-10 py-5 bg-white hover:bg-neutral-200 text-black font-semibold rounded-md text-xl transition-all cursor-pointer shadow-lg hover:shadow-xl">
+            <div className="group inline-block px-6 sm:px-8 md:px-10 py-3 sm:py-4 md:py-5 bg-white hover:bg-neutral-200 text-black font-semibold rounded-md text-base sm:text-lg md:text-xl transition-all cursor-pointer shadow-lg hover:shadow-xl">
               Create Your Hero
               <span className="inline-block ml-2 transform group-hover:translate-x-1 transition-transform">→</span>
             </div>
@@ -277,8 +277,8 @@ export default function Home() {
       </section>
 
       {/* Footer */}
-      <footer className="relative border-t border-neutral-900 py-8 px-8 z-10">
-        <div className="max-w-6xl mx-auto text-center text-neutral-500 text-sm">
+      <footer className="relative border-t border-neutral-900 py-6 sm:py-8 px-4 sm:px-6 md:px-8 z-10">
+        <div className="max-w-6xl mx-auto text-center text-neutral-500 text-xs sm:text-sm">
           <p>© 2026 TaskHero. Level up your life.</p>
         </div>
       </footer>

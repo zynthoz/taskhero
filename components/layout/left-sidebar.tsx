@@ -55,17 +55,22 @@ export default function LeftSidebar({ user, loading = false }: LeftSidebarProps)
       {/* Character & Stats Section */}
       <div className="p-3 md:p-4 space-y-2 md:space-y-3 border-b border-neutral-200 dark:border-neutral-800 shrink-0">
         {/* Character Avatar with Level */}
-        <div className="flex flex-col items-center gap-1.5 md:gap-2">
+        <div className="flex flex-col items-center gap-1 md:gap-1.5">
           {loading ? (
-            <div className="w-16 h-16 md:w-24 md:h-24 rounded-xl bg-neutral-200 dark:bg-neutral-800 animate-pulse relative mb-3 md:mb-4" />
+            <>
+              <div className="w-16 h-16 md:w-24 md:h-24 rounded-xl bg-neutral-200 dark:bg-neutral-800 animate-pulse" />
+              <div className="h-5 w-12 rounded-full bg-neutral-200 dark:bg-neutral-800 animate-pulse" />
+            </>
           ) : (
-            <div className="w-16 h-16 md:w-24 md:h-24 rounded-xl bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 flex items-center justify-center relative mb-3 md:mb-4">
-              <span className="text-3xl md:text-5xl">{getAvatarEmoji(user.avatarId)}</span>
-              {/* Level Badge - positioned below avatar box */}
-              <div className="absolute -bottom-3 md:-bottom-4 left-1/2 -translate-x-1/2 px-2 md:px-2.5 py-0.5 bg-purple-600 rounded-full shadow-sm">
+            <>
+              <div className="w-16 h-16 md:w-24 md:h-24 rounded-xl bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 flex items-center justify-center">
+                <span className="text-3xl md:text-5xl">{getAvatarEmoji(user.avatarId)}</span>
+              </div>
+              {/* Level Badge - separate element below avatar */}
+              <div className="px-2 md:px-2.5 py-0.5 bg-purple-600 rounded-full shadow-sm">
                 <span className="text-[10px] md:text-xs font-semibold text-white">Lv {user.level}</span>
               </div>
-            </div>
+            </>
           )}
         </div>
 
@@ -159,7 +164,7 @@ export default function LeftSidebar({ user, loading = false }: LeftSidebarProps)
       </nav>
 
       {/* Logout */}
-      <div className="p-2 md:p-3 border-t border-neutral-200 dark:border-neutral-800 shrink-0">
+      <div className="p-2 md:p-3 pb-[calc(0.5rem+env(safe-area-inset-bottom))] md:pb-[calc(0.75rem+env(safe-area-inset-bottom))] border-t border-neutral-200 dark:border-neutral-800 shrink-0">
         <button
           onClick={() => window.location.href = "/login"}
           className="w-full px-2.5 md:px-3 py-1.5 md:py-2 rounded-lg text-xs md:text-sm font-medium bg-neutral-200 dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300 hover:bg-red-600 hover:text-white transition-all duration-200 border border-neutral-300 dark:border-neutral-700 hover:border-red-500 hover:shadow-lg hover:shadow-red-500/20"

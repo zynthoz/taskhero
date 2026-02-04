@@ -31,40 +31,83 @@ export function FriendSearch({ currentUserId, onFriendAdded }: FriendSearchProps
     const supabase = createClient()
 
     // Remove @ prefix if present
-    const query = searchQuery.replace('@', '')
+    const query = searchQuery.replace('@', '').trim()
 
-    const { data, error } = await supabase
-      .from('users')
-      .select('id, username, level, total_xp')
-      .ilike('username', `%${query}%`)
-      .neq('id', currentUserId)
-      .limit(10)
+    try {
+      // Search for users
+      const { data, error } = await supabase
+        .from('users')
+        .select('id, username, level, total_xp')
+        .ilike('username', `%${query}%`)
+        .neq('id', currentUserId)
+        .not('username', 'is', null)
+        .limit(10)
+
+      if (error) {
+        console.error('Search error:', error)
+        setSearchResults([])
+        setIsSearching(false)
+        return
+      }
+
+      if (data) {
+        // Filter out users that already have a pending or accepted relationship
+        const { data: existingFriends } = await supabase
+          .from('friends')
+          .select('friend_id, user_id')
+          .or(`user_id.eq.${currentUserId},friend_id.eq.${currentUserId}`)
+
+        const existingFriendIds = new Set<string>()
+        if (existingFriends) {
+          existingFriends.forEach((f: any) => {
+            if (f.user_id === currentUserId) {
+              existingFriendIds.add(f.friend_id)
+            } else {
+              existingFriendIds.add(f.user_id)
+            }
+          })
+        }
+
+        const filteredResults = data.filter(
+          (u) => u.username && !existingFriendIds.has(u.id)
+        )
+        setSearchResults(filteredResults)
+      }
+    } catch (err) {
+      console.error('Search exception:', err)
+      setSearchResults([])
+    }
 
     setIsSearching(false)
-
-    if (!error && data) {
-      setSearchResults(data.filter(u => u.username))
-    }
   }
 
   const sendFriendRequest = async (friendId: string) => {
     setSendingRequestTo(friendId)
     const supabase = createClient()
 
-    const { error } = await supabase
-      .from('friends')
-      .insert({
-        user_id: currentUserId,
-        friend_id: friendId,
-        status: 'pending',
-      })
+    try {
+      const { error } = await supabase
+        .from('friends')
+        .insert({
+          user_id: currentUserId,
+          friend_id: friendId,
+          status: 'pending',
+        })
+
+      if (error) {
+        console.error('Friend request error:', error)
+        alert('Failed to send friend request: ' + error.message)
+      } else {
+        // Remove from search results
+        setSearchResults(prev => prev.filter(u => u.id !== friendId))
+        onFriendAdded?.()
+      }
+    } catch (err) {
+      console.error('Friend request exception:', err)
+      alert('An error occurred while sending friend request')
+    }
 
     setSendingRequestTo(null)
-
-    if (!error) {
-      setSearchResults(prev => prev.filter(u => u.id !== friendId))
-      onFriendAdded?.()
-    }
   }
 
   return (

@@ -370,6 +370,32 @@ export interface Database {
           completed_at?: string | null
         }
       }
+      friends: {
+        Row: {
+          id: string
+          user_id: string
+          friend_id: string
+          status: 'pending' | 'accepted' | 'rejected'
+          requested_at: string
+          updated_at: string
+        }
+        Insert: {
+          id?: string
+          user_id: string
+          friend_id: string
+          status?: 'pending' | 'accepted' | 'rejected'
+          requested_at?: string
+          updated_at?: string
+        }
+        Update: {
+          id?: string
+          user_id?: string
+          friend_id?: string
+          status?: 'pending' | 'accepted' | 'rejected'
+          requested_at?: string
+          updated_at?: string
+        }
+      }
       level_history: {
         Row: {
           id: string

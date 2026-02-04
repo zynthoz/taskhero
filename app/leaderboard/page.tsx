@@ -12,6 +12,7 @@ import { createClient } from '@/lib/supabase/client'
 interface LeaderboardEntry {
   id: string
   username: string
+  email?: string
   level: number
   total_xp: number
   current_streak: number
@@ -64,7 +65,7 @@ export default function LeaderboardPage() {
 
       let query = supabase
         .from('users')
-        .select('id, username, level, total_xp, current_xp, current_streak, total_tasks_completed, avatar_id')
+        .select('id, username, email, level, total_xp, current_xp, current_streak, total_tasks_completed, avatar_id')
 
       // Filter by friends if selected
       if (filter === 'friends' && user) {
@@ -80,7 +81,11 @@ export default function LeaderboardPage() {
         ) || []
 
         // Include current user and friends
-        query = query.in('id', [...friendIds, user.id])
+        if (friendIds.length > 0) {
+          query = query.in('id', [...friendIds, user.id])
+        } else {
+          query = query.eq('id', user.id) // Only show current user if no friends
+        }
       }
 
       // Filter by weekly if selected
@@ -94,10 +99,16 @@ export default function LeaderboardPage() {
 
       const { data, error } = await query.limit(100)
 
-      if (error) throw error
+      if (error) {
+        console.error('Leaderboard query error:', error)
+        throw error
+      }
+
+      console.log('Leaderboard data:', data) // Debug log
 
       const rankedData = data?.map((entry, index) => ({
         ...entry,
+        username: entry.username || entry.email?.split('@')[0] || 'Anonymous',
         rank: index + 1,
       })) || []
 

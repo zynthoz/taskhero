@@ -164,7 +164,7 @@ export default function LeftSidebar({ user, loading = false }: LeftSidebarProps)
       </nav>
 
       {/* Logout */}
-      <div className="p-2 md:p-3 pb-[calc(4rem+env(safe-area-inset-bottom))] md:pb-[calc(4rem+env(safe-area-inset-bottom))] border-t border-neutral-200 dark:border-neutral-800 shrink-0">
+      <div className="p-2 md:p-3 pb-[calc(2rem+env(safe-area-inset-bottom))] md:pb-[calc(2rem+env(safe-area-inset-bottom))] border-t border-neutral-200 dark:border-neutral-800 shrink-0">
         <button
           onClick={() => window.location.href = "/login"}
           className="w-full px-2.5 md:px-3 py-1.5 md:py-2 rounded-lg text-xs md:text-sm font-medium bg-neutral-200 dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300 hover:bg-red-600 hover:text-white transition-all duration-200 border border-neutral-300 dark:border-neutral-700 hover:border-red-500 hover:shadow-lg hover:shadow-red-500/20"

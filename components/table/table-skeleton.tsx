@@ -19,7 +19,7 @@ export function TableSkeleton({ rows = 6 }: { rows?: number }) {
           {/* Rows */}
           <div className="space-y-1 sm:space-y-2 p-2 sm:p-3">
             {Array.from({ length: rows }).map((_, r) => (
-          <div className="flex items-center gap-1 sm:gap-2 px-0.5 sm:px-1 py-0.5 sm:py-1 border-b border-neutral-800 bg-neutral-900 rounded-md min-w-0">
+          <div key={r} className="flex items-center gap-1 sm:gap-2 px-0.5 sm:px-1 py-0.5 sm:py-1 border-b border-neutral-800 bg-neutral-900 rounded-md min-w-0">
                 <div className="w-8 sm:w-12 flex-none">
                   <div className="h-3 sm:h-4 bg-neutral-800 rounded"></div>
                 </div>

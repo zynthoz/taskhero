@@ -61,11 +61,11 @@ interface ColumnConfig {
 const DEFAULT_COLUMNS: ColumnConfig[] = [
   { id: 'title', label: 'Quest Name', field: 'title', visible: true, sortable: true },
   { id: 'priority', label: 'Priority', field: 'priority', visible: true, sortable: true },
-  { id: 'difficulty', label: 'Difficulty', field: 'difficulty', visible: true, sortable: true },
+  { id: 'difficulty', label: 'Difficulty', field: 'difficulty', visible: false, sortable: true },
   { id: 'status', label: 'Status', field: 'status', visible: true, sortable: true },
   { id: 'due_date', label: 'Due Date', field: 'due_date', visible: true, sortable: true },
-  { id: 'xp_reward', label: 'XP', field: 'xp_reward', visible: true, sortable: true },
-  { id: 'gold_reward', label: 'Gold', field: 'gold_reward', visible: true, sortable: true },
+  { id: 'xp_reward', label: 'XP', field: 'xp_reward', visible: false, sortable: true },
+  { id: 'gold_reward', label: 'Gold', field: 'gold_reward', visible: false, sortable: true },
   { id: 'created_at', label: 'Created', field: 'created_at', visible: false, sortable: true },
 ]
 
@@ -412,7 +412,7 @@ export function TasksDataTable({ tasks, isLoading, onTaskUpdate }: TasksDataTabl
       {/* Table - Scrollable body */}
       <div className="flex-1 overflow-auto min-h-0 overflow-x-hidden max-h-[calc(100dvh)] sm:max-h-[calc(100dvh)]">
         <Table className="relative w-full table-fixed">
-          <TableHeader className="sticky top-0 bg-neutral-950 backdrop-blur-sm z-10 border-b border-neutral-800">
+          <TableHeader className="sticky top-0 bg-neutral-950 backdrop-blur-sm z-10 border-b-0 sm:border-b sm:border-neutral-800">
             <TableRow>
               {/* Checkbox Column (header intentionally empty) */}
               <TableHead className="w-8 sm:w-12" />
@@ -423,6 +423,7 @@ export function TasksDataTable({ tasks, isLoading, onTaskUpdate }: TasksDataTabl
                   key={col.id}
                   className={cn(
                     col.sortable && 'cursor-pointer select-none hover:bg-neutral-900/30',
+                    col.id === 'title' && 'max-w-[200px] sm:max-w-[280px] min-w-0',
                     'px-0.5 sm:px-1 py-0.5 sm:py-1 text-[10px] sm:text-[11px] font-semibold text-neutral-300 break-words tracking-wide'
                   )}
                   onClick={() => col.sortable && col.field !== 'actions' && handleSort(col.field as keyof Task)}
@@ -493,13 +494,13 @@ export function TasksDataTable({ tasks, isLoading, onTaskUpdate }: TasksDataTabl
                   {visibleColumns.map(col => {
                     if (col.field === 'title') {
                       return (
-                        <TableCell key={col.id} className="px-0.5 sm:px-1 py-0.5 sm:py-1 text-[11px] sm:text-[12px] font-medium max-w-[100px] sm:max-w-[140px] min-w-0 truncate text-neutral-100">
+                        <TableCell key={col.id} className="px-1 sm:px-2 py-1 sm:py-2 text-[9px] sm:text-[10px] font-normal max-w-[220px] sm:max-w-[320px] min-w-0 truncate text-neutral-100">
                           <div
                             role="button"
                             tabIndex={0}
                             onClick={() => handleQuickEdit(task)}
                             onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); handleQuickEdit(task) } }}
-                            className="w-full cursor-pointer hover:underline focus:outline-none"
+                            className="w-full cursor-pointer hover:underline focus:outline-none truncate leading-tight"
                           >
                             {task.title}
                           </div>
@@ -508,7 +509,7 @@ export function TasksDataTable({ tasks, isLoading, onTaskUpdate }: TasksDataTabl
                     }
                     if (col.field === 'priority') {
                       return (
-                        <TableCell key={col.id} className="px-2 sm:px-4 py-2 sm:py-3 text-xs sm:text-sm text-neutral-300 min-w-0 truncate">
+                        <TableCell key={col.id} className="px-1 sm:px-2 py-1 sm:py-2 text-xs sm:text-sm text-neutral-300 min-w-0 truncate">
                           <div
                             role="button"
                             tabIndex={0}
@@ -516,7 +517,7 @@ export function TasksDataTable({ tasks, isLoading, onTaskUpdate }: TasksDataTabl
                             onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); handleQuickEdit(task) } }}
                             className="w-full cursor-pointer hover:underline focus:outline-none flex items-center gap-1"
                           >
-                            <span className="text-base sm:text-lg">{getPriorityEmoji(task.priority)}</span>
+                            <span className="text-base">{getPriorityEmoji(task.priority)}</span>
                             <span className="hidden sm:inline">
                               {getPriorityLabel(task.priority)}
                             </span>
@@ -526,7 +527,7 @@ export function TasksDataTable({ tasks, isLoading, onTaskUpdate }: TasksDataTabl
                     }
                     if (col.field === 'difficulty') {
                       return (
-                        <TableCell key={col.id} className="px-2 sm:px-4 py-2 sm:py-3 text-xs sm:text-sm text-center text-neutral-300 min-w-0 truncate">
+                        <TableCell key={col.id} className="px-1 sm:px-2 py-1 sm:py-2 text-xs sm:text-sm text-center text-neutral-300 min-w-0 truncate">
                           <div
                             role="button"
                             tabIndex={0}
@@ -541,7 +542,7 @@ export function TasksDataTable({ tasks, isLoading, onTaskUpdate }: TasksDataTabl
                     }
                     if (col.field === 'status') {
                       return (
-                        <TableCell key={col.id} className="px-2 sm:px-4 py-2 sm:py-3 text-xs sm:text-sm text-neutral-300 min-w-0 truncate">
+                        <TableCell key={col.id} className="px-1 sm:px-2 py-1 sm:py-2 text-xs sm:text-sm text-neutral-300 min-w-0 truncate">
                           <div
                             role="button"
                             tabIndex={0}
@@ -558,7 +559,7 @@ export function TasksDataTable({ tasks, isLoading, onTaskUpdate }: TasksDataTabl
                     }
                     if (col.field === 'due_date') {
                       return (
-                        <TableCell key={col.id} className="px-2 sm:px-4 py-2 sm:py-3 text-xs sm:text-sm text-neutral-600 dark:text-neutral-400 min-w-0 truncate">
+                        <TableCell key={col.id} className="px-1 sm:px-2 py-1 sm:py-2 text-xs sm:text-sm text-neutral-600 dark:text-neutral-400 min-w-0 truncate">
                           <div
                             role="button"
                             tabIndex={0}
@@ -573,7 +574,7 @@ export function TasksDataTable({ tasks, isLoading, onTaskUpdate }: TasksDataTabl
                     }
                     if (col.field === 'xp_reward') {
                       return (
-                        <TableCell key={col.id} className="px-0.5 sm:px-1 py-0.5 sm:py-1 text-[10px] sm:text-[11px] text-blue-400 font-semibold min-w-0 truncate">
+                        <TableCell key={col.id} className="px-1 sm:px-2 py-1 sm:py-2 text-[10px] sm:text-[11px] text-blue-400 font-semibold min-w-0 truncate">
                           <div
                             role="button"
                             tabIndex={0}
@@ -589,7 +590,7 @@ export function TasksDataTable({ tasks, isLoading, onTaskUpdate }: TasksDataTabl
                     }
                     if (col.field === 'gold_reward') {
                       return (
-                        <TableCell key={col.id} className="px-2 sm:px-4 py-2 sm:py-3 text-xs sm:text-base text-amber-400 font-semibold min-w-0 truncate">
+                        <TableCell key={col.id} className="px-1 sm:px-2 py-1 sm:py-2 text-xs sm:text-sm text-amber-400 font-semibold min-w-0 truncate">
                           <div
                             role="button"
                             tabIndex={0}
@@ -604,7 +605,7 @@ export function TasksDataTable({ tasks, isLoading, onTaskUpdate }: TasksDataTabl
                     }
                     if (col.field === 'created_at') {
                       return (
-                        <TableCell key={col.id} className="px-2 sm:px-4 py-2 sm:py-3 text-xs sm:text-sm text-neutral-600 dark:text-neutral-400 min-w-0 truncate">
+                        <TableCell key={col.id} className="px-1 sm:px-2 py-1 sm:py-2 text-xs sm:text-sm text-neutral-600 dark:text-neutral-400 min-w-0 truncate">
                           <div
                             role="button"
                             tabIndex={0}
@@ -639,8 +640,8 @@ export function TasksDataTable({ tasks, isLoading, onTaskUpdate }: TasksDataTabl
       />
 
       {/* Pagination - Fixed at bottom */}
-      <div className="flex-shrink-0 p-0.5 sm:p-1 border-t border-neutral-800 bg-neutral-950/90 backdrop-blur-sm">
-        <div className="flex flex-col sm:flex-row gap-0.5 sm:gap-1 sm:items-center sm:justify-between">
+      <div className="flex-shrink-0 p-2 sm:p-3 border-t border-neutral-800 bg-neutral-950/90 backdrop-blur-sm min-h-[3rem] sm:min-h-[3.5rem]">
+        <div className="flex flex-col sm:flex-row gap-1 sm:gap-2 items-center justify-between h-full">
           <div className="text-[10px] sm:text-[11px] text-neutral-600 dark:text-neutral-400 text-center sm:text-left">
             Showing {paginatedTasks.length > 0 ? (currentPage - 1) * rowsPerPage + 1 : 0} to{' '}
             {Math.min(currentPage * rowsPerPage, filteredAndSortedTasks.length)} of{' '}
@@ -650,14 +651,14 @@ export function TasksDataTable({ tasks, isLoading, onTaskUpdate }: TasksDataTabl
           <div className="flex flex-row gap-2 items-center justify-center sm:justify-end">
             {/* Rows per page */}
             <div className="flex items-center gap-1 sm:gap-2">
-              <span className="text-xs sm:text-sm text-neutral-600 dark:text-neutral-400">Rows:</span>
+              <span className="text-[10px] sm:text-[11px] text-neutral-600 dark:text-neutral-400">Rows:</span>
               <select
                 value={rowsPerPage}
                 onChange={(e) => {
                   setRowsPerPage(Number(e.target.value))
                   setCurrentPage(1)
                 }}
-                className="px-1 sm:px-2 py-1 rounded border border-neutral-200 dark:border-neutral-700 bg-white dark:bg-neutral-800 text-xs sm:text-sm h-8 sm:h-auto"
+                className="px-1 py-0.5 rounded border border-neutral-200 dark:border-neutral-700 bg-white dark:bg-neutral-800 text-[10px] sm:text-[11px] h-6 w-14"
               >
                 <option value={10}>10</option>
                 <option value={25}>25</option>
@@ -673,13 +674,14 @@ export function TasksDataTable({ tasks, isLoading, onTaskUpdate }: TasksDataTabl
                 size="sm"
                 onClick={() => setCurrentPage(prev => Math.max(1, prev - 1))}
                 disabled={currentPage === 1}
-                className="h-6 px-1.5 text-[10px] sm:text-[11px]"
+                className="h-6 px-0.5 text-[7px] sm:text-[8px]"
+                aria-label="Previous page"
               >
-                <span className="hidden sm:inline">Previous</span>
-                <span className="sm:hidden">Prev</span>
+                <span className="hidden sm:inline text-[10px] sm:text-[12px]">Previous</span>
+                <span className="sm:hidden text-[10px]">Prev</span>
               </Button>
-              <div className="flex items-center gap-1 px-2 sm:px-3 h-8 justify-center">
-                <span className="text-xs sm:text-sm font-medium">
+              <div className="flex items-center gap-1 px-1 sm:px-2 h-6 justify-center">
+                <span className="text-[10px] sm:text-[11px] font-medium">
                   {currentPage} / {totalPages || 1}
                 </span>
               </div>
@@ -688,9 +690,11 @@ export function TasksDataTable({ tasks, isLoading, onTaskUpdate }: TasksDataTabl
                 size="sm"
                 onClick={() => setCurrentPage(prev => Math.min(totalPages, prev + 1))}
                 disabled={currentPage === totalPages || totalPages === 0}
-                className="h-8 px-2 sm:px-3 text-xs sm:text-sm"
+                className="h-6 px-0.5 text-[10px] sm:text-[12px]"
+                aria-label="Next page"
               >
-                Next
+                <span className="hidden sm:inline text-[10px] sm:text-[12px]">Next</span>
+                <span className="sm:hidden text-[10px]">Next</span>
               </Button>
             </div>
           </div>

@@ -17,12 +17,13 @@ export function TableViewHelp() {
   return (
     <>
       <Button
-        variant="outline"
+        variant="ghost"
         size="sm"
         onClick={() => setIsOpen(true)}
-        className="min-h-[2.75rem] sm:min-h-0"
+        className="h-8 sm:h-9 w-8 sm:w-auto p-1 sm:p-2"
+        aria-label="Table help"
       >
-        <HelpCircle className="w-4 h-4 mr-2" />
+        <HelpCircle className="w-3 h-3 sm:w-4 sm:h-4" />
         <span className="hidden sm:inline">Help</span>
       </Button>
 

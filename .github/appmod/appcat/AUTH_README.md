@@ -1,8 +1,8 @@
-# TaskHero Authentication System
+# Impeto Authentication System
 
 ## Overview
 
-TaskHero uses Supabase Auth for secure, scalable authentication with support for:
+Impeto uses Supabase Auth for secure, scalable authentication with support for:
 - ✅ Email/Password authentication
 - ✅ Google OAuth (one-click sign in)
 - ✅ Password reset flow
@@ -53,7 +53,7 @@ TaskHero uses Supabase Auth for secure, scalable authentication with support for
 ## File Structure
 
 ```
-taskhero/
+impeto/
 ├── app/
 │   ├── login/
 │   │   └── page.tsx              # Login page

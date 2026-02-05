@@ -3,7 +3,7 @@
 ## ✅ Completed - February 2, 2026
 
 ### Overview
-Successfully created a comprehensive database schema for TaskHero with all tables, relationships, Row Level Security policies, functions, and triggers needed for the gamification system.
+Successfully created a comprehensive database schema for Impeto with all tables, relationships, Row Level Security policies, functions, and triggers needed for the gamification system.
 
 ### Files Created
 

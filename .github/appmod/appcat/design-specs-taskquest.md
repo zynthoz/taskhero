@@ -1,4 +1,4 @@
-Design a desktop web application UI for a gamified to-do list called "TaskHero" - a productivity app that transforms boring tasks into an engaging progress tracking system.
+Design a desktop web application UI for a gamified to-do list called "Impeto" - a productivity app that transforms boring tasks into an engaging progress tracking system.
 
 ## DESIGN SPECIFICATIONS:
 
@@ -279,7 +279,7 @@ Recurring Tasks:
   - No decorative elements
   
 - Right side: Login form
-  - "Welcome to TaskHero" headline in clean typography
+  - "Welcome to Impeto" headline in clean typography
   - "Sign in with Google" button (neutral-800 background)
   - Clean form inputs (neutral-900 background, 1px neutral-800 border)
   - Footer: "New user? Create account" in neutral-400
@@ -408,7 +408,7 @@ Use text layers to add notes:
 - Color-blind friendly mode (add patterns/textures to placeholders, not just color)
 
 ### BRANDING ELEMENTS:
-- App name: "TaskHero" in clean sans-serif
+- App name: "Impeto" in clean sans-serif
 - Tagline: "Level Up Your Productivity"
 - Logo: Simple text-based or minimal icon (avoid fantasy themes)
 
@@ -542,7 +542,7 @@ Organize by size and category:
   - Example: `achievement_first-task_128px.png`
 
 ### LAYER ORGANIZATION:
-📁 TaskHero App
+📁 Impeto App
 📄 Design System
   🎨 Colors
   📝 Typography

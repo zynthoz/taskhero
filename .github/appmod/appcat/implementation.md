@@ -1,8 +1,8 @@
-# TaskHero - Technical Implementation Guide
+# Impeto - Technical Implementation Guide
 
 ## Architecture Overview
 
-TaskHero is a full-stack web application built with modern technologies, following a JAMstack architecture with serverless backend services.
+Impeto is a full-stack web application built with modern technologies, following a JAMstack architecture with serverless backend services.
 
 ---
 

@@ -48,7 +48,7 @@ export default function LeftSidebar({ user, loading = false }: LeftSidebarProps)
     <div className="h-[100dvh] flex flex-col bg-neutral-50 dark:bg-[#0a0a0a] overflow-hidden">
       {/* App Name */}
       <div className="p-2 md:p-4 border-b border-neutral-200 dark:border-neutral-800 shrink-0">
-        <h1 className="text-sm md:text-lg font-semibold text-neutral-900 dark:text-white">TaskHero</h1>
+        <h1 className="text-sm md:text-lg font-semibold text-neutral-900 dark:text-white">Impeto</h1>
       </div>
 
       {/* Character & Stats Section */}

@@ -1,14 +1,14 @@
-# Product Requirements Document: TaskHero
+# Product Requirements Document: Impeto
 
 ## Project Overview
 
-**Product Name:** TaskHero (Quest Daily)  
+**Product Name:** Impeto (Quest Daily)  
 **Version:** 1.0  
 **Last Updated:** February 3, 2026  
 **Status:** In Development
 
 ### Vision Statement
-TaskHero transforms boring task management into an epic RPG adventure. Users level up their real life by completing quests (tasks), earning rewards, collecting items, and competing with friends - making productivity genuinely fun and engaging.
+Impeto transforms boring task management into an epic RPG adventure. Users level up their real life by completing quests (tasks), earning rewards, collecting items, and competing with friends - making productivity genuinely fun and engaging.
 
 ### Problem Statement
 Traditional to-do list apps are highly optimized for organization and efficiency, but they fail to keep users engaged. Tasks feel boring and tedious, leading to procrastination and incomplete lists despite perfect organization.

@@ -1,9 +1,9 @@
-# TaskHero Design System
+# Impeto Design System
 
 **Last Updated**: February 2, 2026
 
 > **🚨 CRITICAL DOCUMENT - READ THIS FIRST 🚨**  
-> This document defines the design language, styling conventions, and structural patterns for TaskHero.  
+> This document defines the design language, styling conventions, and structural patterns for Impeto.  
 > **ALL future development MUST adhere to these guidelines** - whether in the same session or a new one.  
 > If you're working on any UI/component/styling task, read this document in its entirety before writing code.
 

@@ -88,7 +88,7 @@ export default function ThreeColumnLayout({
           </button>
 
           <h1 className="text-lg font-semibold text-neutral-900 dark:text-white">
-            TaskHero
+            Impeto
           </h1>
 
           {hasRightSidebar ? (

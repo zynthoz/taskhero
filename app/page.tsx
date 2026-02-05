@@ -85,7 +85,7 @@ export default function Home() {
           </div>
           
           <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-7xl font-bold mb-4 sm:mb-6 text-white">
-            TaskHero
+            Impeto
           </h1>
           
           <p className="text-base sm:text-lg md:text-xl lg:text-2xl mb-3 sm:mb-4 text-neutral-400 leading-relaxed">
@@ -279,7 +279,7 @@ export default function Home() {
       {/* Footer */}
       <footer className="relative border-t border-neutral-900 py-6 sm:py-8 px-4 sm:px-6 md:px-8 z-10">
         <div className="max-w-6xl mx-auto text-center text-neutral-500 text-xs sm:text-sm">
-          <p>© 2026 TaskHero. Level up your life.</p>
+          <p>© 2026 Impeto. Level up your life.</p>
         </div>
       </footer>
     </main>

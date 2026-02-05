@@ -1,7 +1,7 @@
-# TaskHero Development Progress Log
+# Impeto Development Progress Log
 
 ## Purpose
-This file tracks all development attempts, failures, blockers, and learnings throughout the TaskHero project. Following the Ralph Loop methodology, this log helps us avoid repeating failed approaches and builds knowledge across sessions.
+This file tracks all development attempts, failures, blockers, and learnings throughout the Impeto project. Following the Ralph Loop methodology, this log helps us avoid repeating failed approaches and builds knowledge across sessions.
 
 ---
 

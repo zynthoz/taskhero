@@ -3,7 +3,7 @@
 ## ✅ Completed - February 2, 2026
 
 ### Overview
-Successfully implemented a complete authentication system for TaskHero using Supabase Auth with email/password and Google OAuth support.
+Successfully implemented a complete authentication system for Impeto using Supabase Auth with email/password and Google OAuth support.
 
 ### Files Created
 

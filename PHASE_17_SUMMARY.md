@@ -224,7 +224,7 @@ All components properly exported via index files:
 ## File Structure
 
 ```
-taskhero/
+impeto/
 ├── supabase/
 │   ├── migrations/
 │   │   └── 20260203000001_phase_17_folders_attachments.sql

@@ -12,8 +12,11 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "TaskHero - Level Up Your Life",
+  title: "Impeto - Level Up Your Life",
   description: "A gamified task management app that turns your to-do list into an epic RPG adventure",
+  icons: {
+    icon: '/favicon.svg'
+  }
 };
 
 export default function RootLayout({

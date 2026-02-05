@@ -1,7 +1,7 @@
 # Database Migration Guide - Phase 3
 
 ## Overview
-This guide walks you through setting up the TaskHero database schema in Supabase.
+This guide walks you through setting up the Impeto database schema in Supabase.
 
 ## Prerequisites
 - Supabase project created (see [SUPABASE_SETUP.md](./SUPABASE_SETUP.md))

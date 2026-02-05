@@ -1,4 +1,4 @@
-# Supabase Setup Guide for TaskHero
+# Supabase Setup Guide for Impeto
 
 ## Prerequisites
 - Supabase account (free tier available at https://supabase.com)
@@ -9,7 +9,7 @@
 1. Go to https://supabase.com and sign in
 2. Click "New Project"
 3. Fill in project details:
-   - **Name:** TaskHero
+   - **Name:** Impeto
    - **Database Password:** (generate a strong password)
    - **Region:** Choose closest to your users
 4. Click "Create new project"
@@ -58,13 +58,13 @@ NEXT_PUBLIC_SUPABASE_ANON_KEY=your-anon-key-here
 4. Click **Create Credentials** → **OAuth client ID**
 5. If prompted, configure OAuth consent screen:
    - User type: **External**
-   - App name: **TaskHero**
+   - App name: **Impeto**
    - User support email: Your email
    - Developer contact: Your email
    - Add scopes: `email`, `profile`
 6. Create OAuth 2.0 Client ID:
    - Application type: **Web application**
-   - Name: **TaskHero**
+   - Name: **Impeto**
    - Authorized JavaScript origins:
      - `http://localhost:3000` (development)
      - `https://your-domain.com` (production)

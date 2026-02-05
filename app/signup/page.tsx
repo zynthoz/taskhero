@@ -90,7 +90,7 @@ export default function SignUpPage() {
       <Card className="w-full max-w-md p-8">
         <div className="text-center mb-8">
           <h1 className="text-4xl font-bold text-white mb-2">
-            ⚔️ TaskHero
+            ⚔️ Impeto
           </h1>
           <p className="text-neutral-400">Create Your Hero</p>
         </div>
@@ -111,7 +111,7 @@ export default function SignUpPage() {
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              placeholder="hero@taskhero.com"
+              placeholder="hero@impeto.com"
               required
               disabled={loading}
             />

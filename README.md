@@ -1,4 +1,4 @@
-# TaskHero 🎮⚔️
+# Impeto 🎮⚔️
 
 A gamified task management application that transforms boring to-do lists into an epic RPG adventure. Level up your life by completing quests, earning rewards, and building streaks!
 
@@ -17,7 +17,7 @@ A gamified task management application that transforms boring to-do lists into a
 1. **Clone the repository**
    ```bash
    git clone https://github.com/zynthoz/taskhero.git
-   cd taskhero
+   cd impeto
    ```
 
 2. **Install dependencies**
@@ -54,7 +54,7 @@ A gamified task management application that transforms boring to-do lists into a
 ## 📁 Project Structure
 
 ```
-taskhero/
+impeto/
 ├── app/                    # Next.js App Router pages
 ├── components/             # React components
 │   ├── ui/                # shadcn/ui components
@@ -122,7 +122,7 @@ See [PRD.md](PRD.md) for the complete development roadmap and [progress.md](prog
 
 **📖 [Read the complete Design System documentation →](DESIGN_SYSTEM.md)**
 
-TaskHero follows a minimalist, clean design inspired by Linear and GitHub:
+Impeto follows a minimalist, clean design inspired by Linear and GitHub:
 
 - **Colors:** Neutral-900/800 backgrounds, white/neutral-400 text, NO gradients
 - **Layout:** Three-column structure (280px left sidebar, 940px center, 220px right sidebar)
@@ -148,6 +148,6 @@ ISC
 
 ---
 
-**Built with ⚔️ by the TaskHero team**
+**Built with ⚔️ by the Impeto team**
 
 *Level up your productivity, one quest at a time!*

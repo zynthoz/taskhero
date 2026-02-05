@@ -18,7 +18,7 @@ export interface ColumnVisibility {
   created_at: boolean
 }
 
-const STORAGE_KEY = 'taskhero_table_preferences'
+const STORAGE_KEY = 'impeto_table_preferences'
 
 export const loadTablePreferences = (): TablePreferences | null => {
   if (typeof window === 'undefined') return null

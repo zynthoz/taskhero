@@ -2,9 +2,10 @@
 
 import React from "react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { Progress } from "../ui/progress";
 import { GoldBalance } from "../ui/gold-balance";
+import { useAuth } from '@/lib/supabase/auth-provider';
 import { getStreakMultiplier, getStreakMultiplierText } from "@/lib/streak-utils";
 import { getAvatarEmoji } from "@/lib/avatar-utils";
 
@@ -160,13 +161,36 @@ export default function LeftSidebar({ user, loading = false }: LeftSidebarProps)
 
       {/* Logout */}
       <div className="p-2 md:p-3 pb-[calc(0.5rem+env(safe-area-inset-bottom))] md:pb-[calc(0.75rem+env(safe-area-inset-bottom))] border-t border-neutral-200 dark:border-neutral-800 shrink-0">
-        <button
-          onClick={() => window.location.href = "/login"}
-          className="w-full px-2 md:px-3 py-1.5 md:py-2 rounded-lg text-[11px] md:text-sm font-medium bg-neutral-200 dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300 hover:bg-red-600 hover:text-white transition-all duration-200 border border-neutral-300 dark:border-neutral-700 hover:border-red-500 hover:shadow-lg hover:shadow-red-500/20"
-        >
-          Logout
-        </button>
+        <LogoutButton />
       </div>
     </div>
   );
+}
+
+function LogoutButton() {
+  const router = useRouter()
+  const { signOut } = useAuth()
+  const [loading, setLoading] = React.useState(false)
+
+  const handleLogout = async () => {
+    try {
+      setLoading(true)
+      await signOut()
+      router.push('/')
+    } catch (err) {
+      console.error('Logout failed', err)
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  return (
+    <button
+      onClick={handleLogout}
+      disabled={loading}
+      className="w-full px-2 md:px-3 py-1.5 md:py-2 rounded-lg text-[11px] md:text-sm font-medium bg-neutral-200 dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300 hover:bg-red-600 hover:text-white transition-all duration-200 border border-neutral-300 dark:border-neutral-700 hover:border-red-500 hover:shadow-lg hover:shadow-red-500/20"
+    >
+      {loading ? 'Logging out...' : 'Logout'}
+    </button>
+  )
 }

@@ -290,52 +290,67 @@ export function TasksDataTable({ tasks, isLoading, onTaskUpdate }: TasksDataTabl
 
   const visibleColumns = columns.filter(col => col.visible)
 
+  // Short labels for mobile to avoid overlapping in tiny screens
+  const getHeaderAbbr = (colId: string) => {
+    switch (colId) {
+      case 'title': return 'Name'
+      case 'priority': return 'Pri'
+      case 'difficulty': return 'Diff'
+      case 'status': return 'Stat'
+      case 'due_date': return 'Due'
+      case 'xp_reward': return 'XP'
+      case 'gold_reward': return 'Gold'
+      case 'created_at': return 'Created'
+      default: return colId
+    }
+  }
+
   if (isLoading) {
     // Show table-shaped skeleton while loading to match the table layout
     const skeletonCount = Math.min(rowsPerPage || 5, 8)
     return (
-      <div className="p-4">
+      <div className="flex flex-col h-full bg-neutral-900 rounded-xl border border-neutral-800 shadow-sm overflow-hidden p-4">
         <TableSkeleton rows={skeletonCount} />
       </div>
     )
   }
 
   return (
-    <div className="flex flex-col h-full">
-      {/* Toolbar */}
-      <div className="flex-shrink-0 p-3 border-b border-neutral-800 bg-gradient-to-b from-neutral-900/60 to-neutral-900/40">
-        <div className="flex flex-col gap-2">
+    <div className="flex flex-col h-full bg-neutral-900 rounded-xl border border-neutral-800 shadow-sm overflow-hidden">
+      {/* Toolbar - Fixed at top */}
+      <div className="flex-shrink-0 p-1 sm:p-2 border-b border-neutral-800 bg-gradient-to-b from-neutral-900/60 to-neutral-900/40">
+        <div className="flex flex-col gap-1">
           {/* Top Row: Search and Actions (minimal) */}
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-1 sm:gap-2">
             {/* Search */}
             <div className="relative flex-1 max-w-md">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-neutral-400" />
+              <Search className="absolute left-1.5 sm:left-2.5 top-1/2 -translate-y-1/2 w-3 h-3 text-neutral-400" />
               <Input
                 placeholder="Search quests..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="pl-9 h-9 text-sm"
+                className="pl-5 sm:pl-6 h-6 sm:h-7 text-[10px] sm:text-[11px]"
               />
             </div>
 
             {/* Action Buttons (compact) */}
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-1 sm:gap-2">
               <TableViewHelp />
               <Button
                 variant="ghost"
                 size="sm"
                 onClick={() => setShowColumnSettings(!showColumnSettings)}
-                className="h-9"
+                className="h-8 sm:h-9 w-8 sm:w-auto p-1 sm:p-2"
               >
-                <Settings className="w-4 h-4" />
+                <Settings className="w-3 h-3 sm:w-4 sm:h-4" />
               </Button>
               <Button
                 variant="ghost"
                 size="sm"
                 onClick={exportToCSV}
-                className="h-9"
+                className="h-8 sm:h-9 w-8 sm:w-auto p-1 sm:p-2"
               >
-                <Download className="w-4 h-4" />
+                <Download className="w-3 h-3 sm:w-4 sm:h-4" />
               </Button>
             </div>
           </div>
@@ -364,18 +379,18 @@ export function TasksDataTable({ tasks, isLoading, onTaskUpdate }: TasksDataTabl
           {/* Bulk Actions Bar */}
           {selectedRows.size > 0 && (
             <div className="flex items-center justify-between p-2 sm:p-3 bg-neutral-900/40 rounded-lg border border-neutral-800">
-              <span className="text-sm font-medium text-neutral-200">
+              <span className="text-xs sm:text-sm font-medium text-neutral-200">
                 {selectedRows.size} quest{selectedRows.size !== 1 ? 's' : ''} selected
               </span>
-              <div className="flex gap-2">
+              <div className="flex gap-1 sm:gap-2">
                 <Button
                   variant="ghost"
                   size="sm"
                   onClick={handleBulkComplete}
                   disabled={isBulkActionProcessing}
-                  className="min-h-[2.5rem] sm:min-h-0"
+                  className="h-8 sm:h-9 px-2 sm:px-3"
                 >
-                  <CheckCircle2 className="w-4 h-4 mr-2" />
+                  <CheckCircle2 className="w-3 h-3 sm:w-4 sm:h-4 sm:mr-2" />
                   <span className="hidden sm:inline">Complete</span>
                 </Button>
                 <Button
@@ -383,9 +398,9 @@ export function TasksDataTable({ tasks, isLoading, onTaskUpdate }: TasksDataTabl
                   size="sm"
                   onClick={handleBulkDelete}
                   disabled={isBulkActionProcessing}
-                  className="text-red-600 hover:text-red-700 hover:bg-red-50 dark:hover:bg-red-950/30 min-h-[2.5rem] sm:min-h-0"
+                  className="text-red-600 hover:text-red-700 hover:bg-red-50 dark:hover:bg-red-950/30 h-8 sm:h-9 px-2 sm:px-3"
                 >
-                  <Trash2 className="w-4 h-4 mr-2" />
+                  <Trash2 className="w-3 h-3 sm:w-4 sm:h-4 sm:mr-2" />
                   <span className="hidden sm:inline">Delete</span>
                 </Button>
               </div>
@@ -394,13 +409,13 @@ export function TasksDataTable({ tasks, isLoading, onTaskUpdate }: TasksDataTabl
         </div>
       </div>
 
-      {/* Table */}
-      <div className="flex-1 overflow-auto min-h-0 p-4 bg-neutral-900 rounded-xl border border-neutral-800 shadow-sm">
-        <Table>
-          <TableHeader className="sticky top-0 bg-neutral-950/60 backdrop-blur-sm z-10 border-b border-neutral-800">
+      {/* Table - Scrollable body */}
+      <div className="flex-1 overflow-auto min-h-0 overflow-x-hidden max-h-[calc(100dvh)] sm:max-h-[calc(100dvh)]">
+        <Table className="relative w-full table-fixed">
+          <TableHeader className="sticky top-0 bg-neutral-950 backdrop-blur-sm z-10 border-b border-neutral-800">
             <TableRow>
               {/* Checkbox Column (header intentionally empty) */}
-              <TableHead className="w-12" />
+              <TableHead className="w-8 sm:w-12" />
 
               {/* Dynamic Columns */}
               {visibleColumns.map(col => (
@@ -408,21 +423,25 @@ export function TasksDataTable({ tasks, isLoading, onTaskUpdate }: TasksDataTabl
                   key={col.id}
                   className={cn(
                     col.sortable && 'cursor-pointer select-none hover:bg-neutral-900/30',
-                    'px-4 py-3 text-sm font-semibold text-neutral-300 whitespace-nowrap tracking-wide'
+                    'px-0.5 sm:px-1 py-0.5 sm:py-1 text-[10px] sm:text-[11px] font-semibold text-neutral-300 break-words tracking-wide'
                   )}
                   onClick={() => col.sortable && col.field !== 'actions' && handleSort(col.field as keyof Task)}
                 >
-                  <div className="flex items-center gap-2">
-                    <span>{col.label}</span>
+                  <div className="flex items-center gap-0.5 sm:gap-2">
+                    {/* Mobile abbreviation + full label on sm+ */}
+                    <span className="sm:hidden text-[11px]">{getHeaderAbbr(col.id)}</span>
+                    <span className="hidden sm:inline">{col.label}</span>
+
+                    {/* Sort icons hidden on mobile to save space */}
                     {col.sortable && sortField === col.field && (
                       sortDirection === 'asc' ? (
-                        <ChevronUp className="w-4 h-4" />
+                        <ChevronUp className="hidden sm:inline w-3 h-3 sm:w-4 sm:h-4 ml-1" />
                       ) : sortDirection === 'desc' ? (
-                        <ChevronDown className="w-4 h-4" />
+                        <ChevronDown className="hidden sm:inline w-3 h-3 sm:w-4 sm:h-4 ml-1" />
                       ) : null
                     )}
                     {col.sortable && sortField !== col.field && (
-                      <ChevronsUpDown className="w-4 h-4 opacity-30" />
+                      <ChevronsUpDown className="hidden sm:inline w-3 h-3 sm:w-4 sm:h-4 opacity-30 ml-1" />
                     )}
                   </div>
                 </TableHead>
@@ -435,7 +454,7 @@ export function TasksDataTable({ tasks, isLoading, onTaskUpdate }: TasksDataTabl
               <TableRow>
                 <TableCell
                   colSpan={visibleColumns.length + 1}
-                  className="h-32 text-center text-neutral-500 px-4 py-3 text-sm"
+                  className="h-32 text-center text-neutral-500 px-2 sm:px-4 py-2 sm:py-3 text-xs sm:text-sm"
                 >
                   {searchQuery ? 'No quests found matching your search' : 'No quests yet. Create your first quest to get started!'}
                 </TableCell>
@@ -463,7 +482,7 @@ export function TasksDataTable({ tasks, isLoading, onTaskUpdate }: TasksDataTabl
                   )}
                 >
                   {/* Checkbox */}
-                  <TableCell>
+                  <TableCell className="w-6 sm:w-8 flex-none">
                     <Checkbox
                       checked={selectedRows.has(task.id)}
                       onCheckedChange={() => handleSelectRow(task.id)}
@@ -474,7 +493,7 @@ export function TasksDataTable({ tasks, isLoading, onTaskUpdate }: TasksDataTabl
                   {visibleColumns.map(col => {
                     if (col.field === 'title') {
                       return (
-                        <TableCell key={col.id} className="px-4 py-3 text-base font-medium max-w-xs truncate text-neutral-100">
+                        <TableCell key={col.id} className="px-0.5 sm:px-1 py-0.5 sm:py-1 text-[11px] sm:text-[12px] font-medium max-w-[100px] sm:max-w-[140px] min-w-0 truncate text-neutral-100">
                           <div
                             role="button"
                             tabIndex={0}
@@ -489,7 +508,7 @@ export function TasksDataTable({ tasks, isLoading, onTaskUpdate }: TasksDataTabl
                     }
                     if (col.field === 'priority') {
                       return (
-                        <TableCell key={col.id} className="px-4 py-3 text-sm text-neutral-300">
+                        <TableCell key={col.id} className="px-2 sm:px-4 py-2 sm:py-3 text-xs sm:text-sm text-neutral-300 min-w-0 truncate">
                           <div
                             role="button"
                             tabIndex={0}
@@ -497,7 +516,7 @@ export function TasksDataTable({ tasks, isLoading, onTaskUpdate }: TasksDataTabl
                             onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); handleQuickEdit(task) } }}
                             className="w-full cursor-pointer hover:underline focus:outline-none flex items-center gap-1"
                           >
-                            {getPriorityEmoji(task.priority)}
+                            <span className="text-base sm:text-lg">{getPriorityEmoji(task.priority)}</span>
                             <span className="hidden sm:inline">
                               {getPriorityLabel(task.priority)}
                             </span>
@@ -507,7 +526,7 @@ export function TasksDataTable({ tasks, isLoading, onTaskUpdate }: TasksDataTabl
                     }
                     if (col.field === 'difficulty') {
                       return (
-                        <TableCell key={col.id} className="px-4 py-3 text-sm text-center text-neutral-300">
+                        <TableCell key={col.id} className="px-2 sm:px-4 py-2 sm:py-3 text-xs sm:text-sm text-center text-neutral-300 min-w-0 truncate">
                           <div
                             role="button"
                             tabIndex={0}
@@ -522,7 +541,7 @@ export function TasksDataTable({ tasks, isLoading, onTaskUpdate }: TasksDataTabl
                     }
                     if (col.field === 'status') {
                       return (
-                        <TableCell key={col.id} className="px-4 py-3 text-sm text-neutral-300">
+                        <TableCell key={col.id} className="px-2 sm:px-4 py-2 sm:py-3 text-xs sm:text-sm text-neutral-300 min-w-0 truncate">
                           <div
                             role="button"
                             tabIndex={0}
@@ -530,7 +549,7 @@ export function TasksDataTable({ tasks, isLoading, onTaskUpdate }: TasksDataTabl
                             onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); handleQuickEdit(task) } }}
                             className="w-full cursor-pointer hover:underline focus:outline-none"
                           >
-                            <span className={cn('capitalize text-sm', getStatusColor(task.status))}>
+                            <span className={cn('capitalize text-xs sm:text-sm', getStatusColor(task.status))}>
                               {task.status.replace('-', ' ')}
                             </span>
                           </div>
@@ -539,7 +558,7 @@ export function TasksDataTable({ tasks, isLoading, onTaskUpdate }: TasksDataTabl
                     }
                     if (col.field === 'due_date') {
                       return (
-                        <TableCell key={col.id} className="px-4 py-3 text-sm text-neutral-600 dark:text-neutral-400">
+                        <TableCell key={col.id} className="px-2 sm:px-4 py-2 sm:py-3 text-xs sm:text-sm text-neutral-600 dark:text-neutral-400 min-w-0 truncate">
                           <div
                             role="button"
                             tabIndex={0}
@@ -554,7 +573,7 @@ export function TasksDataTable({ tasks, isLoading, onTaskUpdate }: TasksDataTabl
                     }
                     if (col.field === 'xp_reward') {
                       return (
-                        <TableCell key={col.id} className="px-4 py-3 text-base text-blue-400 font-semibold">
+                        <TableCell key={col.id} className="px-0.5 sm:px-1 py-0.5 sm:py-1 text-[10px] sm:text-[11px] text-blue-400 font-semibold min-w-0 truncate">
                           <div
                             role="button"
                             tabIndex={0}
@@ -562,14 +581,15 @@ export function TasksDataTable({ tasks, isLoading, onTaskUpdate }: TasksDataTabl
                             onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); handleQuickEdit(task) } }}
                             className="w-full cursor-pointer hover:underline focus:outline-none"
                           >
-                            {task.xp_reward} XP
+                            <span className="hidden sm:inline">{task.xp_reward} XP</span>
+                            <span className="sm:hidden">{task.xp_reward}</span>
                           </div>
                         </TableCell>
                       )
                     }
                     if (col.field === 'gold_reward') {
                       return (
-                        <TableCell key={col.id} className="px-4 py-3 text-base text-amber-400 font-semibold">
+                        <TableCell key={col.id} className="px-2 sm:px-4 py-2 sm:py-3 text-xs sm:text-base text-amber-400 font-semibold min-w-0 truncate">
                           <div
                             role="button"
                             tabIndex={0}
@@ -584,7 +604,7 @@ export function TasksDataTable({ tasks, isLoading, onTaskUpdate }: TasksDataTabl
                     }
                     if (col.field === 'created_at') {
                       return (
-                        <TableCell key={col.id} className="px-4 py-3 text-sm text-neutral-600 dark:text-neutral-400">
+                        <TableCell key={col.id} className="px-2 sm:px-4 py-2 sm:py-3 text-xs sm:text-sm text-neutral-600 dark:text-neutral-400 min-w-0 truncate">
                           <div
                             role="button"
                             tabIndex={0}
@@ -618,26 +638,26 @@ export function TasksDataTable({ tasks, isLoading, onTaskUpdate }: TasksDataTabl
         onTaskUpdate={onTaskUpdate}
       />
 
-      {/* Pagination */}
-      <div className="flex-shrink-0 p-3 sm:p-4 border-t border-neutral-800 bg-neutral-900/60">
-        <div className="flex flex-col sm:flex-row gap-3 sm:items-center sm:justify-between">
-          <div className="text-sm text-neutral-600 dark:text-neutral-400 text-center sm:text-left">
+      {/* Pagination - Fixed at bottom */}
+      <div className="flex-shrink-0 p-0.5 sm:p-1 border-t border-neutral-800 bg-neutral-950/90 backdrop-blur-sm">
+        <div className="flex flex-col sm:flex-row gap-0.5 sm:gap-1 sm:items-center sm:justify-between">
+          <div className="text-[10px] sm:text-[11px] text-neutral-600 dark:text-neutral-400 text-center sm:text-left">
             Showing {paginatedTasks.length > 0 ? (currentPage - 1) * rowsPerPage + 1 : 0} to{' '}
             {Math.min(currentPage * rowsPerPage, filteredAndSortedTasks.length)} of{' '}
             {filteredAndSortedTasks.length} quests
           </div>
 
-          <div className="flex flex-col sm:flex-row gap-2 items-center">
+          <div className="flex flex-row gap-2 items-center justify-center sm:justify-end">
             {/* Rows per page */}
-            <div className="flex items-center gap-2">
-              <span className="text-sm text-neutral-600 dark:text-neutral-400">Rows:</span>
+            <div className="flex items-center gap-1 sm:gap-2">
+              <span className="text-xs sm:text-sm text-neutral-600 dark:text-neutral-400">Rows:</span>
               <select
                 value={rowsPerPage}
                 onChange={(e) => {
                   setRowsPerPage(Number(e.target.value))
                   setCurrentPage(1)
                 }}
-                className="px-2 py-1 rounded border border-neutral-200 dark:border-neutral-700 bg-white dark:bg-neutral-800 text-sm min-h-[2.5rem] sm:min-h-0"
+                className="px-1 sm:px-2 py-1 rounded border border-neutral-200 dark:border-neutral-700 bg-white dark:bg-neutral-800 text-xs sm:text-sm h-8 sm:h-auto"
               >
                 <option value={10}>10</option>
                 <option value={25}>25</option>
@@ -647,18 +667,19 @@ export function TasksDataTable({ tasks, isLoading, onTaskUpdate }: TasksDataTabl
             </div>
 
             {/* Page navigation */}
-            <div className="flex gap-2">
+            <div className="flex gap-1 sm:gap-2">
               <Button
                 variant="outline"
                 size="sm"
                 onClick={() => setCurrentPage(prev => Math.max(1, prev - 1))}
                 disabled={currentPage === 1}
-                className="min-h-[2.5rem] sm:min-h-0"
+                className="h-6 px-1.5 text-[10px] sm:text-[11px]"
               >
-                Previous
+                <span className="hidden sm:inline">Previous</span>
+                <span className="sm:hidden">Prev</span>
               </Button>
-              <div className="flex items-center gap-1 px-3 min-h-[2.5rem] sm:min-h-0 justify-center">
-                <span className="text-sm font-medium">
+              <div className="flex items-center gap-1 px-2 sm:px-3 h-8 justify-center">
+                <span className="text-xs sm:text-sm font-medium">
                   {currentPage} / {totalPages || 1}
                 </span>
               </div>
@@ -667,7 +688,7 @@ export function TasksDataTable({ tasks, isLoading, onTaskUpdate }: TasksDataTabl
                 size="sm"
                 onClick={() => setCurrentPage(prev => Math.min(totalPages, prev + 1))}
                 disabled={currentPage === totalPages || totalPages === 0}
-                className="min-h-[2.5rem] sm:min-h-0"
+                className="h-8 px-2 sm:px-3 text-xs sm:text-sm"
               >
                 Next
               </Button>

@@ -48,6 +48,8 @@
   --neutral-950: 10, 10, 10;
 }
 
+html, body, #__next { overflow-x: hidden; }
+
 /* Font Size Classes */
 .font-small {
   font-size: 14px;

@@ -31,13 +31,36 @@ export function QuickEditDialog({ task, isOpen, onClose, onTaskUpdate }: QuickEd
   const [dueDate, setDueDate] = useState('')
   const [isSubmitting, setIsSubmitting] = useState(false)
 
+  // Helper: convert ISO string to a value suitable for <input type="datetime-local" /> (local time without timezone)
+  const isoToLocalInput = (iso?: string | null) => {
+    if (!iso) return ''
+    const d = new Date(iso)
+    const pad = (n: number) => n.toString().padStart(2, '0')
+    const yyyy = d.getFullYear()
+    const mm = pad(d.getMonth() + 1)
+    const dd = pad(d.getDate())
+    const hh = pad(d.getHours())
+    const min = pad(d.getMinutes())
+    return `${yyyy}-${mm}-${dd}T${hh}:${min}`
+  }
+
+  // Helper: convert local datetime-local value back to ISO string
+  const localInputToIso = (local?: string) => {
+    if (!local) return undefined
+    try {
+      return new Date(local).toISOString()
+    } catch {
+      return undefined
+    }
+  }
+
   useEffect(() => {
     if (task) {
       setTitle(task.title)
       setDescription(task.description || '')
       setPriority(task.priority)
       setDifficulty(task.difficulty)
-      setDueDate(task.due_date || '')
+      setDueDate(isoToLocalInput(task.due_date))
     }
   }, [task])
 
@@ -51,7 +74,7 @@ export function QuickEditDialog({ task, isOpen, onClose, onTaskUpdate }: QuickEd
         description: description || undefined,
         priority,
         difficulty,
-        due_date: dueDate || undefined,
+        due_date: localInputToIso(dueDate) || undefined,
       })
       showSuccess('Quest updated successfully!')
       onTaskUpdate()
@@ -138,9 +161,9 @@ export function QuickEditDialog({ task, isOpen, onClose, onTaskUpdate }: QuickEd
 
           {/* Due Date */}
           <div className="space-y-2">
-            <label className="text-sm font-medium">Due Date</label>
+            <label className="text-sm font-medium">Due Date & Time</label>
             <Input
-              type="date"
+              type="datetime-local"
               value={dueDate}
               onChange={(e) => setDueDate(e.target.value)}
               onPointerDown={(e) => {

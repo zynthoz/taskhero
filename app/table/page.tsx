@@ -92,15 +92,12 @@ export default function TableViewPage() {
       rightSidebar={<RightSidebar />}
       expandedMain={false}
     >
-      <div className="h-[calc(100vh-theme(spacing.4)-theme(spacing.8))] flex flex-col bg-white dark:bg-neutral-900 rounded-lg border border-neutral-200 dark:border-neutral-800 overflow-hidden">
-        {/* Table Container */}
-        <div className="flex-1 min-h-0 overflow-hidden">
-          <TasksDataTable 
-            tasks={tasks} 
-            isLoading={isLoading}
-            onTaskUpdate={handleTaskUpdate}
-          />
-        </div>
+      <div className="h-[calc(90dvh-2rem)] flex flex-col overflow-hidden">
+        <TasksDataTable 
+          tasks={tasks} 
+          isLoading={isLoading}
+          onTaskUpdate={handleTaskUpdate}
+        />
       </div>
     </ThreeColumnLayout>
   )

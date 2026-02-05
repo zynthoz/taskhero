@@ -150,36 +150,37 @@ export function AddAttachmentDialog({
 
   return (
     <Dialog open={isOpen} onOpenChange={handleClose}>
-      <DialogContent className="sm:max-w-[480px] bg-white dark:bg-neutral-900 border-neutral-200 dark:border-neutral-800">
-        <DialogHeader>
-          <DialogTitle className="text-neutral-900 dark:text-white">
+      <DialogContent className="w-[calc(100%-1rem)] sm:w-full sm:max-w-[480px] max-h-[calc(100dvh-2rem)] sm:max-h-[90vh] bg-white dark:bg-neutral-900 border-neutral-200 dark:border-neutral-800 flex flex-col overflow-hidden p-4 sm:p-6">
+        <DialogHeader className="flex-shrink-0 pr-8">
+          <DialogTitle className="text-neutral-900 dark:text-white text-base sm:text-lg">
             Add Attachment
           </DialogTitle>
-          <DialogDescription className="text-neutral-600 dark:text-neutral-400">
+          <DialogDescription className="text-neutral-600 dark:text-neutral-400 text-sm">
             Attach files, checklists, or links to your quest
           </DialogDescription>
         </DialogHeader>
 
-        {/* Tabs */}
-        <div className="flex gap-1 p-1 bg-neutral-100 dark:bg-neutral-800 rounded-lg">
+        {/* Tabs - mobile friendly with proper touch targets */}
+        <div className="flex gap-1 p-1 bg-neutral-100 dark:bg-neutral-800 rounded-lg flex-shrink-0">
           {tabs.map(tab => (
             <button
               key={tab.id}
               onClick={() => setActiveTab(tab.id)}
               className={cn(
-                'flex-1 flex items-center justify-center gap-2 py-2 px-3 rounded-md text-sm font-medium transition-colors',
+                'flex-1 flex items-center justify-center gap-1.5 py-2.5 sm:py-2 px-2 sm:px-3 rounded-md text-sm font-medium transition-colors min-h-[2.75rem] sm:min-h-0',
                 activeTab === tab.id
                   ? 'bg-white dark:bg-neutral-700 text-neutral-900 dark:text-white shadow-sm'
-                  : 'text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white'
+                  : 'text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white active:bg-white/50 dark:active:bg-neutral-600/50'
               )}
             >
-              <span>{tab.icon}</span>
-              <span>{tab.label}</span>
+              <span className="text-base sm:text-sm">{tab.icon}</span>
+              <span className="text-xs sm:text-sm">{tab.label}</span>
             </button>
           ))}
         </div>
 
-        <div className="py-4">
+        {/* Content area - scrollable */}
+        <div className="flex-1 overflow-y-auto min-h-0 py-4">
           {/* File Upload */}
           {activeTab === 'file' && (
             <div className="space-y-4">
@@ -189,10 +190,10 @@ export function AddAttachmentDialog({
                 onDragLeave={() => setDragActive(false)}
                 onDrop={handleFileDrop}
                 className={cn(
-                  'border-2 border-dashed rounded-lg p-8 text-center cursor-pointer transition-colors',
+                  'border-2 border-dashed rounded-lg p-6 sm:p-8 text-center cursor-pointer transition-colors',
                   dragActive
                     ? 'border-[var(--accent-color,#9333ea)] bg-purple-50 dark:bg-purple-950/20'
-                    : 'border-neutral-300 dark:border-neutral-700 hover:border-neutral-400 dark:hover:border-neutral-600'
+                    : 'border-neutral-300 dark:border-neutral-700 hover:border-neutral-400 dark:hover:border-neutral-600 active:border-[var(--accent-color,#9333ea)]'
                 )}
               >
                 <input
@@ -204,28 +205,29 @@ export function AddAttachmentDialog({
                 />
                 {selectedFile ? (
                   <div className="space-y-2">
-                    <span className="text-4xl">📄</span>
-                    <p className="font-medium text-neutral-900 dark:text-white">
+                    <span className="text-3xl sm:text-4xl">📄</span>
+                    <p className="font-medium text-neutral-900 dark:text-white text-sm sm:text-base break-all px-2">
                       {selectedFile.name}
                     </p>
-                    <p className="text-sm text-neutral-500">
+                    <p className="text-xs sm:text-sm text-neutral-500">
                       {formatFileSize(selectedFile.size)}
                     </p>
                     <Button
                       variant="outline"
                       size="sm"
                       onClick={(e) => { e.stopPropagation(); setSelectedFile(null) }}
+                      className="min-h-[2.75rem] sm:min-h-0"
                     >
                       Remove
                     </Button>
                   </div>
                 ) : (
                   <div className="space-y-2">
-                    <span className="text-4xl">📁</span>
-                    <p className="font-medium text-neutral-900 dark:text-white">
-                      Drop file here or click to upload
+                    <span className="text-3xl sm:text-4xl">📁</span>
+                    <p className="font-medium text-neutral-900 dark:text-white text-sm sm:text-base">
+                      Tap to upload file
                     </p>
-                    <p className="text-sm text-neutral-500">
+                    <p className="text-xs sm:text-sm text-neutral-500">
                       Max size: {formatFileSize(MAX_FILE_SIZE)}
                     </p>
                   </div>
@@ -239,7 +241,7 @@ export function AddAttachmentDialog({
             <div className="space-y-3">
               {checklistItems.map((item, index) => (
                 <div key={index} className="flex items-center gap-2">
-                  <span className="text-neutral-400">☐</span>
+                  <span className="text-neutral-400 flex-shrink-0">☐</span>
                   <Input
                     placeholder={`Item ${index + 1}`}
                     value={item}
@@ -250,12 +252,12 @@ export function AddAttachmentDialog({
                         addChecklistItem()
                       }
                     }}
-                    className="flex-1 bg-neutral-100 dark:bg-neutral-800"
+                    className="flex-1 bg-neutral-100 dark:bg-neutral-800 min-h-[2.75rem] sm:min-h-0 text-base sm:text-sm"
                   />
                   {checklistItems.length > 1 && (
                     <button
                       onClick={() => removeChecklistItem(index)}
-                      className="p-1.5 rounded hover:bg-neutral-200 dark:hover:bg-neutral-700 text-neutral-500"
+                      className="p-2 sm:p-1.5 rounded hover:bg-neutral-200 dark:hover:bg-neutral-700 text-neutral-500 min-w-[2.5rem] min-h-[2.5rem] sm:min-w-0 sm:min-h-0 flex items-center justify-center"
                     >
                       ✕
                     </button>
@@ -266,7 +268,7 @@ export function AddAttachmentDialog({
                 variant="ghost"
                 size="sm"
                 onClick={addChecklistItem}
-                className="text-neutral-600 dark:text-neutral-400"
+                className="text-neutral-600 dark:text-neutral-400 min-h-[2.75rem] sm:min-h-0"
               >
                 + Add item
               </Button>
@@ -284,7 +286,10 @@ export function AddAttachmentDialog({
                   placeholder="https://example.com"
                   value={linkUrl}
                   onChange={(e) => setLinkUrl(e.target.value)}
-                  className="bg-neutral-100 dark:bg-neutral-800"
+                  className="bg-neutral-100 dark:bg-neutral-800 min-h-[2.75rem] sm:min-h-0 text-base sm:text-sm"
+                  type="url"
+                  autoCapitalize="off"
+                  autoCorrect="off"
                 />
               </div>
               <div className="space-y-2">
@@ -295,7 +300,7 @@ export function AddAttachmentDialog({
                   placeholder="Link title"
                   value={linkTitle}
                   onChange={(e) => setLinkTitle(e.target.value)}
-                  className="bg-neutral-100 dark:bg-neutral-800"
+                  className="bg-neutral-100 dark:bg-neutral-800 min-h-[2.75rem] sm:min-h-0 text-base sm:text-sm"
                 />
               </div>
               <div className="space-y-2">
@@ -306,7 +311,7 @@ export function AddAttachmentDialog({
                   placeholder="Brief description"
                   value={linkDescription}
                   onChange={(e) => setLinkDescription(e.target.value)}
-                  className="bg-neutral-100 dark:bg-neutral-800"
+                  className="bg-neutral-100 dark:bg-neutral-800 min-h-[2.75rem] sm:min-h-0 text-base sm:text-sm"
                 />
               </div>
             </div>
@@ -317,8 +322,14 @@ export function AddAttachmentDialog({
           )}
         </div>
 
-        <DialogFooter>
-          <Button variant="outline" onClick={handleClose} disabled={isSubmitting}>
+        {/* Footer - mobile optimized */}
+        <DialogFooter className="flex-shrink-0 flex-col-reverse sm:flex-row gap-2 pt-4 border-t border-neutral-200 dark:border-neutral-800">
+          <Button 
+            variant="outline" 
+            onClick={handleClose} 
+            disabled={isSubmitting}
+            className="min-h-[2.75rem] sm:min-h-0 w-full sm:w-auto"
+          >
             Cancel
           </Button>
           <Button
@@ -329,7 +340,7 @@ export function AddAttachmentDialog({
               (activeTab === 'checklist' && checklistItems.every(i => !i.trim())) ||
               (activeTab === 'link' && !linkUrl.trim())
             }
-            className="bg-[var(--accent-color,#9333ea)] hover:bg-[var(--accent-color-hover,#7e22ce)] text-white"
+            className="bg-[var(--accent-color,#9333ea)] hover:bg-[var(--accent-color-hover,#7e22ce)] text-white min-h-[2.75rem] sm:min-h-0 w-full sm:w-auto"
           >
             {isSubmitting ? 'Adding...' : 'Add Attachment'}
           </Button>

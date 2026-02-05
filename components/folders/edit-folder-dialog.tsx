@@ -109,13 +109,13 @@ export function EditFolderDialog({
 
   return (
     <Dialog open={isOpen} onOpenChange={handleClose}>
-      <DialogContent className="sm:max-w-[480px] bg-white dark:bg-neutral-900 border-neutral-200 dark:border-neutral-800">
-        <DialogHeader>
-          <DialogTitle className="text-neutral-900 dark:text-white flex items-center gap-2">
-            <span className="text-2xl">{selectedIcon}</span>
+      <DialogContent className="w-[calc(100%-1rem)] sm:w-full sm:max-w-[480px] max-h-[calc(100dvh-2rem)] sm:max-h-[90vh] bg-white dark:bg-neutral-900 border-neutral-200 dark:border-neutral-800 flex flex-col overflow-hidden p-4 sm:p-6">
+        <DialogHeader className="flex-shrink-0 pr-8">
+          <DialogTitle className="text-neutral-900 dark:text-white flex items-center gap-2 text-base sm:text-lg">
+            <span className="text-xl sm:text-2xl">{selectedIcon}</span>
             Edit Folder
           </DialogTitle>
-          <DialogDescription className="text-neutral-600 dark:text-neutral-400">
+          <DialogDescription className="text-neutral-600 dark:text-neutral-400 text-sm">
             Update folder settings and appearance
           </DialogDescription>
         </DialogHeader>
@@ -124,18 +124,19 @@ export function EditFolderDialog({
           <div className="py-6 space-y-4">
             <div className="text-center">
               <span className="text-4xl">⚠️</span>
-              <h3 className="text-lg font-semibold text-neutral-900 dark:text-white mt-2">
+              <h3 className="text-lg font-semibold text-neutral-900 dark:text-white mt-2 break-words">
                 Delete "{folder?.name}"?
               </h3>
               <p className="text-sm text-neutral-600 dark:text-neutral-400 mt-1">
                 Tasks in this folder will be moved to "All Quests". This action cannot be undone.
               </p>
             </div>
-            <div className="flex gap-2 justify-center">
+            <div className="flex flex-col-reverse sm:flex-row gap-2 justify-center">
               <Button
                 variant="outline"
                 onClick={() => setShowDeleteConfirm(false)}
                 disabled={isDeleting}
+                className="min-h-[2.75rem] sm:min-h-0 w-full sm:w-auto"
               >
                 Cancel
               </Button>
@@ -143,6 +144,7 @@ export function EditFolderDialog({
                 variant="danger"
                 onClick={handleDelete}
                 disabled={isDeleting}
+                className="min-h-[2.75rem] sm:min-h-0 w-full sm:w-auto"
               >
                 {isDeleting ? 'Deleting...' : 'Delete Folder'}
               </Button>
@@ -150,7 +152,7 @@ export function EditFolderDialog({
           </div>
         ) : (
           <>
-            <div className="space-y-4 py-4">
+            <div className="flex-1 overflow-y-auto min-h-0 space-y-4 py-4">
               {/* Folder Name */}
               <div className="space-y-2">
                 <label className="text-sm font-medium text-neutral-900 dark:text-white">
@@ -160,7 +162,7 @@ export function EditFolderDialog({
                   placeholder="Enter folder name..."
                   value={name}
                   onChange={(e) => setName(e.target.value)}
-                  className="bg-neutral-100 dark:bg-neutral-800 border-neutral-200 dark:border-neutral-700"
+                  className="bg-neutral-100 dark:bg-neutral-800 border-neutral-200 dark:border-neutral-700 min-h-[2.75rem] sm:min-h-0 text-base sm:text-sm"
                 />
               </div>
 
@@ -173,7 +175,7 @@ export function EditFolderDialog({
                   placeholder="Brief description..."
                   value={description}
                   onChange={(e) => setDescription(e.target.value)}
-                  className="bg-neutral-100 dark:bg-neutral-800 border-neutral-200 dark:border-neutral-700"
+                  className="bg-neutral-100 dark:bg-neutral-800 border-neutral-200 dark:border-neutral-700 min-h-[2.75rem] sm:min-h-0 text-base sm:text-sm"
                 />
               </div>
 
@@ -182,7 +184,7 @@ export function EditFolderDialog({
                 <label className="text-sm font-medium text-neutral-900 dark:text-white">
                   Icon
                 </label>
-                <div className="grid grid-cols-10 gap-1.5">
+                <div className="grid grid-cols-10 sm:grid-cols-10 gap-1.5">
                   {FOLDER_ICONS.map(({ icon, label }) => (
                     <button
                       key={icon}
@@ -190,8 +192,8 @@ export function EditFolderDialog({
                       title={label}
                       onClick={() => setSelectedIcon(icon)}
                       className={cn(
-                        'w-8 h-8 rounded-lg flex items-center justify-center text-lg transition-all',
-                        'hover:bg-neutral-200 dark:hover:bg-neutral-700',
+                        'w-8 h-8 sm:w-8 sm:h-8 rounded-lg flex items-center justify-center text-lg transition-all',
+                        'hover:bg-neutral-200 dark:hover:bg-neutral-700 active:scale-95',
                         selectedIcon === icon
                           ? 'bg-neutral-200 dark:bg-neutral-700 ring-2 ring-[var(--accent-color,#9333ea)]'
                           : 'bg-neutral-100 dark:bg-neutral-800'
@@ -216,7 +218,7 @@ export function EditFolderDialog({
                       title={label}
                       onClick={() => setSelectedColor(color)}
                       className={cn(
-                        'w-10 h-10 rounded-lg transition-all',
+                        'w-10 h-10 rounded-lg transition-all active:scale-95',
                         'hover:scale-110',
                         selectedColor === color
                           ? 'ring-2 ring-offset-2 ring-offset-white dark:ring-offset-neutral-900 ring-neutral-900 dark:ring-white'
@@ -237,7 +239,7 @@ export function EditFolderDialog({
                   <select
                     value={parentFolderId || ''}
                     onChange={(e) => setParentFolderId(e.target.value || null)}
-                    className="w-full px-3 py-2 rounded-lg bg-neutral-100 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 text-neutral-900 dark:text-white"
+                    className="w-full px-3 py-2 rounded-lg bg-neutral-100 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 text-neutral-900 dark:text-white min-h-[2.75rem] sm:min-h-0 text-base sm:text-sm"
                   >
                     <option value="">No parent (root level)</option>
                     {availableParents.map((f) => (
@@ -259,12 +261,12 @@ export function EditFolderDialog({
                   style={{ borderColor: selectedColor, backgroundColor: `${selectedColor}10` }}
                 >
                   <span className="text-2xl">{selectedIcon}</span>
-                  <div>
-                    <p className="font-medium text-neutral-900 dark:text-white">
+                  <div className="min-w-0 flex-1">
+                    <p className="font-medium text-neutral-900 dark:text-white truncate">
                       {name || 'Folder Name'}
                     </p>
                     {description && (
-                      <p className="text-sm text-neutral-600 dark:text-neutral-400">
+                      <p className="text-sm text-neutral-600 dark:text-neutral-400 truncate">
                         {description}
                       </p>
                     )}
@@ -277,30 +279,31 @@ export function EditFolderDialog({
               )}
             </div>
 
-            <DialogFooter className="flex justify-between">
-              <div>
+            <DialogFooter className="flex-shrink-0 flex-col sm:flex-row sm:justify-between gap-2 pt-4 border-t border-neutral-200 dark:border-neutral-800">
+              <div className="order-last sm:order-first">
                 {onDelete && !folder?.is_default && (
                   <Button
                     variant="ghost"
                     onClick={() => setShowDeleteConfirm(true)}
-                    className="text-red-600 hover:text-red-700 hover:bg-red-50 dark:hover:bg-red-950/30"
+                    className="text-red-600 hover:text-red-700 hover:bg-red-50 dark:hover:bg-red-950/30 min-h-[2.75rem] sm:min-h-0 w-full sm:w-auto"
                   >
                     Delete Folder
                   </Button>
                 )}
               </div>
-              <div className="flex gap-2">
+              <div className="flex flex-col-reverse sm:flex-row gap-2">
                 <Button
                   variant="outline"
                   onClick={handleClose}
                   disabled={isSubmitting}
+                  className="min-h-[2.75rem] sm:min-h-0 w-full sm:w-auto"
                 >
                   Cancel
                 </Button>
                 <Button
                   onClick={handleSubmit}
                   disabled={isSubmitting || !name.trim()}
-                  className="bg-[var(--accent-color,#9333ea)] hover:bg-[var(--accent-color-hover,#7e22ce)] text-white"
+                  className="bg-[var(--accent-color,#9333ea)] hover:bg-[var(--accent-color-hover,#7e22ce)] text-white min-h-[2.75rem] sm:min-h-0 w-full sm:w-auto"
                 >
                   {isSubmitting ? 'Saving...' : 'Save Changes'}
                 </Button>

@@ -90,16 +90,16 @@ export function TaskDetailModal({
 
   return (
     <Dialog open={isOpen} onOpenChange={() => onClose()}>
-      <DialogContent className="max-w-md max-h-[85vh] flex flex-col">
+      <DialogContent className="w-[calc(100%-1rem)] sm:w-full sm:max-w-md max-h-[calc(100dvh-2rem)] sm:max-h-[85vh] flex flex-col p-4 sm:p-6">
         {/* Header with color indicator */}
-        <DialogHeader className="pb-3 border-b border-neutral-200 dark:border-neutral-800 flex-shrink-0">
-          <div className="flex items-center gap-3">
+        <DialogHeader className="pb-3 border-b border-neutral-200 dark:border-neutral-800 flex-shrink-0 pr-8">
+          <div className="flex items-start gap-3 min-w-0">
             <span 
-              className="w-3 h-3 rounded-full flex-shrink-0" 
+              className="w-3 h-3 rounded-full flex-shrink-0 mt-1.5" 
               style={{ backgroundColor: color.hex }}
             />
             <DialogTitle className={cn(
-              'text-lg font-semibold text-neutral-900 dark:text-white',
+              'text-base sm:text-lg font-semibold text-neutral-900 dark:text-white break-words',
               isCompleted && 'line-through opacity-60'
             )}>
               {task.title}
@@ -126,27 +126,27 @@ export function TaskDetailModal({
         </DialogHeader>
         
         {/* Content - Scrollable */}
-        <div className="space-y-4 py-2 overflow-y-auto flex-1">
+        <div className="space-y-4 py-2 overflow-y-auto flex-1 min-h-0">
           {/* Description */}
           {task.description && (
             <div>
               <h4 className="text-xs font-medium text-neutral-500 dark:text-neutral-400 mb-1">
                 Description
               </h4>
-              <p className="text-sm text-neutral-700 dark:text-neutral-300">
+              <p className="text-sm text-neutral-700 dark:text-neutral-300 break-words whitespace-pre-wrap">
                 {task.description}
               </p>
             </div>
           )}
           
-          {/* Details grid */}
-          <div className="grid grid-cols-2 gap-3 text-sm">
-            <div className="p-2.5 rounded-lg bg-neutral-50 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700">
+          {/* Details grid - responsive */}
+          <div className="grid grid-cols-2 gap-2 sm:gap-3 text-sm">
+            <div className="p-2 sm:p-2.5 rounded-lg bg-neutral-50 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700">
               <div className="text-xs text-neutral-500 dark:text-neutral-400 mb-0.5">
                 Due Date
               </div>
               <div className={cn(
-                'font-medium',
+                'font-medium text-xs sm:text-sm break-words',
                 isOverdue && 'text-red-600 dark:text-red-400',
                 !isOverdue && 'text-neutral-900 dark:text-white'
               )}>
@@ -154,27 +154,27 @@ export function TaskDetailModal({
               </div>
             </div>
             
-            <div className="p-2.5 rounded-lg bg-neutral-50 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700">
+            <div className="p-2 sm:p-2.5 rounded-lg bg-neutral-50 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700">
               <div className="text-xs text-neutral-500 dark:text-neutral-400 mb-0.5">
                 Priority
               </div>
-              <div className="font-medium text-neutral-900 dark:text-white">
+              <div className="font-medium text-neutral-900 dark:text-white text-xs sm:text-sm">
                 {['Lowest', 'Low', 'Normal', 'High', 'Urgent'][task.priority - 1]}
               </div>
             </div>
             
-            <div className="p-2.5 rounded-lg bg-neutral-50 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700">
+            <div className="p-2 sm:p-2.5 rounded-lg bg-neutral-50 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700">
               <div className="text-xs text-neutral-500 dark:text-neutral-400 mb-0.5">
                 Difficulty
               </div>
-              <div className="font-medium text-neutral-900 dark:text-white flex items-center gap-0.5">
+              <div className="font-medium text-neutral-900 dark:text-white flex items-center gap-0.5 flex-wrap">
                 {Array.from({ length: task.difficulty }).map((_, i) => (
-                  <span key={i} className="text-sm">⚔️</span>
+                  <span key={i} className="text-xs sm:text-sm">⚔️</span>
                 ))}
               </div>
             </div>
             
-            <div className="p-2.5 rounded-lg bg-neutral-50 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700">
+            <div className="p-2 sm:p-2.5 rounded-lg bg-neutral-50 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700">
               <div className="text-xs text-neutral-500 dark:text-neutral-400 mb-0.5">
                 Rewards
               </div>
@@ -188,7 +188,7 @@ export function TaskDetailModal({
           
           {/* Recurrence pattern */}
           {task.is_recurring && task.recurrence_pattern && (
-            <div className="p-2.5 rounded-lg bg-neutral-50 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700">
+            <div className="p-2 sm:p-2.5 rounded-lg bg-neutral-50 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700">
               <div className="text-xs text-neutral-500 dark:text-neutral-400 mb-0.5">
                 Repeats
               </div>
@@ -222,14 +222,14 @@ export function TaskDetailModal({
           </div>
         </div>
         
-        {/* Footer actions */}
-        <div className="flex items-center justify-between pt-4 border-t border-neutral-200 dark:border-neutral-800">
+        {/* Footer actions - mobile optimized with proper touch targets */}
+        <div className="flex flex-col-reverse sm:flex-row items-stretch sm:items-center justify-between gap-2 pt-4 border-t border-neutral-200 dark:border-neutral-800 flex-shrink-0">
           <Button
             variant="ghost"
             size="sm"
             onClick={handleDelete}
             disabled={isDeleting}
-            className="text-red-600 hover:text-red-700 hover:bg-red-50 dark:text-red-400 dark:hover:bg-red-900/20"
+            className="text-red-600 hover:text-red-700 hover:bg-red-50 dark:text-red-400 dark:hover:bg-red-900/20 min-h-[2.75rem] sm:min-h-0 justify-center"
           >
             {isDeleting ? 'Deleting...' : 'Delete'}
           </Button>
@@ -240,6 +240,7 @@ export function TaskDetailModal({
                 variant="outline"
                 size="sm"
                 onClick={() => onEdit(task)}
+                className="flex-1 sm:flex-none min-h-[2.75rem] sm:min-h-0"
               >
                 Edit
               </Button>
@@ -253,6 +254,7 @@ export function TaskDetailModal({
                   onClose()
                 }}
                 variant="primary"
+                className="flex-1 sm:flex-none min-h-[2.75rem] sm:min-h-0"
               >
                 Complete ✓
               </Button>

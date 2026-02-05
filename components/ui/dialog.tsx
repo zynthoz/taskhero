@@ -32,14 +32,22 @@ const DialogContent = React.forwardRef<
     <DialogPrimitive.Content
       ref={ref}
       className={cn(
-        'fixed left-[50%] top-[50%] z-50 grid w-full max-w-lg translate-x-[-50%] translate-y-[-50%] gap-4 border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-950 p-6 shadow-lg duration-200 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[state=closed]:slide-out-to-left-1/2 data-[state=closed]:slide-out-to-top-[48%] data-[state=open]:slide-in-from-left-1/2 data-[state=open]:slide-in-from-top-[48%] rounded-lg',
+        // Base positioning and sizing - mobile first
+        'fixed left-[50%] top-[50%] z-50 grid w-[calc(100%-1rem)] sm:w-full max-w-lg translate-x-[-50%] translate-y-[-50%]',
+        // Spacing and styling
+        'gap-3 sm:gap-4 border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-950 p-4 sm:p-6 shadow-lg rounded-lg',
+        // Max height for mobile - use dvh for mobile viewport compatibility
+        'max-h-[calc(100dvh-2rem)] sm:max-h-[90vh] overflow-y-auto',
+        // Animations
+        'duration-200 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[state=closed]:slide-out-to-left-1/2 data-[state=closed]:slide-out-to-top-[48%] data-[state=open]:slide-in-from-left-1/2 data-[state=open]:slide-in-from-top-[48%]',
         className
       )}
       {...props}
     >
       {children}
-      <DialogPrimitive.Close className="absolute right-4 top-4 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-neutral-400 dark:focus:ring-neutral-600 focus:ring-offset-2 disabled:pointer-events-none">
-        <X className="h-4 w-4 text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white" />
+      {/* Close button - larger touch target for mobile (44x44px minimum) */}
+      <DialogPrimitive.Close className="absolute right-3 top-3 sm:right-4 sm:top-4 w-8 h-8 sm:w-6 sm:h-6 flex items-center justify-center rounded-md opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-neutral-400 dark:focus:ring-neutral-600 focus:ring-offset-2 disabled:pointer-events-none hover:bg-neutral-100 dark:hover:bg-neutral-800">
+        <X className="h-5 w-5 sm:h-4 sm:w-4 text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white" />
         <span className="sr-only">Close</span>
       </DialogPrimitive.Close>
     </DialogPrimitive.Content>

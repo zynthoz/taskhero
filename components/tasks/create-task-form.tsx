@@ -271,7 +271,7 @@ export function CreateTaskForm({
           {trigger || defaultTrigger}
         </DialogTrigger>
       )}
-      <DialogContent className="w-[95vw] max-w-2xl max-h-[90vh] overflow-y-auto overflow-x-hidden min-w-0">
+      <DialogContent className="w-[95vw] max-w-4xl max-h-[90vh] overflow-y-auto overflow-x-hidden min-w-0">
         <DialogHeader>
           <DialogTitle className="text-xl md:text-2xl font-semibold text-neutral-900 dark:text-white">
             Create New Task
@@ -283,7 +283,7 @@ export function CreateTaskForm({
         
         <form onSubmit={handleSubmit} className="space-y-4 min-w-0">
           {/* Two Column Layout */}
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
             {/* Left Column - Task Details */}
             <div className="space-y-4">
               {/* Task Title */}
@@ -383,8 +383,21 @@ export function CreateTaskForm({
                   type="datetime-local"
                   value={formData.due_date}
                   onChange={(e) => setFormData({ ...formData, due_date: e.target.value })}
+                  onPointerDown={(e) => {
+                    // Only attempt to open native picker on a trusted user gesture
+                    if (!e.isTrusted) return
+                    try {
+                      (e.target as any).showPicker?.()
+                    } catch {
+                      // Ignore NotAllowedError or other failures
+                    }
+                  }}
+                  onKeyDown={(e) => {
+                    const allowed = ['Tab','Enter','Escape','ArrowLeft','ArrowRight','ArrowUp','ArrowDown','Backspace'];
+                    if (!allowed.includes(e.key)) e.preventDefault();
+                  }}
                   min={getMinDateTime()}
-                  className="h-10"
+                  className="h-10 cursor-pointer"
                 />
                 
                 {/* Quick date buttons */}
@@ -522,7 +535,7 @@ export function CreateTaskForm({
               </div>
 
               {/* Attachment Tabs */}
-              <div className="flex gap-1 p-1 bg-neutral-100 dark:bg-neutral-800 rounded-lg">
+              <div className="flex gap-1 p-1 bg-neutral-100 dark:bg-neutral-800 rounded-lg flex-wrap">
                 {[
                   { id: 'checklist' as const, label: 'Checklist', icon: '✅' },
                   { id: 'link' as const, label: 'Link', icon: '🔗' },
@@ -533,7 +546,7 @@ export function CreateTaskForm({
                     type="button"
                     onClick={() => setAttachmentTab(tab.id)}
                     className={cn(
-                      'flex-1 flex items-center justify-center gap-1.5 py-2 px-2 rounded-md text-xs font-medium transition-colors',
+                      'flex-1 min-w-0 flex items-center justify-center gap-1.5 py-2 px-2 rounded-md text-xs font-medium transition-colors whitespace-nowrap',
                       attachmentTab === tab.id
                         ? 'bg-white dark:bg-neutral-700 text-neutral-900 dark:text-white shadow-sm'
                         : 'text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white'
@@ -546,7 +559,7 @@ export function CreateTaskForm({
               </div>
 
               {/* Attachment Input Area */}
-              <div className="min-h-[150px]">
+              <div className="min-h-[200px]">
                 {/* File Upload */}
                 {attachmentTab === 'file' && (
                   <div
@@ -594,7 +607,7 @@ export function CreateTaskForm({
                               addChecklistItem()
                             }
                           }}
-                          className="flex-1 h-9 bg-neutral-100 dark:bg-neutral-800"
+                          className="flex-1 min-w-0 h-10 bg-neutral-100 dark:bg-neutral-800"
                         />
                         {checklistItems.length > 1 && (
                           <button

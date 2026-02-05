@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { TaskAttachment, ChecklistItem, getFileIcon, formatFileSize } from '@/types/folder'
 import { cn } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
@@ -10,6 +10,12 @@ import { Input } from '@/components/ui/input'
 // Extended type to include signed URL from server
 interface AttachmentWithSignedUrl extends TaskAttachment {
   signed_url?: string
+}
+
+// Detect if running on mobile/touch device
+function isTouchDevice() {
+  if (typeof window === 'undefined') return false
+  return 'ontouchstart' in window || navigator.maxTouchPoints > 0
 }
 
 interface AttachmentListProps {
@@ -73,9 +79,16 @@ function AttachmentItem({
   readOnly = false,
 }: AttachmentItemProps) {
   const [isDeleting, setIsDeleting] = useState(false)
+  const [isTouch, setIsTouch] = useState(false)
+  const [showActions, setShowActions] = useState(false)
+
+  useEffect(() => {
+    setIsTouch(isTouchDevice())
+  }, [])
 
   const handleDelete = async () => {
     if (!onDeleteAttachment) return
+    if (!confirm('Delete this attachment?')) return
     setIsDeleting(true)
     try {
       await onDeleteAttachment(attachment.id)
@@ -84,14 +97,26 @@ function AttachmentItem({
     }
   }
 
+  // Toggle actions visibility on mobile tap
+  const handleTap = () => {
+    if (isTouch && !readOnly) {
+      setShowActions(!showActions)
+    }
+  }
+
   return (
-    <div className="group rounded-lg border border-neutral-200 dark:border-neutral-800 bg-neutral-50 dark:bg-neutral-900/50 p-3">
+    <div 
+      className="group rounded-lg border border-neutral-200 dark:border-neutral-800 bg-neutral-50 dark:bg-neutral-900/50 p-3"
+      onClick={handleTap}
+    >
       {attachment.attachment_type === 'file' && (
         <FileAttachment 
           attachment={attachment} 
           onDelete={!readOnly ? handleDelete : undefined}
           onPreview={onPreviewFile}
           isDeleting={isDeleting}
+          showActions={isTouch ? showActions : true}
+          isTouch={isTouch}
         />
       )}
       {attachment.attachment_type === 'checklist' && (
@@ -103,6 +128,8 @@ function AttachmentItem({
           onDelete={!readOnly ? handleDelete : undefined}
           isDeleting={isDeleting}
           readOnly={readOnly}
+          showActions={isTouch ? showActions : true}
+          isTouch={isTouch}
         />
       )}
       {attachment.attachment_type === 'link' && (
@@ -110,6 +137,8 @@ function AttachmentItem({
           attachment={attachment} 
           onDelete={!readOnly ? handleDelete : undefined}
           isDeleting={isDeleting}
+          showActions={isTouch ? showActions : true}
+          isTouch={isTouch}
         />
       )}
     </div>
@@ -122,9 +151,11 @@ interface FileAttachmentProps {
   onDelete?: () => void
   onPreview?: (attachment: AttachmentWithSignedUrl) => void
   isDeleting?: boolean
+  showActions?: boolean
+  isTouch?: boolean
 }
 
-function FileAttachment({ attachment, onDelete, onPreview, isDeleting }: FileAttachmentProps) {
+function FileAttachment({ attachment, onDelete, onPreview, isDeleting, showActions = true, isTouch = false }: FileAttachmentProps) {
   const icon = getFileIcon(attachment.file_type || '')
   const canPreview = attachment.file_type?.startsWith('image/') || 
                       attachment.file_type === 'application/pdf' ||
@@ -132,29 +163,40 @@ function FileAttachment({ attachment, onDelete, onPreview, isDeleting }: FileAtt
   
   return (
     <div className="flex items-center gap-3">
-      <span className="text-2xl">{icon}</span>
+      <span className="text-xl sm:text-2xl flex-shrink-0">{icon}</span>
       <div className="flex-1 min-w-0">
         <button
-          onClick={() => onPreview?.(attachment)}
+          onClick={(e) => {
+            e.stopPropagation()
+            onPreview?.(attachment)
+          }}
           className={cn(
-            'font-medium text-neutral-900 dark:text-white truncate block text-left w-full',
-            canPreview && onPreview && 'hover:text-[var(--accent-color,#9333ea)] cursor-pointer'
+            'font-medium text-neutral-900 dark:text-white truncate block text-left w-full text-sm sm:text-base',
+            canPreview && onPreview && 'hover:text-[var(--accent-color,#9333ea)] cursor-pointer active:text-[var(--accent-color,#9333ea)]'
           )}
         >
           {attachment.file_name}
         </button>
-        <div className="flex items-center gap-2 text-xs text-neutral-500">
+        <div className="flex items-center gap-2 text-xs text-neutral-500 flex-wrap">
           <span>{formatFileSize(attachment.file_size || 0)}</span>
           {canPreview && onPreview && (
-            <span className="text-[var(--accent-color,#9333ea)]">• Click to preview</span>
+            <span className="text-[var(--accent-color,#9333ea)]">• Tap to preview</span>
           )}
         </div>
       </div>
       {onDelete && (
         <button
-          onClick={onDelete}
+          onClick={(e) => {
+            e.stopPropagation()
+            onDelete()
+          }}
           disabled={isDeleting}
-          className="opacity-0 group-hover:opacity-100 p-1.5 rounded hover:bg-red-100 dark:hover:bg-red-900/30 text-neutral-500 hover:text-red-600 transition-opacity"
+          className={cn(
+            'p-2 sm:p-1.5 rounded hover:bg-red-100 dark:hover:bg-red-900/30 text-neutral-500 hover:text-red-600 transition-opacity min-w-[2.5rem] min-h-[2.5rem] sm:min-w-0 sm:min-h-0 flex items-center justify-center',
+            isTouch 
+              ? showActions ? 'opacity-100' : 'opacity-0'
+              : 'opacity-0 group-hover:opacity-100'
+          )}
           title="Delete file"
         >
           🗑️
@@ -173,6 +215,8 @@ interface ChecklistAttachmentProps {
   onDelete?: () => void
   isDeleting?: boolean
   readOnly?: boolean
+  showActions?: boolean
+  isTouch?: boolean
 }
 
 function ChecklistAttachment({
@@ -183,6 +227,8 @@ function ChecklistAttachment({
   onDelete,
   isDeleting,
   readOnly,
+  showActions = true,
+  isTouch = false,
 }: ChecklistAttachmentProps) {
   const [newItemText, setNewItemText] = useState('')
   const [isAdding, setIsAdding] = useState(false)
@@ -203,11 +249,11 @@ function ChecklistAttachment({
   }
 
   return (
-    <div className="space-y-2">
+    <div className="space-y-2" onClick={(e) => e.stopPropagation()}>
       {/* Header with progress */}
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
-          <span className="text-lg">✅</span>
+          <span className="text-base sm:text-lg">✅</span>
           <span className="text-sm font-medium text-neutral-900 dark:text-white">
             Checklist
           </span>
@@ -217,9 +263,17 @@ function ChecklistAttachment({
         </div>
         {onDelete && (
           <button
-            onClick={onDelete}
+            onClick={(e) => {
+              e.stopPropagation()
+              onDelete()
+            }}
             disabled={isDeleting}
-            className="opacity-0 group-hover:opacity-100 p-1 rounded hover:bg-red-100 dark:hover:bg-red-900/30 text-neutral-500 hover:text-red-600 transition-opacity text-sm"
+            className={cn(
+              'p-2 sm:p-1 rounded hover:bg-red-100 dark:hover:bg-red-900/30 text-neutral-500 hover:text-red-600 transition-opacity text-sm min-w-[2.5rem] min-h-[2.5rem] sm:min-w-0 sm:min-h-0 flex items-center justify-center',
+              isTouch 
+                ? showActions ? 'opacity-100' : 'opacity-0'
+                : 'opacity-0 group-hover:opacity-100'
+            )}
             title="Delete checklist"
           >
             🗑️
@@ -304,15 +358,15 @@ function ChecklistItemRow({ item, onToggle, onDelete, readOnly }: ChecklistItemR
   }
 
   return (
-    <div className="group/item flex items-center gap-2 py-1 px-1 -mx-1 rounded hover:bg-neutral-100 dark:hover:bg-neutral-800/50">
+    <div className="group/item flex items-center gap-2 py-2 sm:py-1 px-1 -mx-1 rounded hover:bg-neutral-100 dark:hover:bg-neutral-800/50 min-h-[2.75rem] sm:min-h-0">
       <Checkbox
         checked={item.checked}
         onCheckedChange={handleToggle}
         disabled={isToggling || readOnly}
-        className="data-[state=checked]:bg-green-500 data-[state=checked]:border-green-500"
+        className="data-[state=checked]:bg-green-500 data-[state=checked]:border-green-500 w-5 h-5 sm:w-4 sm:h-4"
       />
       <span className={cn(
-        'flex-1 text-sm',
+        'flex-1 text-sm break-words',
         item.checked && 'line-through text-neutral-500'
       )}>
         {item.text}
@@ -321,7 +375,7 @@ function ChecklistItemRow({ item, onToggle, onDelete, readOnly }: ChecklistItemR
         <button
           onClick={handleDelete}
           disabled={isDeleting}
-          className="opacity-0 group-hover/item:opacity-100 p-1 rounded hover:bg-red-100 dark:hover:bg-red-900/30 text-neutral-400 hover:text-red-600 transition-opacity"
+          className="sm:opacity-0 sm:group-hover/item:opacity-100 p-2 sm:p-1 rounded hover:bg-red-100 dark:hover:bg-red-900/30 text-neutral-400 hover:text-red-600 transition-opacity min-w-[2.5rem] min-h-[2.5rem] sm:min-w-0 sm:min-h-0 flex items-center justify-center"
         >
           ✕
         </button>
@@ -335,29 +389,32 @@ interface LinkAttachmentProps {
   attachment: TaskAttachment
   onDelete?: () => void
   isDeleting?: boolean
+  showActions?: boolean
+  isTouch?: boolean
 }
 
-function LinkAttachment({ attachment, onDelete, isDeleting }: LinkAttachmentProps) {
+function LinkAttachment({ attachment, onDelete, isDeleting, showActions = true, isTouch = false }: LinkAttachmentProps) {
   const displayUrl = attachment.link_url?.replace(/^https?:\/\//, '').slice(0, 40) || ''
   
   return (
     <div className="flex items-center gap-3">
-      <span className="text-2xl">🔗</span>
+      <span className="text-xl sm:text-2xl flex-shrink-0">🔗</span>
       <div className="flex-1 min-w-0">
         <a
           href={attachment.link_url || '#'}
           target="_blank"
           rel="noopener noreferrer"
-          className="font-medium text-neutral-900 dark:text-white hover:text-[var(--accent-color,#9333ea)] truncate block"
+          onClick={(e) => e.stopPropagation()}
+          className="font-medium text-neutral-900 dark:text-white hover:text-[var(--accent-color,#9333ea)] active:text-[var(--accent-color,#9333ea)] truncate block text-sm sm:text-base"
         >
           {attachment.link_title || displayUrl}
         </a>
         {attachment.link_description && (
-          <p className="text-xs text-neutral-500 truncate">
+          <p className="text-xs text-neutral-500 line-clamp-2 sm:truncate">
             {attachment.link_description}
           </p>
         )}
-        {!attachment.link_title && attachment.link_description && (
+        {!attachment.link_title && (
           <p className="text-xs text-neutral-400 truncate">
             {displayUrl}
           </p>
@@ -365,9 +422,17 @@ function LinkAttachment({ attachment, onDelete, isDeleting }: LinkAttachmentProp
       </div>
       {onDelete && (
         <button
-          onClick={onDelete}
+          onClick={(e) => {
+            e.stopPropagation()
+            onDelete()
+          }}
           disabled={isDeleting}
-          className="opacity-0 group-hover:opacity-100 p-1.5 rounded hover:bg-red-100 dark:hover:bg-red-900/30 text-neutral-500 hover:text-red-600 transition-opacity"
+          className={cn(
+            'p-2 sm:p-1.5 rounded hover:bg-red-100 dark:hover:bg-red-900/30 text-neutral-500 hover:text-red-600 transition-opacity min-w-[2.5rem] min-h-[2.5rem] sm:min-w-0 sm:min-h-0 flex items-center justify-center',
+            isTouch 
+              ? showActions ? 'opacity-100' : 'opacity-0'
+              : 'opacity-0 group-hover:opacity-100'
+          )}
           title="Delete link"
         >
           🗑️

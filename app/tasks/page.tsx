@@ -23,7 +23,7 @@ import { Confetti, XPGainAnimation, GoldGainAnimation, LevelUpCelebration } from
 import { FolderList } from '@/components/folders/folder-list'
 import { CreateFolderDialog } from '@/components/folders/create-folder-dialog'
 import { EditFolderDialog } from '@/components/folders/edit-folder-dialog'
-import { getFolders, createFolder, updateFolder, deleteFolder, moveTaskToFolder } from '@/app/folders/actions'
+import { getFolders, getFolderHierarchy, createFolder, updateFolder, deleteFolder, moveTaskToFolder } from '@/app/folders/actions'
 import { Folder, CreateFolderInput, UpdateFolderInput } from '@/types/folder'
 // Attachment imports
 import { uploadFileAttachment, createChecklistAttachment, createLinkAttachment } from '@/app/attachments/actions'
@@ -58,7 +58,8 @@ export default function TasksPage() {
   const [draggedTaskId, setDraggedTaskId] = useState<string | null>(null)
 
   // Folder states
-  const [folders, setFolders] = useState<Folder[]>([])
+  const [folders, setFolders] = useState<Folder[]>([]) // Hierarchical folders for display
+  const [flatFolders, setFlatFolders] = useState<Folder[]>([]) // Flat folders for parent selector
   const [selectedFolderId, setSelectedFolderId] = useState<string | null>(null)
   const [showCreateFolderDialog, setShowCreateFolderDialog] = useState(false)
   const [editingFolder, setEditingFolder] = useState<Folder | null>(null)
@@ -89,9 +90,20 @@ export default function TasksPage() {
 
   const loadFolders = async () => {
     setLoadingFolders(true)
-    const result = await getFolders()
-    if (result.success && result.data) {
-      setFolders(result.data)
+    
+    // Get flat folders list for parent folder selector in dialogs
+    const flatResult = await getFolders()
+    if (flatResult.success && flatResult.data) {
+      setFlatFolders(flatResult.data)
+    }
+    
+    // Use getFolderHierarchy for nested folder structure display
+    const hierarchyResult = await getFolderHierarchy()
+    if (hierarchyResult.success && hierarchyResult.data) {
+      setFolders(hierarchyResult.data)
+    } else if (flatResult.success && flatResult.data) {
+      // Fallback to flat list if hierarchy fails
+      setFolders(flatResult.data)
     }
     setLoadingFolders(false)
   }
@@ -619,7 +631,7 @@ export default function TasksPage() {
         isOpen={showCreateFolderDialog}
         onClose={() => setShowCreateFolderDialog(false)}
         onSubmit={handleCreateFolder}
-        parentFolders={folders}
+        parentFolders={flatFolders}
       />
 
       {editingFolder && (
@@ -629,7 +641,7 @@ export default function TasksPage() {
           onSubmit={handleUpdateFolder}
           onDelete={handleDeleteFolder}
           folder={editingFolder}
-          parentFolders={folders}
+          parentFolders={flatFolders}
         />
       )}
     </ThreeColumnLayout>

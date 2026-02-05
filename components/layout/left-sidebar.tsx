@@ -30,6 +30,7 @@ export default function LeftSidebar({ user, loading = false }: LeftSidebarProps)
     { href: "/dashboard", label: "Dashboard" },
     { href: "/tasks", label: "Tasks" },
     { href: "/calendar", label: "Calendar" },
+    { href: "/table", label: "Table View" },
     { href: "/goals", label: "Goals" },
     { href: "/shop", label: "Shop" },
     { href: "/inventory", label: "Inventory" },

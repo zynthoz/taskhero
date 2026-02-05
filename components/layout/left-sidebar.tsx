@@ -33,8 +33,6 @@ export default function LeftSidebar({ user, loading = false }: LeftSidebarProps)
     { href: "/table", label: "Table View" },
     { href: "/goals", label: "Goals" },
     { href: "/shop", label: "Shop" },
-    { href: "/inventory", label: "Inventory" },
-    { href: "/achievements", label: "Achievements" },
     { href: "/leaderboard", label: "Leaderboard" },
     { href: "/friends", label: "Friends" },
     { href: "/profile", label: "Profile" },

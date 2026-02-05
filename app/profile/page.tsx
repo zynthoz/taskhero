@@ -10,6 +10,8 @@ import { Badge } from '@/components/ui/badge'
 import { Progress } from '@/components/ui/progress'
 import { createClient } from '@/lib/supabase/client'
 import Link from 'next/link'
+import ProfileInventory from '@/components/profile/inventory-tab'
+import ProfileAchievements from '@/components/profile/achievements-tab'
 
 interface Achievement {
   id: string
@@ -36,7 +38,7 @@ interface UserStats {
 
 export default function ProfilePage() {
   const { user } = useAuth()
-  const [activeTab, setActiveTab] = useState('stats')
+  const [activeTab, setActiveTab] = useState('profile')
   const [stats, setStats] = useState<UserStats | null>(null)
   const [achievements, setAchievements] = useState<Achievement[]>([])
   const [loading, setLoading] = useState(true)
@@ -148,7 +150,8 @@ export default function ProfilePage() {
     : 0
 
   const tabs = [
-    { id: 'stats', label: 'Statistics', icon: '📊' },
+    { id: 'profile', label: 'Profile', icon: '👤' },
+    { id: 'inventory', label: 'Inventory', icon: '🎒' },
     { id: 'achievements', label: 'Achievements', icon: '🏆' },
   ]
 
@@ -198,8 +201,8 @@ export default function ProfilePage() {
           </Card>
         ) : (
           <>
-            {/* Statistics Tab */}
-            {activeTab === 'stats' && stats && (
+            {/* Profile Tab */}
+            {activeTab === 'profile' && stats && (
               <div className="space-y-6">
                 {/* Power Level */}
                 <Card className="p-6 bg-gradient-to-r from-purple-900/20 to-purple-800/10 border-purple-800/30">
@@ -308,37 +311,14 @@ export default function ProfilePage() {
             {/* Achievements Tab */}
             {activeTab === 'achievements' && (
               <div>
-                {achievements.length === 0 ? (
-                  <Card className="p-12 bg-white dark:bg-neutral-900 border-neutral-200 dark:border-neutral-800 text-center">
-                    <div className="text-4xl mb-4">🏆</div>
-                    <h3 className="text-lg font-semibold text-neutral-900 dark:text-white mb-2">No achievements yet</h3>
-                    <p className="text-sm text-neutral-600 dark:text-neutral-400">
-                      Complete tasks and reach milestones to unlock achievements
-                    </p>
-                  </Card>
-                ) : (
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    {achievements.map((achievement) => (
-                      <Card key={achievement.id} className="p-4 bg-white dark:bg-neutral-900 border-neutral-200 dark:border-neutral-800">
-                        <div className="flex items-start gap-3">
-                          <div className="text-3xl">{achievement.icon}</div>
-                          <div className="flex-1">
-                            <div className="flex items-center gap-2 mb-1">
-                              <h3 className="text-sm font-semibold text-neutral-900 dark:text-white">{achievement.name}</h3>
-                              <Badge className="text-xs bg-purple-600/20 text-purple-400 border-purple-600/50">
-                                {achievement.category}
-                              </Badge>
-                            </div>
-                            <p className="text-xs text-neutral-400 mb-2">{achievement.description}</p>
-                            <p className="text-xs text-neutral-500">
-                              Unlocked: {new Date(achievement.unlocked_at).toLocaleDateString()}
-                            </p>
-                          </div>
-                        </div>
-                      </Card>
-                    ))}
-                  </div>
-                )}
+                <ProfileAchievements />
+              </div>
+            )}
+
+            {/* Inventory Tab */}
+            {activeTab === 'inventory' && (
+              <div>
+                <ProfileInventory />
               </div>
             )}
           </>

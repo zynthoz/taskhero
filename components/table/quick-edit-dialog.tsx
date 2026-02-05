@@ -90,7 +90,7 @@ export function QuickEditDialog({ task, isOpen, onClose, onTaskUpdate }: QuickEd
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="w-[calc(100%-1rem)] sm:w-full sm:max-w-[500px] max-h-[calc(100dvh-2rem)] sm:max-h-[90vh] flex flex-col overflow-hidden p-4 sm:p-6">
+      <DialogContent onOpenAutoFocus={(e) => e.preventDefault()} className="w-[calc(100%-1rem)] sm:w-full sm:max-w-[500px] max-h-[calc(100dvh-2rem)] sm:max-h-[90vh] flex flex-col overflow-hidden p-4 sm:p-6">
         <DialogHeader className="flex-shrink-0">
           <DialogTitle className="text-base sm:text-lg">Quick Edit Quest</DialogTitle>
           <DialogDescription className="text-sm">
